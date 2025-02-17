@@ -1,0 +1,73 @@
+{
+  "habitats": {
+    "caves": "Caves",
+    "forests": "Forests",
+    "hills": "Hills",
+    "mountains": "Mountains",
+    "swamps": "Swamps",
+    "volcanic_caves": "Volcanic Caves"
+  },
+  "types": {
+    "humanoid": "Humanoid",
+    "beast": "Beast",
+    "dragon": "Dragon"
+  },
+  "groups": {
+    "goblin_tribes": "Goblin Tribes",
+    "orc_warbands": "Orc Warbands",
+    "solitary_hunters": "Solitary Hunters",
+    "chromatic_dragons": "Chromatic Dragons"
+  },
+  "creatures": [
+    {
+      "name": "Goblin",
+      "cr": 0.25,
+      "xp": 50,
+      "habitat": ["caves", "forests"],
+      "type": "humanoid",
+      "group": "goblin_tribes",
+      "associations": ["bugbear", "hobgoblin"],
+      "source": { "book": "Monster Manual 2024", "page": 56 }
+    },
+    {
+      "name": "Orc",
+      "cr": 1,
+      "xp": 200,
+      "habitat": ["hills", "mountains"],
+      "type": "humanoid",
+      "group": "orc_warbands",
+      "associations": ["ogre", "warchief"],
+      "source": { "book": "Monster Manual 2024", "page": 112 }
+    },
+    {
+      "name": "Owlbear",
+      "cr": 3,
+      "xp": 700,
+      "habitat": ["forests", "caves"],
+      "type": "beast",
+      "group": "solitary_hunters",
+      "associations": [],
+      "source": { "book": "Monster Manual 2024", "page": 220 }
+    },
+    {
+      "name": "Young Green Dragon",
+      "cr": 8,
+      "xp": 3900,
+      "habitat": ["forests", "swamps"],
+      "type": "dragon",
+      "group": "chromatic_dragons",
+      "associations": ["kobolds", "lizardfolk"],
+      "source": { "book": "Monster Manual 2024", "page": 105 }
+    },
+    {
+      "name": "Ancient Red Dragon",
+      "cr": 24,
+      "xp": 62000,
+      "habitat": ["mountains", "volcanic_caves"],
+      "type": "dragon",
+      "group": "chromatic_dragons",
+      "associations": ["cultists", "fire_giants"],
+      "source": { "book": "Monster Manual 2024", "page": 150 }
+    }
+  ]
+}

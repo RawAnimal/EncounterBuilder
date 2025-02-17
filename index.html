@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Encounter Builder</title>
+    <link rel="stylesheet" href="style/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css"
+    />
+    <style>
+      /* Keep Male & Female buttons consistent */
+      #toggle-male,
+      #toggle-female {
+        border-color: #6c757d; /* Keep border gray */
+      }
+      /* Ensure equal panel height */
+      .equal-height {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+      }
+      /* Scrollable Creature List */
+      .scrollable-list {
+        max-height: 400px;
+        overflow-y: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container mt-4">
+      <h1 class="mb-3">D&D Encounter Builder</h1>
+
+      <div class="row">
+        <!-- Party Panel -->
+        <div class="col-md-6">
+          <div class="card p-4 mb-4 equal-height">
+            <section id="party-settings">
+              <h2>Party Setup</h2>
+              <div class="mb-3">
+                <label for="character-name" class="form-label"
+                  >Character Name:</label
+                >
+                <div class="input-group">
+                  <input
+                    type="text"
+                    id="character-name"
+                    class="form-control"
+                    placeholder="Enter name"
+                  />
+                  <button id="regenerate-name" class="btn btn-secondary">
+                    <i class="bi bi-arrow-clockwise"></i>
+                  </button>
+                  <button id="toggle-male" class="btn btn-secondary">
+                    <i class="bi bi-gender-male"></i>
+                  </button>
+                  <button id="toggle-female" class="btn btn-secondary">
+                    <i class="bi bi-gender-female"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="character-class" class="form-label">Class:</label>
+                <select id="character-class" class="form-select"></select>
+              </div>
+              <div class="mb-3">
+                <label for="character-level" class="form-label">Level:</label>
+                <select id="character-level" class="form-select"></select>
+              </div>
+              <button id="add-character" class="btn btn-primary w-100">
+                Add Character
+              </button>
+            </section>
+          </div>
+        </div>
+
+        <!-- Creatures Panel -->
+        <div class="col-md-6">
+          <div class="card p-4 mb-4 equal-height">
+            <section id="creature-selection">
+              <h2>Creature Selection</h2>
+              <div id="creature-list" class="list-group scrollable-list"></div>
+            </section>
+          </div>
+        </div>
+      </div>
+
+      <!-- Encounter Details Panel -->
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card p-4">
+            <section id="encounter-summary">
+              <h2>Encounter Summary</h2>
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Level</th>
+                    <th>Class</th>
+                    <th>Remove</th>
+                  </tr>
+                </thead>
+                <tbody id="character-table-body"></tbody>
+              </table>
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="script/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
