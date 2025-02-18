@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td>${character.name}</td>
                 <td>Level ${character.level}</td>
                 <td>${character.characterClass}</td>
-                <td><button class="btn btn-danger btn-sm remove-character" data-index="${index}">
+                <td class="text-end"><button class="btn btn-danger btn-sm remove-character" data-index="${index}">
                     <i class="bi bi-trash"></i>
                 </button></td>
             `;
