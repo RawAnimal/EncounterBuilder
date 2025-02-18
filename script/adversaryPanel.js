@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const adversarySearch = document.getElementById('adversary-search');
   const crFilter = document.getElementById('cr-filter');
   const habitatFilter = document.getElementById('habitat-filter');
+  const typeFilter = document.getElementById('type-filter');
 
   let adversaries = [];
 
@@ -32,6 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
       adversaries = data.creatures;
       populateCRFilter();
       populateHabitatFilter();
+      populateTypeFilter();
       displayAdversaries();
     } catch (error) {
       console.error('Error loading adversaries:', error);
@@ -68,7 +70,21 @@ document.addEventListener('DOMContentLoaded', () => {
       option.textContent = habitat
         .replace(/_/g, ' ')
         .replace(/\b\w/g, (c) => c.toUpperCase());
+
       habitatFilter.appendChild(option);
+    });
+  }
+
+  // Function to populate Type filter dropdown
+  function populateTypeFilter() {
+    const uniqueTypes = [...new Set(adversaries.map((a) => a.type))].sort();
+
+    typeFilter.innerHTML = '<option value="">All Types</option>';
+    uniqueTypes.forEach((type) => {
+      const option = document.createElement('option');
+      option.value = type;
+      option.textContent = type.charAt(0).toUpperCase() + type.slice(1);
+      typeFilter.appendChild(option);
     });
   }
 
@@ -99,7 +115,8 @@ document.addEventListener('DOMContentLoaded', () => {
           adversary.name.toLowerCase().includes(filter.toLowerCase()) &&
           (selectedCR === '' || formatCR(adversary.cr) === selectedCR) &&
           (selectedHabitat === '' ||
-            adversary.habitat.includes(selectedHabitat))
+            adversary.habitat.includes(selectedHabitat)) &&
+          (typeFilter.value === '' || adversary.type === typeFilter.value)
       )
       .forEach((adversary) => {
         const row = document.createElement('tr');
@@ -129,6 +146,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // CR Filter event listener
   crFilter.addEventListener('change', () => {
+    displayAdversaries(adversarySearch.value);
+  });
+
+  // Type Filter event listener
+  typeFilter.addEventListener('change', () => {
     displayAdversaries(adversarySearch.value);
   });
 
