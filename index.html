@@ -84,20 +84,29 @@
           <div class="card p-4 mb-4 equal-height">
             <section id="adversary-selection">
               <h2>Adversaries</h2>
-              <!-- Filter Button Group -->
-              <div class="btn-group w-100 mb-2" role="group">
-                <button id="filter-cr" class="btn btn-secondary">CR</button>
-                <button id="filter-habitat" class="btn btn-secondary">
-                  Habitat
-                </button>
-                <button id="filter-type" class="btn btn-secondary">
-                  Type
-                </button>
-                <button id="filter-group" class="btn btn-secondary">
-                  Group
-                </button>
-                <button id="clear-filters" class="btn btn-danger">
-                  <i class="bi bi-x-circle"></i> Clear
+              <!-- Filter Button Group with Search Bar Inside -->
+              <div class="input-group mb-2" style="gap: 5px">
+                <div class="btn-group" role="group">
+                  <button id="filter-cr" class="btn btn-secondary">CR</button>
+                  <button id="filter-habitat" class="btn btn-secondary">
+                    Habitat
+                  </button>
+                  <button id="filter-type" class="btn btn-secondary">
+                    Type
+                  </button>
+                  <button id="filter-group" class="btn btn-secondary">
+                    Group
+                  </button>
+                </div>
+                <input
+                  type="text"
+                  id="adversary-search"
+                  class="form-control form-control-sm rounded"
+                  placeholder="Search Adversaries..."
+                />
+                <button id="clear-filters" class="btn btn-danger rounded">
+                  <i class="bi bi-x-circle"></i>
+                  <!-- Icon Only -->
                 </button>
               </div>
 
@@ -120,14 +129,6 @@
                   class="form-select form-select-sm d-none"
                 ></select>
               </div>
-
-              <!-- Search Bar -->
-              <input
-                type="text"
-                id="adversary-search"
-                class="form-control form-control-sm"
-                placeholder="Search Adversaries..."
-              />
 
               <div
                 id="adversary-list"

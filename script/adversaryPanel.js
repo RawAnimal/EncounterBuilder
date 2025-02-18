@@ -185,11 +185,14 @@ document.addEventListener('DOMContentLoaded', () => {
     groupFilter.value = '';
     adversarySearch.value = '';
 
-    // Reset button group colors
+    // Reset button group colors & hide dropdowns
     document.querySelectorAll('.btn-group button').forEach((btn) => {
       btn.classList.remove('btn-primary');
       btn.classList.add('btn-secondary');
     });
+    document
+      .querySelectorAll('#filter-dropdowns select')
+      .forEach((select) => select.classList.add('d-none'));
 
     displayAdversaries();
   });
