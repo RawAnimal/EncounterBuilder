@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const crFilter = document.getElementById('cr-filter');
   const habitatFilter = document.getElementById('habitat-filter');
   const typeFilter = document.getElementById('type-filter');
+  const groupFilter = document.getElementById('group-filter');
 
   let adversaries = [];
 
@@ -34,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
       populateCRFilter();
       populateHabitatFilter();
       populateTypeFilter();
+      populateGroupFilter();
       displayAdversaries();
     } catch (error) {
       console.error('Error loading adversaries:', error);
@@ -67,10 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
     uniqueHabitats.forEach((habitat) => {
       const option = document.createElement('option');
       option.value = habitat;
-      option.textContent = habitat
-        .replace(/_/g, ' ')
-        .replace(/\b\w/g, (c) => c.toUpperCase());
-
+      option.textContent = habitat.charAt(0).toUpperCase() + habitat.slice(1);
       habitatFilter.appendChild(option);
     });
   }
@@ -85,6 +84,20 @@ document.addEventListener('DOMContentLoaded', () => {
       option.value = type;
       option.textContent = type.charAt(0).toUpperCase() + type.slice(1);
       typeFilter.appendChild(option);
+    });
+  }
+
+  // Function to populate Group filter dropdown
+  function populateGroupFilter() {
+    const uniqueGroups = [...new Set(adversaries.map((a) => a.group))].sort();
+
+    groupFilter.innerHTML = '<option value="">All Groups</option>';
+    uniqueGroups.forEach((group) => {
+      const option = document.createElement('option');
+      option.value = group;
+      option.textContent =
+        group.charAt(0).toUpperCase() + group.slice(1).replace(/_/g, ' ');
+      groupFilter.appendChild(option);
     });
   }
 
@@ -116,7 +129,8 @@ document.addEventListener('DOMContentLoaded', () => {
           (selectedCR === '' || formatCR(adversary.cr) === selectedCR) &&
           (selectedHabitat === '' ||
             adversary.habitat.includes(selectedHabitat)) &&
-          (typeFilter.value === '' || adversary.type === typeFilter.value)
+          (typeFilter.value === '' || adversary.type === typeFilter.value) &&
+          (groupFilter.value === '' || adversary.group === groupFilter.value)
       )
       .forEach((adversary) => {
         const row = document.createElement('tr');
@@ -151,6 +165,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Type Filter event listener
   typeFilter.addEventListener('change', () => {
+    displayAdversaries(adversarySearch.value);
+  });
+
+  // Group Filter event listener
+  groupFilter.addEventListener('change', () => {
     displayAdversaries(adversarySearch.value);
   });
 
