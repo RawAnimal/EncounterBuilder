@@ -42,15 +42,13 @@
             <section id="party-settings">
               <h2>Party</h2>
               <div class="mb-3">
-                <label for="character-name" class="form-label"
-                  >Character Name:</label
-                >
-                <div class="input-group">
+                <div class="input-group mb-3">
+                  <span class="input-group-text">Name:</span>
                   <input
                     type="text"
                     id="character-name"
                     class="form-control"
-                    placeholder="Enter name"
+                    placeholder="Enter Name"
                   />
                   <button id="regenerate-name" class="btn btn-secondary">
                     <i class="bi bi-arrow-clockwise"></i>
@@ -64,15 +62,19 @@
                 </div>
               </div>
               <div class="mb-3">
-                <label for="character-class" class="form-label">Class:</label>
-                <select id="character-class" class="form-select"></select>
+                <div class="input-group mb-3">
+                  <span class="input-group-text">Class:</span>
+                  <select id="character-class" class="form-select"></select>
+                </div>
               </div>
               <div class="mb-3">
-                <label for="character-level" class="form-label">Level:</label>
-                <select id="character-level" class="form-select"></select>
+                <div class="input-group mb-3">
+                  <span class="input-group-text">Level:</span>
+                  <select id="character-level" class="form-select"></select>
+                </div>
               </div>
               <button id="add-character" class="btn btn-primary w-100">
-                Add Character
+                Add to Party of Good Guys
               </button>
             </section>
           </div>
