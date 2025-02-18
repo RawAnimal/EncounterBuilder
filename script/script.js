@@ -30,6 +30,47 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // Function to toggle gender filter buttons
+  function toggleGenderButton(button, gender) {
+    if (gender === 'male') {
+      useMaleNames = !useMaleNames;
+      useFemaleNames = false;
+      toggleMaleButton.classList.toggle('btn-primary', useMaleNames);
+      toggleMaleButton.classList.toggle('btn-secondary', !useMaleNames);
+      toggleFemaleButton.classList.remove('btn-primary');
+      toggleFemaleButton.classList.add('btn-secondary');
+    } else {
+      useFemaleNames = !useFemaleNames;
+      useMaleNames = false;
+      toggleFemaleButton.classList.toggle('btn-primary', useFemaleNames);
+      toggleFemaleButton.classList.toggle('btn-secondary', !useFemaleNames);
+      toggleMaleButton.classList.remove('btn-primary');
+      toggleMaleButton.classList.add('btn-secondary');
+    }
+    setDefaultCharacterName();
+  }
+
+  // Add event listeners for gender selection
+  toggleMaleButton.addEventListener('click', () =>
+    toggleGenderButton(toggleMaleButton, 'male')
+  );
+  toggleFemaleButton.addEventListener('click', () =>
+    toggleGenderButton(toggleFemaleButton, 'female')
+  );
+
+  // Handle manual name input
+  characterNameInput.addEventListener('focus', () => {
+    characterNameInput.value = '';
+    userModifiedName = true;
+  });
+
+  characterNameInput.addEventListener('blur', () => {
+    if (characterNameInput.value.trim() === '') {
+      userModifiedName = false;
+      setDefaultCharacterName();
+    }
+  });
+
   // Load creatures from JSON file
   async function loadCreatures() {
     try {
@@ -77,6 +118,12 @@ document.addEventListener('DOMContentLoaded', () => {
       characterNameInput.value = generateRandomName();
     }
   }
+
+  // Add event listener to regenerate name
+  regenerateNameButton.addEventListener('click', () => {
+    userModifiedName = false;
+    setDefaultCharacterName();
+  });
 
   // Load classes from JSON file
   async function loadClasses() {
