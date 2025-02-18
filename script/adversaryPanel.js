@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const adversaryList = document.getElementById('adversary-list');
   const adversarySearch = document.getElementById('adversary-search');
   const crFilter = document.getElementById('cr-filter');
+  const habitatFilter = document.getElementById('habitat-filter');
 
   let adversaries = [];
 
@@ -30,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       adversaries = data.creatures;
       populateCRFilter();
+      populateHabitatFilter();
       displayAdversaries();
     } catch (error) {
       console.error('Error loading adversaries:', error);
@@ -53,10 +55,28 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Function to populate Habitat filter dropdown
+  function populateHabitatFilter() {
+    const uniqueHabitats = [
+      ...new Set(adversaries.flatMap((a) => a.habitat)),
+    ].sort();
+
+    habitatFilter.innerHTML = '<option value="">All Habitats</option>';
+    uniqueHabitats.forEach((habitat) => {
+      const option = document.createElement('option');
+      option.value = habitat;
+      option.textContent = habitat
+        .replace(/_/g, ' ')
+        .replace(/\b\w/g, (c) => c.toUpperCase());
+      habitatFilter.appendChild(option);
+    });
+  }
+
   // Function to display adversaries in a table with a fixed height
   function displayAdversaries(filter = '') {
     adversaryList.innerHTML = '';
     const selectedCR = crFilter.value;
+    const selectedHabitat = habitatFilter.value;
 
     const table = document.createElement('table');
     table.classList.add('table', 'table-striped', 'table-bordered');
@@ -77,7 +97,9 @@ document.addEventListener('DOMContentLoaded', () => {
       .filter(
         (adversary) =>
           adversary.name.toLowerCase().includes(filter.toLowerCase()) &&
-          (selectedCR === '' || formatCR(adversary.cr) === selectedCR)
+          (selectedCR === '' || formatCR(adversary.cr) === selectedCR) &&
+          (selectedHabitat === '' ||
+            adversary.habitat.includes(selectedHabitat))
       )
       .forEach((adversary) => {
         const row = document.createElement('tr');
@@ -107,6 +129,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // CR Filter event listener
   crFilter.addEventListener('change', () => {
+    displayAdversaries(adversarySearch.value);
+  });
+
+  // Habitat Filter event listener
+  habitatFilter.addEventListener('change', () => {
     displayAdversaries(adversarySearch.value);
   });
 
