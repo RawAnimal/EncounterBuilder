@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   const adversaryList = document.getElementById('adversary-list');
   const adversarySearch = document.getElementById('adversary-search');
+  const crFilter = document.getElementById('cr-filter');
 
   let adversaries = [];
 
@@ -11,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
       0.25: '1/4',
       0.5: '1/2',
     };
-    return crMap[cr] || cr;
+    return crMap[cr] || cr.toString(); // Convert to string for proper comparison
   }
 
   // Load adversaries from adversaries.json
@@ -28,15 +29,34 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       adversaries = data.creatures;
+      populateCRFilter();
       displayAdversaries();
     } catch (error) {
       console.error('Error loading adversaries:', error);
     }
   }
 
+  // Function to populate CR filter dropdown
+  function populateCRFilter() {
+    const uniqueCRs = [
+      ...new Set(adversaries.map((a) => formatCR(a.cr))),
+    ].sort((a, b) => {
+      return parseFloat(a) - parseFloat(b);
+    });
+
+    crFilter.innerHTML = '<option value="">All CRs</option>';
+    uniqueCRs.forEach((cr) => {
+      const option = document.createElement('option');
+      option.value = cr;
+      option.textContent = `CR ${cr}`;
+      crFilter.appendChild(option);
+    });
+  }
+
   // Function to display adversaries in a table with a fixed height
   function displayAdversaries(filter = '') {
     adversaryList.innerHTML = '';
+    const selectedCR = crFilter.value;
 
     const table = document.createElement('table');
     table.classList.add('table', 'table-striped', 'table-bordered');
@@ -54,8 +74,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const tbody = document.createElement('tbody');
     adversaries
-      .filter((adversary) =>
-        adversary.name.toLowerCase().includes(filter.toLowerCase())
+      .filter(
+        (adversary) =>
+          adversary.name.toLowerCase().includes(filter.toLowerCase()) &&
+          (selectedCR === '' || formatCR(adversary.cr) === selectedCR)
       )
       .forEach((adversary) => {
         const row = document.createElement('tr');
@@ -81,6 +103,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // Search functionality for adversaries
   adversarySearch.addEventListener('input', (event) => {
     displayAdversaries(event.target.value);
+  });
+
+  // CR Filter event listener
+  crFilter.addEventListener('change', () => {
+    displayAdversaries(adversarySearch.value);
   });
 
   // Limit height of the adversary panel and make it scrollable
