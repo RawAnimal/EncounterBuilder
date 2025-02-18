@@ -131,7 +131,10 @@
                 ></select>
               </div>
 
-              <div id="filter-badges" class="mb-2"></div>
+              <div
+                id="filter-badges"
+                class="d-flex flex-wrap gap-2 mt-2"
+              ></div>
 
               <div
                 id="adversary-list"
@@ -165,10 +168,20 @@
       </div>
     </div>
 
-    <script src="script/nameGenerator.js"></script>
-    <script src="script/partyPanel.js"></script>
-    <script src="script/adversaryPanel.js"></script>
-    <script src="script/script.js"></script>
+    <!-- Global Scripts (e.g., Bootstrap, jQuery, other dependencies) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="script/adversaryUI.js"></script>
+    <!-- Defines displayAdversaries -->
+    <script src="script/adversaryData.js"></script>
+    <!-- Calls displayAdversaries -->
+    <script src="script/adversaryFilters.js"></script>
+    <!-- Manages filters -->
+
+    <!-- Any other scripts that depend on adversary data/UI -->
+    <script src="script/nameGenerator.js"></script>
+    <!-- Example: Name generation -->
+    <script src="script/partyPanel.js"></script>
+    <!-- Example: Party-related logic -->
   </body>
 </html>
