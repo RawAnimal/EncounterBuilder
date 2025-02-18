@@ -1,3 +1,5 @@
+// Version: 1.0
+
 document.addEventListener('DOMContentLoaded', () => {
   const adversaryList = document.getElementById('adversary-list');
   const adversarySearch = document.getElementById('adversary-search');
