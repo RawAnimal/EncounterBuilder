@@ -1,4 +1,4 @@
-// Version: 1.1 | adversaryData.js
+// Version: 1.2 | adversaryData.js
 // Handles: Fetching adversary data, Formatting CR values, Populating dropdowns
 
 let adversaries = [];
@@ -47,11 +47,19 @@ function populateDropdown(dropdown, values, defaultText) {
 }
 
 function populateFilters() {
+  function parseCR(cr) {
+    const crMap = { '1/8': 0.125, '1/4': 0.25, '1/2': 0.5 };
+    return crMap[cr] || parseFloat(cr);
+  }
+
   populateDropdown(
     crFilter,
-    [...new Set(adversaries.map((a) => formatCR(a.cr)))].sort(),
+    [...new Set(adversaries.map((a) => formatCR(a.cr)))].sort(
+      (a, b) => parseCR(a) - parseCR(b)
+    ),
     'All CRs'
   );
+
   populateDropdown(
     habitatFilter,
     [...new Set(adversaries.flatMap((a) => a.habitat))].sort(),
