@@ -5,18 +5,60 @@ document.addEventListener('DOMContentLoaded', () => {
   const habitatFilter = document.getElementById('habitat-filter');
   const typeFilter = document.getElementById('type-filter');
   const groupFilter = document.getElementById('group-filter');
+  const clearFiltersButton = document.getElementById('clear-filters');
+
+  const filterButtons = {
+    'filter-cr': crFilter,
+    'filter-habitat': habitatFilter,
+    'filter-type': typeFilter,
+    'filter-group': groupFilter,
+  };
 
   let adversaries = [];
 
-  // Function to convert decimal CR values to fractions
+  // Function to format CR values
   function formatCR(cr) {
-    const crMap = {
-      0.125: '1/8',
-      0.25: '1/4',
-      0.5: '1/2',
-    };
-    return crMap[cr] || cr.toString(); // Convert to string for proper comparison
+    const crMap = { 0.125: '1/8', 0.25: '1/4', 0.5: '1/2' };
+    return crMap[cr] || cr.toString();
   }
+
+  // Toggle filter dropdowns & button styles
+  function toggleFilter(selectedButtonId) {
+    Object.keys(filterButtons).forEach((buttonId) => {
+      const button = document.getElementById(buttonId);
+      const dropdown = filterButtons[buttonId];
+
+      if (buttonId === selectedButtonId) {
+        const isActive = button.classList.contains('btn-primary');
+
+        // Reset all buttons and dropdowns
+        document.querySelectorAll('.btn-group button').forEach((btn) => {
+          btn.classList.remove('btn-primary');
+          btn.classList.add('btn-secondary');
+        });
+        document
+          .querySelectorAll('#filter-dropdowns select')
+          .forEach((select) => select.classList.add('d-none'));
+
+        if (!isActive) {
+          button.classList.add('btn-primary');
+          button.classList.remove('btn-secondary');
+          dropdown.classList.remove('d-none');
+        }
+      } else {
+        button.classList.add('btn-secondary');
+        button.classList.remove('btn-primary');
+        dropdown.classList.add('d-none');
+      }
+    });
+  }
+
+  // Assign toggle functionality to filter buttons
+  Object.keys(filterButtons).forEach((buttonId) => {
+    document.getElementById(buttonId).addEventListener('click', () => {
+      toggleFilter(buttonId);
+    });
+  });
 
   // Load adversaries from adversaries.json
   async function loadAdversaries() {
@@ -26,7 +68,6 @@ document.addEventListener('DOMContentLoaded', () => {
         throw new Error(`HTTP error! Status: ${response.status}`);
       const data = await response.json();
 
-      // Ensure we're only using the "creatures" list
       if (!Array.isArray(data.creatures)) {
         throw new Error('Adversaries data is not an array');
       }
@@ -42,70 +83,46 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Function to populate CR filter dropdown
+  // Populate filters dynamically
+  function populateDropdown(dropdown, values, defaultText) {
+    dropdown.innerHTML = `<option value="">${defaultText}</option>`;
+    values.sort().forEach((value) => {
+      const option = document.createElement('option');
+      option.value = value;
+      option.textContent = value
+        .replace(/_/g, ' ')
+        .replace(/\b\w/g, (c) => c.toUpperCase());
+      dropdown.appendChild(option);
+    });
+  }
+
   function populateCRFilter() {
-    const uniqueCRs = [
-      ...new Set(adversaries.map((a) => formatCR(a.cr))),
-    ].sort((a, b) => {
-      return parseFloat(a) - parseFloat(b);
-    });
-
-    crFilter.innerHTML = '<option value="">All CRs</option>';
-    uniqueCRs.forEach((cr) => {
-      const option = document.createElement('option');
-      option.value = cr;
-      option.textContent = `CR ${cr}`;
-      crFilter.appendChild(option);
-    });
+    const uniqueCRs = [...new Set(adversaries.map((a) => formatCR(a.cr)))];
+    populateDropdown(crFilter, uniqueCRs, 'All CRs');
   }
 
-  // Function to populate Habitat filter dropdown
   function populateHabitatFilter() {
-    const uniqueHabitats = [
-      ...new Set(adversaries.flatMap((a) => a.habitat)),
-    ].sort();
-
-    habitatFilter.innerHTML = '<option value="">All Habitats</option>';
-    uniqueHabitats.forEach((habitat) => {
-      const option = document.createElement('option');
-      option.value = habitat;
-      option.textContent = habitat.charAt(0).toUpperCase() + habitat.slice(1);
-      habitatFilter.appendChild(option);
-    });
+    const uniqueHabitats = [...new Set(adversaries.flatMap((a) => a.habitat))];
+    populateDropdown(habitatFilter, uniqueHabitats, 'All Habitats');
   }
 
-  // Function to populate Type filter dropdown
   function populateTypeFilter() {
-    const uniqueTypes = [...new Set(adversaries.map((a) => a.type))].sort();
-
-    typeFilter.innerHTML = '<option value="">All Types</option>';
-    uniqueTypes.forEach((type) => {
-      const option = document.createElement('option');
-      option.value = type;
-      option.textContent = type.charAt(0).toUpperCase() + type.slice(1);
-      typeFilter.appendChild(option);
-    });
+    const uniqueTypes = [...new Set(adversaries.map((a) => a.type))];
+    populateDropdown(typeFilter, uniqueTypes, 'All Types');
   }
 
-  // Function to populate Group filter dropdown
   function populateGroupFilter() {
-    const uniqueGroups = [...new Set(adversaries.map((a) => a.group))].sort();
-
-    groupFilter.innerHTML = '<option value="">All Groups</option>';
-    uniqueGroups.forEach((group) => {
-      const option = document.createElement('option');
-      option.value = group;
-      option.textContent =
-        group.charAt(0).toUpperCase() + group.slice(1).replace(/_/g, ' ');
-      groupFilter.appendChild(option);
-    });
+    const uniqueGroups = [...new Set(adversaries.map((a) => a.group))];
+    populateDropdown(groupFilter, uniqueGroups, 'All Groups');
   }
 
-  // Function to display adversaries in a table with a fixed height
+  // Function to display adversaries
   function displayAdversaries(filter = '') {
     adversaryList.innerHTML = '';
     const selectedCR = crFilter.value;
     const selectedHabitat = habitatFilter.value;
+    const selectedType = typeFilter.value;
+    const selectedGroup = groupFilter.value;
 
     const table = document.createElement('table');
     table.classList.add('table', 'table-striped', 'table-bordered');
@@ -129,8 +146,8 @@ document.addEventListener('DOMContentLoaded', () => {
           (selectedCR === '' || formatCR(adversary.cr) === selectedCR) &&
           (selectedHabitat === '' ||
             adversary.habitat.includes(selectedHabitat)) &&
-          (typeFilter.value === '' || adversary.type === typeFilter.value) &&
-          (groupFilter.value === '' || adversary.group === groupFilter.value)
+          (selectedType === '' || adversary.type === selectedType) &&
+          (selectedGroup === '' || adversary.group === selectedGroup)
       )
       .forEach((adversary) => {
         const row = document.createElement('tr');
@@ -138,13 +155,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td>${adversary.name}</td>
                     <td>${formatCR(adversary.cr)}</td>
                     <td>${adversary.xp}</td>
-                    <td>
-                        <button class="btn btn-primary btn-sm add-adversary" data-name="${
-                          adversary.name
-                        }">
-                            Add
-                        </button>
-                    </td>
+                    <td><button class="btn btn-primary btn-sm add-adversary" data-name="${
+                      adversary.name
+                    }">Add</button></td>
                 `;
         tbody.appendChild(row);
       });
@@ -153,35 +166,34 @@ document.addEventListener('DOMContentLoaded', () => {
     adversaryList.appendChild(table);
   }
 
-  // Search functionality for adversaries
+  // Apply filtering when a selection is made
+  [crFilter, habitatFilter, typeFilter, groupFilter].forEach((filter) => {
+    filter.addEventListener('change', () =>
+      displayAdversaries(adversarySearch.value)
+    );
+  });
+
   adversarySearch.addEventListener('input', (event) => {
     displayAdversaries(event.target.value);
   });
 
-  // CR Filter event listener
-  crFilter.addEventListener('change', () => {
-    displayAdversaries(adversarySearch.value);
+  // Clear Filters event listener
+  clearFiltersButton.addEventListener('click', () => {
+    crFilter.value = '';
+    habitatFilter.value = '';
+    typeFilter.value = '';
+    groupFilter.value = '';
+    adversarySearch.value = '';
+
+    // Reset button group colors
+    document.querySelectorAll('.btn-group button').forEach((btn) => {
+      btn.classList.remove('btn-primary');
+      btn.classList.add('btn-secondary');
+    });
+
+    displayAdversaries();
   });
 
-  // Type Filter event listener
-  typeFilter.addEventListener('change', () => {
-    displayAdversaries(adversarySearch.value);
-  });
-
-  // Group Filter event listener
-  groupFilter.addEventListener('change', () => {
-    displayAdversaries(adversarySearch.value);
-  });
-
-  // Habitat Filter event listener
-  habitatFilter.addEventListener('change', () => {
-    displayAdversaries(adversarySearch.value);
-  });
-
-  // Limit height of the adversary panel and make it scrollable
-  adversaryList.style.maxHeight = '400px';
-  adversaryList.style.overflowY = 'auto';
-
-  // Load adversaries automatically on page load
+  // Load adversaries automatically
   loadAdversaries();
 });
