@@ -1,4 +1,4 @@
-// Version: 1.0 | adversaryUI.js
+// Version: 1.1 | adversaryUI.js
 // Handles: Managing dropdown visibility, Rendering the adversary table
 
 const adversaryList = document.getElementById('adversary-list');
@@ -41,7 +41,7 @@ function displayAdversaries(filter = '') {
                       <td>${adversary.name}</td>
                       <td>${formatCR(adversary.cr)}</td>
                       <td>${adversary.xp}</td>
-                      <td><button class="btn btn-primary btn-sm add-adversary" data-name="${
+                      <td class="text-end"><button class="btn btn-primary btn-sm add-adversary" data-name="${
                         adversary.name
                       }">Add</button></td>
                   </tr>
