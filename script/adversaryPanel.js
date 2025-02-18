@@ -4,6 +4,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let adversaries = [];
 
+  // Function to convert decimal CR values to fractions
+  function formatCR(cr) {
+    const crMap = {
+      0.125: '1/8',
+      0.25: '1/4',
+      0.5: '1/2',
+    };
+    return crMap[cr] || cr;
+  }
+
   // Load adversaries from adversaries.json
   async function loadAdversaries() {
     try {
@@ -51,10 +61,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const row = document.createElement('tr');
         row.innerHTML = `
                     <td>${adversary.name}</td>
-                    <td>${adversary.cr}</td>
+                    <td>${formatCR(adversary.cr)}</td>
                     <td>${adversary.xp}</td>
                     <td>
-                        <button class="btn btn-primary btn-sm add-adversary" data-name="${adversary.name}">
+                        <button class="btn btn-primary btn-sm add-adversary" data-name="${
+                          adversary.name
+                        }">
                             Add
                         </button>
                     </td>
