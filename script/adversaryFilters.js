@@ -1,4 +1,4 @@
-// Version: 1.0 | adversaryFilters.js
+// Version: 1.1 | adversaryFilters.js
 // Handles: Filtering adversaries, Managing filter badges, Handling the button group UI
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -35,7 +35,10 @@ document.addEventListener('DOMContentLoaded', () => {
         badge.className =
           'badge bg-primary text-white d-flex align-items-center p-2';
         badge.style.whiteSpace = 'nowrap';
-        badge.innerHTML = `${label}: ${value} <button type="button" class="btn-close btn-close-white ms-2" aria-label="Close" data-filter="${label}"></button>`;
+        badge.innerHTML = `${label}: ${formatText(
+          value
+        )} <button type="button" class="btn-close btn-close-white ms-2" aria-label="Close" data-filter="${label}"></button>`;
+
         filterBadgesContainer.appendChild(badge);
       }
     });

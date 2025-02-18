@@ -1,4 +1,4 @@
-// Version: 1.0 | adversaryData.js
+// Version: 1.1 | adversaryData.js
 // Handles: Fetching adversary data, Formatting CR values, Populating dropdowns
 
 let adversaries = [];
@@ -30,13 +30,18 @@ async function loadAdversaries() {
   }
 }
 
+function formatText(value) {
+  return value
+    .replace(/_/g, ' ') // Replace underscores with spaces
+    .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitalize each word
+}
+
 function populateDropdown(dropdown, values, defaultText) {
   dropdown.innerHTML = `<option value="">${defaultText}</option>`;
   values.forEach((value) => {
     const option = document.createElement('option');
     option.value = value;
-    option.textContent =
-      value.charAt(0).toUpperCase() + value.slice(1).replace(/_/g, ' ');
+    option.textContent = formatText(value);
     dropdown.appendChild(option);
   });
 }
