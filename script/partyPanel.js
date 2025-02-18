@@ -6,6 +6,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let characters = [];
 
+  // Function to show toast notification
+  function showToast(message, type = 'success') {
+    const toastElement = document.getElementById('notification-toast');
+    const toastBody = document.getElementById('toast-message');
+
+    // Update message and background color based on type
+    toastBody.textContent = message;
+    toastElement.className = `toast align-items-center text-white bg-${type} border-0`;
+
+    // Show the toast using Bootstrap's Toast class
+    const toast = new bootstrap.Toast(toastElement);
+    toast.show();
+  }
+
   // Load classes from JSON file
   async function loadClasses() {
     try {
@@ -56,6 +70,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const character = { name, characterClass, level };
     characters.push(character);
     updatePartyTable();
+
+    // Show success toast notification
+    showToast(`${name} has been added to the party!`);
   }
 
   // Function to update the party table
@@ -79,8 +96,15 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.remove-character').forEach((button) => {
       button.addEventListener('click', (event) => {
         const index = event.target.closest('button').dataset.index;
+        const removedCharacter = characters[index];
         characters.splice(index, 1);
         updatePartyTable();
+
+        // Show toast notification for character removal
+        showToast(
+          `${removedCharacter.name} has been removed from the party!`,
+          'danger'
+        );
       });
     });
   }
