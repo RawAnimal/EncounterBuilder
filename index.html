@@ -82,9 +82,18 @@
         <!-- Creatures Panel -->
         <div class="col-md-6">
           <div class="card p-4 mb-4 equal-height">
-            <section id="creature-selection">
-              <h2>Creature Selection</h2>
-              <div id="creature-list" class="list-group scrollable-list"></div>
+            <section id="adversary-selection">
+              <h2>Adversary Selection</h2>
+              <input
+                type="text"
+                id="adversary-search"
+                class="form-control"
+                placeholder="Search Adversaries..."
+              />
+              <div
+                id="adversary-list"
+                class="list-group scrollable-list"
+              ></div>
             </section>
           </div>
         </div>
@@ -113,7 +122,9 @@
       </div>
     </div>
 
-    <script src="script/script.js"></script>
+    <script src="script/nameGenerator.js" defer></script>
+    <script src="script/script.js" defer></script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

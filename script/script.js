@@ -1,134 +1,71 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const characterNameInput = document.getElementById('character-name');
-  const regenerateNameButton = document.getElementById('regenerate-name');
-  const toggleMaleButton = document.getElementById('toggle-male');
-  const toggleFemaleButton = document.getElementById('toggle-female');
   const characterClassInput = document.getElementById('character-class');
   const characterLevelInput = document.getElementById('character-level');
   const addCharacterButton = document.getElementById('add-character');
   const characterTableBody = document.getElementById('character-table-body');
-  const creatureList = document.getElementById('creature-list');
+  const adversaryList = document.getElementById('adversary-list');
+  const adversarySearch = document.getElementById('adversary-search');
 
-  let firstNames = [];
-  let lastNames = [];
   let characters = [];
-  let creatures = [];
-  let userModifiedName = false;
-  let useMaleNames = false;
-  let useFemaleNames = false;
+  let adversaries = [];
 
-  // Load random names from JSON file
-  async function loadRandomNames() {
+  // Ensure elements exist before executing functions
+  if (
+    !characterClassInput ||
+    !characterLevelInput ||
+    !adversaryList ||
+    !adversarySearch
+  ) {
+    console.error('One or more required elements are missing from the DOM.');
+    return;
+  }
+
+  // Load adversaries from adversaries.json
+  async function loadAdversaries() {
     try {
-      const response = await fetch('data/random_names.json');
+      const response = await fetch('data/adversaries.json');
+      if (!response.ok)
+        throw new Error(`HTTP error! Status: ${response.status}`);
       const data = await response.json();
-      firstNames = data.firstNames;
-      lastNames = data.lastNames;
-      setDefaultCharacterName();
+
+      // Ensure we're only using the "creatures" list
+      if (!Array.isArray(data.creatures)) {
+        throw new Error('Adversaries data is not an array');
+      }
+
+      adversaries = data.creatures;
+      displayAdversaries();
     } catch (error) {
-      console.error('Error loading random names:', error);
+      console.error('Error loading adversaries:', error);
     }
   }
 
-  // Function to toggle gender filter buttons
-  function toggleGenderButton(button, gender) {
-    if (gender === 'male') {
-      useMaleNames = !useMaleNames;
-      useFemaleNames = false;
-      toggleMaleButton.classList.toggle('btn-primary', useMaleNames);
-      toggleMaleButton.classList.toggle('btn-secondary', !useMaleNames);
-      toggleFemaleButton.classList.remove('btn-primary');
-      toggleFemaleButton.classList.add('btn-secondary');
-    } else {
-      useFemaleNames = !useFemaleNames;
-      useMaleNames = false;
-      toggleFemaleButton.classList.toggle('btn-primary', useFemaleNames);
-      toggleFemaleButton.classList.toggle('btn-secondary', !useFemaleNames);
-      toggleMaleButton.classList.remove('btn-primary');
-      toggleMaleButton.classList.add('btn-secondary');
-    }
-    setDefaultCharacterName();
+  // Function to display adversaries in a scrollable list
+  function displayAdversaries(filter = '') {
+    adversaryList.innerHTML = '';
+    adversaries
+      .filter((adversary) =>
+        adversary.name.toLowerCase().includes(filter.toLowerCase())
+      )
+      .forEach((adversary) => {
+        const listItem = document.createElement('div');
+        listItem.classList.add('list-group-item');
+        listItem.textContent = `${adversary.name} (CR ${adversary.cr})`;
+        adversaryList.appendChild(listItem);
+      });
   }
 
-  // Add event listeners for gender selection
-  toggleMaleButton.addEventListener('click', () =>
-    toggleGenderButton(toggleMaleButton, 'male')
-  );
-  toggleFemaleButton.addEventListener('click', () =>
-    toggleGenderButton(toggleFemaleButton, 'female')
-  );
-
-  // Handle manual name input
-  characterNameInput.addEventListener('focus', () => {
-    characterNameInput.value = '';
-    userModifiedName = true;
-  });
-
-  characterNameInput.addEventListener('blur', () => {
-    if (characterNameInput.value.trim() === '') {
-      userModifiedName = false;
-      setDefaultCharacterName();
-    }
-  });
-
-  // Load creatures from JSON file
-  async function loadCreatures() {
-    try {
-      const response = await fetch('data/creatures.json');
-      creatures = await response.json();
-      displayCreatures();
-    } catch (error) {
-      console.error('Error loading creatures:', error);
-    }
-  }
-
-  // Function to display creatures in a scrollable list
-  function displayCreatures() {
-    creatureList.innerHTML = '';
-    creatures.forEach((creature) => {
-      const listItem = document.createElement('div');
-      listItem.classList.add('list-group-item');
-      listItem.textContent = `${creature.name} (CR ${creature.cr})`;
-      creatureList.appendChild(listItem);
-    });
-  }
-
-  // Load creatures automatically on page load
-  loadCreatures();
-
-  // Function to generate a random name
-  function generateRandomName() {
-    let availableNames = firstNames.filter(
-      (nameObj) =>
-        (useMaleNames && nameObj.category === 'male') ||
-        (useFemaleNames && nameObj.category === 'female') ||
-        (!useMaleNames && !useFemaleNames && nameObj.category === 'both')
-    );
-
-    if (availableNames.length === 0) return 'Unknown Adventurer';
-    const firstName =
-      availableNames[Math.floor(Math.random() * availableNames.length)].name;
-    const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
-    return `${firstName} ${lastName}`;
-  }
-
-  // Function to set a default character name
-  function setDefaultCharacterName() {
-    if (!userModifiedName) {
-      characterNameInput.value = generateRandomName();
-    }
-  }
-
-  // Add event listener to regenerate name
-  regenerateNameButton.addEventListener('click', () => {
-    userModifiedName = false;
-    setDefaultCharacterName();
+  // Search functionality for adversaries
+  adversarySearch.addEventListener('input', (event) => {
+    displayAdversaries(event.target.value);
   });
 
   // Load classes from JSON file
   async function loadClasses() {
     try {
-      const response = await fetch('data/classes.json');
+      const response = await fetch('data/classes.json'); // Ensure this file exists
+      if (!response.ok)
+        throw new Error(`HTTP error! Status: ${response.status}`);
       const data = await response.json();
       populateClassDropdown(data.classes);
     } catch (error) {
@@ -161,6 +98,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Initialize dropdowns and load data
   populateLevelDropdown();
-  loadRandomNames();
   loadClasses();
+  loadAdversaries();
 });
