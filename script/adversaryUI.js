@@ -4,9 +4,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   console.log('Initializing Adversary UI...');
   renderAdversaryList();
   populateCRFilter();
+  populateXPFilter(); // ✅ Ensure XP filter loads properly
   populateHabitatFilter();
   populateTypeFilter();
-  populateGroupFilter(); // ✅ Ensure Group filter loads too
+  populateGroupFilter();
 
   const filterButtons = document.querySelectorAll('.filter-btn');
   filterButtons.forEach((button) => {
@@ -26,7 +27,25 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 });
 
-// ✅ New Function: Populate the Group Dropdown
+// ✅ New Function: Populate the XP Range Inputs
+function populateXPFilter() {
+  const xpMinInput = document.getElementById('filter-xp-min');
+  const xpMaxInput = document.getElementById('filter-xp-max');
+  if (!xpMinInput || !xpMaxInput) return;
+
+  const { min, max } = getXPRange();
+
+  xpMinInput.value = min;
+  xpMaxInput.value = max;
+  xpMinInput.min = min;
+  xpMinInput.max = max;
+  xpMaxInput.min = min;
+  xpMaxInput.max = max;
+
+  console.log('XP filter populated:', { min, max });
+}
+
+// ✅ Existing Function: Populate the Group Dropdown
 function populateGroupFilter() {
   const groupSelect = document.getElementById('filter-group');
   if (!groupSelect) return;
@@ -50,7 +69,7 @@ function populateGroupFilter() {
   console.log('Group filter populated:', groups);
 }
 
-// ✅ Ensure Other Filters Remain Intact
+// ✅ Existing Function: Populate the Habitat Dropdown
 function populateHabitatFilter() {
   const habitatSelect = document.getElementById('filter-habitat');
   if (!habitatSelect) return;
@@ -74,6 +93,7 @@ function populateHabitatFilter() {
   console.log('Habitat filter populated:', habitats);
 }
 
+// ✅ Existing Function: Populate the Type Dropdown
 function populateTypeFilter() {
   const typeSelect = document.getElementById('filter-type');
   if (!typeSelect) return;
@@ -97,6 +117,7 @@ function populateTypeFilter() {
   console.log('Type filter populated:', types);
 }
 
+// ✅ Existing Function: Populate the CR Dropdown
 function populateCRFilter() {
   const crSelect = document.getElementById('filter-cr');
   if (!crSelect) return;

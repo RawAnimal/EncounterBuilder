@@ -14,6 +14,7 @@ async function loadAdversaries() {
     console.log('Adversaries loaded successfully:', adversaries);
 
     populateCRFilter();
+    populateXPFilter(); // ✅ Ensure XP filter loads after data
   } catch (error) {
     console.error('Error loading adversaries:', error);
   }
@@ -31,7 +32,7 @@ async function loadAdversaryMetadata() {
 
     populateHabitatFilter();
     populateTypeFilter();
-    populateGroupFilter(); // ✅ Populate Group filter after loading metadata
+    populateGroupFilter();
   } catch (error) {
     console.error('Error loading adversary metadata:', error);
   }
@@ -45,17 +46,29 @@ function getAdversaryMetadata() {
   return adversaryMetadata;
 }
 
-// ✅ New Function: Get Unique, Sorted Group Values with Formatted Display
+// ✅ New Function: Get XP Range (Min & Max)
+function getXPRange() {
+  if (!adversaries.length) return { min: 0, max: 0 };
+
+  // Extract XP values
+  const xpValues = adversaries.map((adv) => adv.xp);
+
+  // Get min and max XP
+  const minXP = Math.min(...xpValues);
+  const maxXP = Math.max(...xpValues);
+
+  return { min: minXP, max: maxXP };
+}
+
+// ✅ Function: Get Unique, Sorted Group Values with Formatted Display
 function getGroupList() {
   if (!adversaryMetadata.groups) return [];
 
-  // Extract and format group names
   const groupValues = adversaryMetadata.groups.map((group) => ({
     value: group,
     display: formatText(group),
   }));
 
-  // Sort alphabetically by display name
   return groupValues.sort((a, b) => a.display.localeCompare(b.display));
 }
 
