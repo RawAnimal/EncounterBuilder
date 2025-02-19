@@ -30,7 +30,8 @@ async function loadAdversaryMetadata() {
     console.log('Adversary metadata loaded successfully:', adversaryMetadata);
 
     populateHabitatFilter();
-    populateTypeFilter(); // ✅ Populate Type filter after loading metadata
+    populateTypeFilter();
+    populateGroupFilter(); // ✅ Populate Group filter after loading metadata
   } catch (error) {
     console.error('Error loading adversary metadata:', error);
   }
@@ -44,17 +45,29 @@ function getAdversaryMetadata() {
   return adversaryMetadata;
 }
 
-// ✅ New Function: Get Unique, Sorted Type Values with Formatted Display
+// ✅ New Function: Get Unique, Sorted Group Values with Formatted Display
+function getGroupList() {
+  if (!adversaryMetadata.groups) return [];
+
+  // Extract and format group names
+  const groupValues = adversaryMetadata.groups.map((group) => ({
+    value: group,
+    display: formatText(group),
+  }));
+
+  // Sort alphabetically by display name
+  return groupValues.sort((a, b) => a.display.localeCompare(b.display));
+}
+
+// ✅ Function: Get Unique, Sorted Type Values with Formatted Display
 function getTypeList() {
   if (!adversaryMetadata.types) return [];
 
-  // Extract and format type names
   const typeValues = adversaryMetadata.types.map((type) => ({
     value: type,
     display: formatText(type),
   }));
 
-  // Sort alphabetically by display name
   return typeValues.sort((a, b) => a.display.localeCompare(b.display));
 }
 
@@ -62,34 +75,27 @@ function getTypeList() {
 function getHabitatList() {
   if (!adversaryMetadata.habitats) return [];
 
-  // Extract and format habitat names
   const habitatValues = adversaryMetadata.habitats.map((habitat) => ({
     value: habitat,
     display: formatText(habitat),
   }));
 
-  // Sort alphabetically by display name
   return habitatValues.sort((a, b) => a.display.localeCompare(b.display));
 }
 
 // ✅ Helper Function: Convert Text (Capitalize & Remove Underscores)
 function formatText(str) {
-  return str
-    .replace(/_/g, ' ') // Replace underscores with spaces
-    .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitalize words
+  return str.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
 // ✅ Function: Get Unique, Sorted CR Values with Formatted Display
 function getUniqueCRValues() {
   if (!adversaries.length) return [];
 
-  // Extract all CR values from adversaries
   let crValues = adversaries.map((adv) => adv.cr);
 
-  // Remove duplicates and sort in ascending order
   crValues = [...new Set(crValues)].sort((a, b) => a - b);
 
-  // Convert decimal CR values to fraction display
   const formattedCRs = crValues.map((cr) => ({
     value: cr.toString(),
     display: formatCR(cr),
@@ -106,5 +112,5 @@ function formatCR(cr) {
     0.5: '1/2',
     0.75: '3/4',
   };
-  return fractionMap[cr] || cr.toString(); // Convert only if it matches, otherwise return as-is
+  return fractionMap[cr] || cr.toString();
 }
