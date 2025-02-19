@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let firstNames = [];
   let lastNames = [];
-  let userModifiedName = false;
   let useMaleNames = false;
   let useFemaleNames = false;
 
@@ -22,47 +21,6 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error('Error loading random names:', error);
     }
   }
-
-  // Function to toggle gender filter buttons
-  function toggleGenderButton(button, gender) {
-    if (gender === 'male') {
-      useMaleNames = !useMaleNames;
-      useFemaleNames = false;
-      toggleMaleButton.classList.toggle('btn-primary', useMaleNames);
-      toggleMaleButton.classList.toggle('btn-secondary', !useMaleNames);
-      toggleFemaleButton.classList.remove('btn-primary');
-      toggleFemaleButton.classList.add('btn-secondary');
-    } else {
-      useFemaleNames = !useFemaleNames;
-      useMaleNames = false;
-      toggleFemaleButton.classList.toggle('btn-primary', useFemaleNames);
-      toggleFemaleButton.classList.toggle('btn-secondary', !useFemaleNames);
-      toggleMaleButton.classList.remove('btn-primary');
-      toggleMaleButton.classList.add('btn-secondary');
-    }
-    setDefaultCharacterName();
-  }
-
-  // Add event listeners for gender selection
-  toggleMaleButton.addEventListener('click', () =>
-    toggleGenderButton(toggleMaleButton, 'male')
-  );
-  toggleFemaleButton.addEventListener('click', () =>
-    toggleGenderButton(toggleFemaleButton, 'female')
-  );
-
-  // Handle manual name input
-  characterNameInput.addEventListener('focus', () => {
-    characterNameInput.value = '';
-    userModifiedName = true;
-  });
-
-  characterNameInput.addEventListener('blur', () => {
-    if (characterNameInput.value.trim() === '') {
-      userModifiedName = false;
-      setDefaultCharacterName();
-    }
-  });
 
   // Function to generate a random name
   function generateRandomName() {
@@ -80,18 +38,37 @@ document.addEventListener('DOMContentLoaded', () => {
     return `${firstName} ${lastName}`;
   }
 
-  // Function to set a default character name
+  // Function to set a new default name (always overwrites existing name)
   function setDefaultCharacterName() {
-    if (!userModifiedName) {
-      characterNameInput.value = generateRandomName();
-    }
+    const newName = generateRandomName();
+    characterNameInput.value = newName;
+    console.log('New name set:', newName);
   }
 
-  // Add event listener to regenerate name
-  regenerateNameButton.addEventListener('click', () => {
-    userModifiedName = false;
+  // Attach function globally so other scripts can access it
+  window.setDefaultCharacterName = setDefaultCharacterName;
+
+  // Regenerate name when button is clicked
+  regenerateNameButton.addEventListener('click', setDefaultCharacterName);
+
+  // Toggle gender selection
+  function toggleGenderButton(button, gender) {
+    if (gender === 'male') {
+      useMaleNames = !useMaleNames;
+      useFemaleNames = false;
+    } else {
+      useFemaleNames = !useFemaleNames;
+      useMaleNames = false;
+    }
     setDefaultCharacterName();
-  });
+  }
+
+  toggleMaleButton.addEventListener('click', () =>
+    toggleGenderButton(toggleMaleButton, 'male')
+  );
+  toggleFemaleButton.addEventListener('click', () =>
+    toggleGenderButton(toggleFemaleButton, 'female')
+  );
 
   // Initialize name generation
   loadRandomNames();
