@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderAdversaryList();
   populateCRFilter(); // ✅ Populate the CR filter dropdown
   populateHabitatFilter(); // ✅ Populate the Habitat filter dropdown
+  populateTypeFilter(); // ✅ Populate the Type filter dropdown
 
   // Attach event listener for filter buttons
   const filterButtons = document.querySelectorAll('.filter-btn');
@@ -27,7 +28,35 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 });
 
-// ✅ New Function: Populate the Habitat Dropdown
+// ✅ New Function: Populate the Type Dropdown
+function populateTypeFilter() {
+  const typeSelect = document.getElementById('filter-type');
+  if (!typeSelect) return;
+
+  // Clear existing options
+  typeSelect.innerHTML = '';
+
+  // Get type list from adversaryData.js
+  const types = getTypeList();
+
+  // Add "All Types" option at the top
+  const allOption = document.createElement('option');
+  allOption.value = '';
+  allOption.textContent = 'All Types';
+  typeSelect.appendChild(allOption);
+
+  // Add each type as an option
+  types.forEach(({ value, display }) => {
+    const option = document.createElement('option');
+    option.value = value;
+    option.textContent = display;
+    typeSelect.appendChild(option);
+  });
+
+  console.log('Type filter populated:', types);
+}
+
+// ✅ Function to populate the Habitat dropdown
 function populateHabitatFilter() {
   const habitatSelect = document.getElementById('filter-habitat');
   if (!habitatSelect) return;

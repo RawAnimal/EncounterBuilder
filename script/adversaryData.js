@@ -30,6 +30,7 @@ async function loadAdversaryMetadata() {
     console.log('Adversary metadata loaded successfully:', adversaryMetadata);
 
     populateHabitatFilter();
+    populateTypeFilter(); // ✅ Populate Type filter after loading metadata
   } catch (error) {
     console.error('Error loading adversary metadata:', error);
   }
@@ -43,7 +44,21 @@ function getAdversaryMetadata() {
   return adversaryMetadata;
 }
 
-// ✅ New Function: Get Unique, Sorted Habitat Values with Formatted Display
+// ✅ New Function: Get Unique, Sorted Type Values with Formatted Display
+function getTypeList() {
+  if (!adversaryMetadata.types) return [];
+
+  // Extract and format type names
+  const typeValues = adversaryMetadata.types.map((type) => ({
+    value: type,
+    display: formatText(type),
+  }));
+
+  // Sort alphabetically by display name
+  return typeValues.sort((a, b) => a.display.localeCompare(b.display));
+}
+
+// ✅ Function: Get Unique, Sorted Habitat Values with Formatted Display
 function getHabitatList() {
   if (!adversaryMetadata.habitats) return [];
 
