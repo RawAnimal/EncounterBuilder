@@ -1,123 +1,62 @@
-{
-  "habitats": {
-    "caves": "Caves",
-    "forests": "Forests",
-    "hills": "Hills",
-    "mountains": "Mountains",
-    "swamps": "Swamps",
-    "volcanic_caves": "Volcanic Caves"
+[
+  {
+    "name": "goblin",
+    "cr": 0.25,
+    "xp": 50,
+    "habitat": ["caves", "forests"],
+    "type": "humanoid",
+    "group": ["goblinoid"],
+    "associations": ["orcs", "hobgoblins"],
+    "source": { "book": "monster_manual", "page": 166 }
   },
-  "types": {
-    "humanoid": "Humanoid",
-    "beast": "Beast",
-    "dragon": "Dragon"
+  {
+    "name": "orc",
+    "cr": 1,
+    "xp": 200,
+    "habitat": ["plains", "mountains"],
+    "type": "humanoid",
+    "group": ["orc", "goblinoid"],
+    "associations": ["goblins", "ogres"],
+    "source": { "book": "monster_manual", "page": 246 }
   },
-  "groups": {
-    "goblin_tribes": "Goblin Tribes",
-    "orc_warbands": "Orc Warbands",
-    "solitary_hunters": "Solitary Hunters",
-    "chromatic_dragons": "Chromatic Dragons"
+  {
+    "name": "owlbear",
+    "cr": 3,
+    "xp": 700,
+    "habitat": ["forests", "caves"],
+    "type": "monstrosity",
+    "group": [],
+    "associations": [],
+    "source": { "book": "monster_manual", "page": 249 }
   },
-  "creatures": [
-    {
-      "name": "Goblin",
-      "cr": 0.25,
-      "xp": 50,
-      "habitat": ["caves", "forests"],
-      "type": "humanoid",
-      "group": "goblin_tribes",
-      "associations": ["bugbear", "hobgoblin"],
-      "source": { "book": "Monster Manual 2024", "page": 56 }
-    },
-    {
-      "name": "Orc",
-      "cr": 1,
-      "xp": 200,
-      "habitat": ["hills", "mountains"],
-      "type": "humanoid",
-      "group": "orc_warbands",
-      "associations": ["ogre", "warchief"],
-      "source": { "book": "Monster Manual 2024", "page": 112 }
-    },
-    {
-      "name": "Owlbear",
-      "cr": 3,
-      "xp": 700,
-      "habitat": ["forests", "caves"],
-      "type": "beast",
-      "group": "solitary_hunters",
-      "associations": [],
-      "source": { "book": "Monster Manual 2024", "page": 220 }
-    },
-    {
-      "name": "Young Green Dragon",
-      "cr": 8,
-      "xp": 3900,
-      "habitat": ["forests", "swamps"],
-      "type": "dragon",
-      "group": "chromatic_dragons",
-      "associations": ["kobolds", "lizardfolk"],
-      "source": { "book": "Monster Manual 2024", "page": 105 }
-    },
-    {
-      "name": "Ancient Red Dragon",
-      "cr": 24,
-      "xp": 62000,
-      "habitat": ["mountains", "volcanic_caves"],
-      "type": "dragon",
-      "group": "chromatic_dragons",
-      "associations": ["cultists", "fire_giants"],
-      "source": { "book": "Monster Manual 2024", "page": 150 }
-    },
-    {
-      "name": "Kobold",
-      "cr": 0.125,
-      "xp": 25,
-      "habitat": ["caves", "mountains"],
-      "type": "humanoid",
-      "group": "goblin_tribes",
-      "associations": ["young_green_dragon"],
-      "source": { "book": "Monster Manual 2024", "page": 78 }
-    },
-    {
-      "name": "Minotaur",
-      "cr": 4,
-      "xp": 1100,
-      "habitat": ["caves", "forests"],
-      "type": "beast",
-      "group": "solitary_hunters",
-      "associations": [],
-      "source": { "book": "Monster Manual 2024", "page": 200 }
-    },
-    {
-      "name": "Fire Giant",
-      "cr": 9,
-      "xp": 5000,
-      "habitat": ["volcanic_caves", "mountains"],
-      "type": "giant",
-      "group": "fire_giants",
-      "associations": ["ancient_red_dragon"],
-      "source": { "book": "Monster Manual 2024", "page": 145 }
-    },
-    {
-      "name": "Wraith",
-      "cr": 5,
-      "xp": 1800,
-      "habitat": ["swamps", "caves"],
-      "type": "undead",
-      "group": "solitary_hunters",
-      "associations": [],
-      "source": { "book": "Monster Manual 2024", "page": 300 }
-    },
-    {
-      "name": "Lizardfolk",
-      "cr": 2,
-      "xp": 450,
-      "habitat": ["swamps"],
-      "type": "humanoid",
-      "group": "solitary_hunters",
-      "associations": ["young_green_dragon"],
-      "source": { "book": "Monster Manual 2024", "page": 105 }
-    }
-  ]
-}
+  {
+    "name": "young_green_dragon",
+    "cr": 8,
+    "xp": 3900,
+    "habitat": ["forests", "swamps"],
+    "type": "dragon",
+    "group": ["chromatic_dragon"],
+    "associations": [],
+    "source": { "book": "monster_manual", "page": 95 }
+  },
+  {
+    "name": "ancient_red_dragon",
+    "cr": 24,
+    "xp": 62000,
+    "habitat": ["mountains", "caverns"],
+    "type": "dragon",
+    "group": ["chromatic_dragon"],
+    "associations": [],
+    "source": { "book": "monster_manual", "page": 98 }
+  },
+  {
+    "name": "kobold",
+    "cr": 0.125,
+    "xp": 25,
+    "habitat": ["caves", "forests"],
+    "type": "humanoid",
+    "group": ["kobold", "dragonspawn"],
+    "associations": ["dragons"],
+    "source": { "book": "monster_manual", "page": 195 }
+  }
+]

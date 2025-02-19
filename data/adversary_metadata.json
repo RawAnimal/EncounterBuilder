@@ -1,0 +1,17 @@
+{
+  "habitats": [
+    "caves",
+    "forests",
+    "hills",
+    "mountains",
+    "swamps",
+    "volcanic_caves"
+  ],
+  "types": ["humanoid", "beast", "dragon"],
+  "groups": [
+    "goblin_tribes",
+    "orc_warbands",
+    "solitary_hunters",
+    "chromatic_dragons"
+  ]
+}

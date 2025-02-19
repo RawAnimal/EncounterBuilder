@@ -112,64 +112,95 @@
           </div>
         </div>
         <div class="col-md-6">
-          <div class="card p-4 mb-4 equal-height">
+          <div class="card p-4 equal-height">
             <section id="adversary-selection">
               <h2>Adversaries</h2>
-              <!-- Filter Button Group with Search Bar Inside -->
-              <div class="input-group mb-2" style="gap: 5px">
-                <div class="btn-group" role="group">
-                  <button id="filter-cr" class="btn btn-secondary">CR</button>
-                  <button id="filter-habitat" class="btn btn-secondary">
+
+              <div>
+                <!-- Filter Buttons -->
+                <div class="btn-group mb-2" role="group">
+                  <button
+                    id="toggle-cr"
+                    class="btn btn-secondary filter-btn"
+                    data-filter="cr"
+                  >
+                    CR
+                  </button>
+                  <button
+                    id="toggle-xp"
+                    class="btn btn-secondary filter-btn"
+                    data-filter="xp"
+                  >
+                    XP
+                  </button>
+                  <button
+                    id="toggle-habitat"
+                    class="btn btn-secondary filter-btn"
+                    data-filter="habitat"
+                  >
                     Habitat
                   </button>
-                  <button id="filter-type" class="btn btn-secondary">
+                  <button
+                    id="toggle-type"
+                    class="btn btn-secondary filter-btn"
+                    data-filter="type"
+                  >
                     Type
                   </button>
-                  <button id="filter-group" class="btn btn-secondary">
+                  <button
+                    id="toggle-group"
+                    class="btn btn-secondary filter-btn"
+                    data-filter="group"
+                  >
                     Group
                   </button>
                 </div>
-                <input
-                  type="text"
-                  id="adversary-search"
-                  class="form-control form-control-sm rounded"
-                  placeholder="Search Adversaries..."
-                />
-                <button id="clear-filters" class="btn btn-danger rounded">
-                  <i class="bi bi-x-circle"></i>
-                  <!-- Icon Only -->
+                <!-- Clear Filters Button -->
+                <button
+                  id="clear-filters"
+                  class="btn btn-danger btn-sm d-none"
+                >
+                  X
                 </button>
               </div>
-
-              <!-- Filter Dropdowns (Hidden by Default) -->
+              <!-- Filter Dropdowns (Initially Hidden) -->
               <div id="filter-dropdowns" class="mb-3">
                 <select
-                  id="cr-filter"
+                  id="filter-cr"
                   class="form-select form-select-sm d-none"
                 ></select>
                 <select
-                  id="habitat-filter"
+                  id="filter-xp"
                   class="form-select form-select-sm d-none"
                 ></select>
                 <select
-                  id="type-filter"
+                  id="filter-habitat"
                   class="form-select form-select-sm d-none"
                 ></select>
                 <select
-                  id="group-filter"
+                  id="filter-type"
+                  class="form-select form-select-sm d-none"
+                ></select>
+                <select
+                  id="filter-group"
                   class="form-select form-select-sm d-none"
                 ></select>
               </div>
+              <div>
+                <!-- Search Bar -->
+                <input
+                  type="text"
+                  id="search-adversary"
+                  class="form-control mb-2"
+                  placeholder="Search adversaries..."
+                />
+                <!-- Applied Filters -->
+                <div id="applied-filters" class="mb-2"></div>
+                <p id="adversary-count">Showing All</p>
+              </div>
 
-              <div
-                id="filter-badges"
-                class="d-flex flex-wrap gap-2 mt-2 mb-2"
-              ></div>
-
-              <div
-                id="adversary-list"
-                class="list-group scrollable-list"
-              ></div>
+              <!-- Adversary List -->
+              <div id="adversary-list" class="overflow-auto border p-2"></div>
             </section>
           </div>
         </div>
@@ -268,8 +299,8 @@
                     <th>#</th>
                     <th>Adversary</th>
                     <th>CR</th>
-                    <th>Type</th>
-                    <th>Remove</th>
+                    <th>XP</th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody id="adversary-table-body"></tbody>
@@ -282,12 +313,11 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="script/adversaryData.js"></script>
-    <script src="script/adversaryFilters.js"></script>
     <script src="script/adversaryUI.js"></script>
+    <script src="script/adversaryController.js"></script>
     <script src="script/nameGenerator.js"></script>
     <script src="script/partyPanel.js"></script>
     <script src="script/partyCalculations.js"></script>
     <script src="script/script.js"></script>
-    <!-- Controller loads LAST -->
   </body>
 </html>
