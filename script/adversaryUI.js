@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   console.log('Initializing Adversary UI...');
   renderAdversaryList();
   populateCRFilter(); // ✅ Populate the CR filter dropdown
+  populateHabitatFilter(); // ✅ Populate the Habitat filter dropdown
 
   // Attach event listener for filter buttons
   const filterButtons = document.querySelectorAll('.filter-btn');
@@ -26,7 +27,35 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 });
 
-// ✅ New Function: Populate the CR Dropdown
+// ✅ New Function: Populate the Habitat Dropdown
+function populateHabitatFilter() {
+  const habitatSelect = document.getElementById('filter-habitat');
+  if (!habitatSelect) return;
+
+  // Clear existing options
+  habitatSelect.innerHTML = '';
+
+  // Get habitat list from adversaryData.js
+  const habitats = getHabitatList();
+
+  // Add "All Habitats" option at the top
+  const allOption = document.createElement('option');
+  allOption.value = '';
+  allOption.textContent = 'All Habitats';
+  habitatSelect.appendChild(allOption);
+
+  // Add each habitat as an option
+  habitats.forEach(({ value, display }) => {
+    const option = document.createElement('option');
+    option.value = value;
+    option.textContent = display;
+    habitatSelect.appendChild(option);
+  });
+
+  console.log('Habitat filter populated:', habitats);
+}
+
+// ✅ Function to populate the CR dropdown
 function populateCRFilter() {
   const crSelect = document.getElementById('filter-cr');
   if (!crSelect) return;

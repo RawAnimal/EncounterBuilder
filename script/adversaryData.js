@@ -13,7 +13,6 @@ async function loadAdversaries() {
 
     console.log('Adversaries loaded successfully:', adversaries);
 
-    // ✅ Ensure CR filter is populated after loading data
     populateCRFilter();
   } catch (error) {
     console.error('Error loading adversaries:', error);
@@ -27,7 +26,10 @@ async function loadAdversaryMetadata() {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
     adversaryMetadata = await response.json();
+
     console.log('Adversary metadata loaded successfully:', adversaryMetadata);
+
+    populateHabitatFilter();
   } catch (error) {
     console.error('Error loading adversary metadata:', error);
   }
@@ -41,7 +43,28 @@ function getAdversaryMetadata() {
   return adversaryMetadata;
 }
 
-// ✅ New Function: Get Unique, Sorted CR Values with Formatted Display
+// ✅ New Function: Get Unique, Sorted Habitat Values with Formatted Display
+function getHabitatList() {
+  if (!adversaryMetadata.habitats) return [];
+
+  // Extract and format habitat names
+  const habitatValues = adversaryMetadata.habitats.map((habitat) => ({
+    value: habitat,
+    display: formatText(habitat),
+  }));
+
+  // Sort alphabetically by display name
+  return habitatValues.sort((a, b) => a.display.localeCompare(b.display));
+}
+
+// ✅ Helper Function: Convert Text (Capitalize & Remove Underscores)
+function formatText(str) {
+  return str
+    .replace(/_/g, ' ') // Replace underscores with spaces
+    .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitalize words
+}
+
+// ✅ Function: Get Unique, Sorted CR Values with Formatted Display
 function getUniqueCRValues() {
   if (!adversaries.length) return [];
 
