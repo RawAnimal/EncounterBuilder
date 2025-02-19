@@ -15,62 +15,77 @@ window.addEventListener('load', () => {
     return;
   }
 
-  // Get reference to buttons and input
+  // Get references
   const addCharacterButton = document.getElementById('add-character');
+  const characterClassInput = document.getElementById('character-class');
+  const characterLevelInput = document.getElementById('character-level'); // Level dropdown
+  const classImageElement = document.getElementById('class-image'); // Class image
   const toggleMaleButton = document.getElementById('toggle-male');
   const toggleFemaleButton = document.getElementById('toggle-female');
 
+  let classData = {}; // Store class info including images
   let useMaleNames = false;
   let useFemaleNames = false;
 
-  // Populate class dropdown
-  function populateClassDropdown() {
-    const characterClassInput = document.getElementById('character-class');
-    const classes = [
-      'Barbarian',
-      'Bard',
-      'Cleric',
-      'Druid',
-      'Fighter',
-      'Monk',
-      'Paladin',
-      'Ranger',
-      'Rogue',
-      'Sorcerer',
-      'Warlock',
-      'Wizard',
-    ];
+  // Load class data from JSON file
+  async function loadClassData() {
+    try {
+      const response = await fetch('data/classes.json');
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const data = await response.json();
+      classData = {};
 
-    characterClassInput.innerHTML = '';
-    classes.forEach((className) => {
-      const option = document.createElement('option');
-      option.value = className;
-      option.textContent = className;
-      characterClassInput.appendChild(option);
-    });
+      // Clear existing dropdown options
+      characterClassInput.innerHTML = '';
 
-    console.log('Class dropdown initialized.');
+      data.classes.forEach((cls) => {
+        classData[cls.name] = cls.image; // Store image path
+        const option = document.createElement('option');
+        option.value = cls.name;
+        option.textContent = cls.name;
+        characterClassInput.appendChild(option);
+      });
+
+      // Set initial image
+      updateClassImage(characterClassInput.value);
+      console.log('Class dropdown initialized.');
+    } catch (error) {
+      console.error('Error loading class data:', error);
+    }
   }
 
-  // Populate level dropdown
+  // Function to populate level dropdown
   function populateLevelDropdown() {
-    const characterLevelInput = document.getElementById('character-level');
     characterLevelInput.innerHTML = '';
 
     for (let i = 1; i <= 20; i++) {
       const option = document.createElement('option');
       option.value = i;
-      option.textContent = `Level ${i}`;
-      if (i === 5) option.selected = true;
+      option.textContent = `${i}`;
+      if (i === 5) option.selected = true; // Default to Level 5
       characterLevelInput.appendChild(option);
     }
 
     console.log('Level dropdown initialized.');
   }
 
-  // Ensure dropdowns are populated when the page loads
-  populateClassDropdown();
-  populateLevelDropdown();
+  // Function to update class image based on selected class
+  function updateClassImage(selectedClass) {
+    if (classData[selectedClass]) {
+      classImageElement.src = classData[selectedClass];
+      classImageElement.style.display = 'block'; // Ensure it's visible
+      console.log(`Class image updated: ${classData[selectedClass]}`);
+    } else {
+      classImageElement.style.display = 'none';
+    }
+  }
+
+  // Ensure class image updates when selecting a class
+  characterClassInput.addEventListener('change', () => {
+    updateClassImage(characterClassInput.value);
+  });
 
   // Toggle gender selection
   function toggleGender(gender) {
@@ -118,4 +133,8 @@ window.addEventListener('load', () => {
   } else {
     console.error('Could not find "Add to Party" button.');
   }
+
+  // Load class data and initialize dropdowns
+  loadClassData();
+  populateLevelDropdown(); // Ensure level dropdown is populated
 });

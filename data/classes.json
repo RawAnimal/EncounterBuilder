@@ -1,16 +1,16 @@
 {
   "classes": [
-    "Barbarian",
-    "Bard",
-    "Cleric",
-    "Druid",
-    "Fighter",
-    "Monk",
-    "Paladin",
-    "Ranger",
-    "Rogue",
-    "Sorcerer",
-    "Warlock",
-    "Wizard"
+    { "name": "Barbarian", "image": "images/classes/barbarian.svg" },
+    { "name": "Bard", "image": "images/classes/bard.svg" },
+    { "name": "Cleric", "image": "images/classes/cleric.svg" },
+    { "name": "Druid", "image": "images/classes/druid.svg" },
+    { "name": "Fighter", "image": "images/classes/fighter.svg" },
+    { "name": "Monk", "image": "images/classes/monk.svg" },
+    { "name": "Paladin", "image": "images/classes/paladin.svg" },
+    { "name": "Ranger", "image": "images/classes/ranger.svg" },
+    { "name": "Rogue", "image": "images/classes/rogue.svg" },
+    { "name": "Sorcerer", "image": "images/classes/sorcerer.svg" },
+    { "name": "Warlock", "image": "images/classes/warlock.svg" },
+    { "name": "Wizard", "image": "images/classes/wizard.svg" }
   ]
 }
