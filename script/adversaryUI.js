@@ -3,6 +3,7 @@
 document.addEventListener('DOMContentLoaded', async () => {
   console.log('Initializing Adversary UI...');
   renderAdversaryList();
+  populateCRFilter(); // ✅ Populate the CR filter dropdown
 
   // Attach event listener for filter buttons
   const filterButtons = document.querySelectorAll('.filter-btn');
@@ -24,6 +25,34 @@ document.addEventListener('DOMContentLoaded', async () => {
     clearFiltersButton.addEventListener('click', () => clearFilters());
   }
 });
+
+// ✅ New Function: Populate the CR Dropdown
+function populateCRFilter() {
+  const crSelect = document.getElementById('filter-cr');
+  if (!crSelect) return;
+
+  // Clear existing options
+  crSelect.innerHTML = '';
+
+  // Get unique CR values from adversaryData.js
+  const crValues = getUniqueCRValues();
+
+  // Add "All CRs" option at the top
+  const allOption = document.createElement('option');
+  allOption.value = '';
+  allOption.textContent = 'All CRs';
+  crSelect.appendChild(allOption);
+
+  // Add each CR as an option
+  crValues.forEach(({ value, display }) => {
+    const option = document.createElement('option');
+    option.value = value;
+    option.textContent = display;
+    crSelect.appendChild(option);
+  });
+
+  console.log('CR filter populated:', crValues);
+}
 
 // ✅ Function to toggle filter buttons and display associated filter
 function toggleFilter(button) {
