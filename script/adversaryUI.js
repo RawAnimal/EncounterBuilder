@@ -25,6 +25,35 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 });
 
+// ✅ Function to toggle filter buttons and display associated filter
+function toggleFilter(button) {
+  const filterId = button.dataset.filter;
+  const activeButton = document.querySelector('.filter-btn.active');
+  const activeFilterDiv = document.querySelector('.filter-div:not(.d-none)');
+
+  // If the clicked button is already active, deactivate it and hide its filter options
+  if (button.classList.contains('active')) {
+    button.classList.remove('active', 'btn-primary');
+    button.classList.add('btn-secondary');
+    document.getElementById(`filter-${filterId}-div`).classList.add('d-none');
+    return;
+  }
+
+  // Deactivate previously active button and hide its filter
+  if (activeButton) {
+    activeButton.classList.remove('active', 'btn-primary');
+    activeButton.classList.add('btn-secondary');
+  }
+  if (activeFilterDiv) activeFilterDiv.classList.add('d-none');
+
+  // Activate the clicked button
+  button.classList.add('active', 'btn-primary');
+  button.classList.remove('btn-secondary');
+
+  // Show the corresponding filter div
+  document.getElementById(`filter-${filterId}-div`).classList.remove('d-none');
+}
+
 // Function to render the adversary list
 function renderAdversaryList(searchQuery = '') {
   console.log('Rendering adversary list...');

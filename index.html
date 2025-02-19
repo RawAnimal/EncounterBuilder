@@ -164,36 +164,50 @@
               </div>
               <!-- Filter Dropdowns (Initially Hidden) -->
               <div id="filter-dropdowns" class="mb-3">
-                <select
-                  id="filter-cr"
-                  class="form-select form-select-sm d-none"
-                >
-                  <option>CR</option>
-                </select>
-                <select
-                  id="filter-xp"
-                  class="form-select form-select-sm d-none"
-                >
-                  <option>XP</option>
-                </select>
-                <select
-                  id="filter-habitat"
-                  class="form-select form-select-sm d-none"
-                >
-                  <option>Habitat</option>
-                </select>
-                <select
-                  id="filter-type"
-                  class="form-select form-select-sm d-none"
-                >
-                  <option>Type</option>
-                </select>
-                <select
-                  id="filter-group"
-                  class="form-select form-select-sm d-none"
-                >
-                  <option>Group</option>
-                </select>
+                <div id="filter-cr-div" class="filter-div d-none">
+                  <select id="filter-cr" class="form-select form-select-sm">
+                    <option value="">Select CR</option>
+                  </select>
+                </div>
+
+                <div id="filter-xp-div" class="filter-div d-none">
+                  <div class="input-group input-group-sm">
+                    <input
+                      type="number"
+                      id="filter-xp-min"
+                      class="form-control"
+                      placeholder="Min XP"
+                    />
+                    <span class="input-group-text">-</span>
+                    <input
+                      type="number"
+                      id="filter-xp-max"
+                      class="form-control"
+                      placeholder="Max XP"
+                    />
+                  </div>
+                </div>
+
+                <div id="filter-habitat-div" class="filter-div d-none">
+                  <select
+                    id="filter-habitat"
+                    class="form-select form-select-sm"
+                  >
+                    <option value="">Select Habitat</option>
+                  </select>
+                </div>
+
+                <div id="filter-type-div" class="filter-div d-none">
+                  <select id="filter-type" class="form-select form-select-sm">
+                    <option value="">Select Type</option>
+                  </select>
+                </div>
+
+                <div id="filter-group-div" class="filter-div d-none">
+                  <select id="filter-group" class="form-select form-select-sm">
+                    <option value="">Select Group</option>
+                  </select>
+                </div>
               </div>
               <div>
                 <!-- Search Bar -->
