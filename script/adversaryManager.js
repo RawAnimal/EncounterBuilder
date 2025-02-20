@@ -125,9 +125,50 @@ function updateTotalAdversaryXP() {
     totalXP.toLocaleString();
 }
 
+// Function to update encounter balance
+function updateEncounterBalance() {
+  const xpBudget =
+    parseInt(
+      document.getElementById('xp-budget').textContent.replace(/,/g, '')
+    ) || 0;
+  const totalXP =
+    parseInt(
+      document.getElementById('bad-guys-xp').textContent.replace(/,/g, '')
+    ) || 0;
+
+  const balance = xpBudget - totalXP;
+
+  // Update the encounter summary panel
+  document.getElementById('encounter-balance').textContent =
+    balance.toLocaleString();
+}
+
 // Utility function to format text (capitalization & remove underscores)
 function formatText(str) {
   return str
     .replace(/_/g, ' ') // Replace underscores with spaces
     .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitalize words
 }
+
+// MutationObserver to watch for changes in XP Budget and Total Adversary XP
+function setupEncounterBalanceObserver() {
+  const targetNodes = [
+    document.getElementById('xp-budget'),
+    document.getElementById('bad-guys-xp'),
+  ];
+
+  const config = { childList: true, subtree: true, characterData: true };
+
+  const observer = new MutationObserver(() => {
+    updateEncounterBalance();
+  });
+
+  targetNodes.forEach((node) => {
+    if (node) observer.observe(node, config);
+  });
+
+  console.log('Encounter Balance Observer Initialized');
+}
+
+// Call observer setup on page load
+document.addEventListener('DOMContentLoaded', setupEncounterBalanceObserver);
