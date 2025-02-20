@@ -2,7 +2,7 @@
 
 let addedAdversaries = {}; // Tracks added adversaries
 
-// ✅ Function to add an adversary to the Bad Guys table
+// Function to add an adversary to the Bad Guys table
 function addAdversary(adversary) {
   const tableBody = document.getElementById('adversary-table-body');
 
@@ -71,7 +71,7 @@ function addAdversary(adversary) {
   showToast(`${formatText(adversary.name)} added to Bad Guys.`);
 }
 
-// ✅ Function to remove an adversary from the Bad Guys table
+// Function to remove an adversary from the Bad Guys table
 function removeAdversary(name) {
   if (addedAdversaries[name]) {
     const qtyElement = document.getElementById(`qty-${name}`);
@@ -84,32 +84,32 @@ function removeAdversary(name) {
       showToast(
         `Decreased ${formatText(name)} count to ${
           addedAdversaries[name].quantity
-        }.`
+        }.`,
+        'danger'
       );
     } else {
       // Remove row entirely if quantity reaches 0
       delete addedAdversaries[name];
       qtyElement.closest('tr').remove();
 
-      showToast(`${formatText(name)} removed from Bad Guys.`);
+      showToast(`${formatText(name)} removed from Bad Guys.`, 'danger');
     }
   }
 }
 
-// ✅ Function to show toast notifications
-function showToast(message) {
+// Function to show toast notification
+function showToast(message, type = 'success') {
   const toastElement = document.getElementById('notification-toast');
-  const toastMessage = document.getElementById('toast-message');
+  const toastBody = document.getElementById('toast-message');
 
-  if (toastElement && toastMessage) {
-    toastMessage.innerText = message;
+  toastBody.textContent = message;
+  toastElement.className = `toast align-items-center text-white bg-${type} border-0`;
 
-    const toast = new bootstrap.Toast(toastElement);
-    toast.show();
-  }
+  const toast = new bootstrap.Toast(toastElement);
+  toast.show();
 }
 
-// ✅ Utility function to format text (capitalization & remove underscores)
+// Utility function to format text (capitalization & remove underscores)
 function formatText(str) {
   return str
     .replace(/_/g, ' ') // Replace underscores with spaces
