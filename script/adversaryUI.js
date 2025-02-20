@@ -14,24 +14,18 @@ document.addEventListener('DOMContentLoaded', async () => {
   console.log('Initializing Adversary UI...');
   renderAdversaryList();
   populateCRFilter();
-  document
-    .getElementById('filter-cr')
-    ?.addEventListener('change', updateFilters);
-  document
-    .getElementById('filter-habitat')
-    ?.addEventListener('change', updateFilters);
-  document
-    .getElementById('filter-type')
-    ?.addEventListener('change', updateFilters);
-  document
-    .getElementById('filter-group')
-    ?.addEventListener('change', updateFilters);
-  document
-    .getElementById('filter-xp-min')
-    ?.addEventListener('input', updateFilters);
-  document
-    .getElementById('filter-xp-max')
-    ?.addEventListener('input', updateFilters);
+  const filterIds = [
+    'filter-cr',
+    'filter-habitat',
+    'filter-type',
+    'filter-group',
+    'filter-xp-min',
+    'filter-xp-max',
+  ];
+
+  filterIds.forEach((id) => {
+    document.getElementById(id)?.addEventListener('input', updateFilters);
+  });
 
   populateXPFilter();
   populateHabitatFilter();
