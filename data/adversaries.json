@@ -58,5 +58,15 @@
     "group": ["kobold", "dragonspawn"],
     "associations": ["dragons"],
     "source": { "book": "monster_manual", "page": 195 }
+  },
+  {
+    "name": "kobold",
+    "cr": 24,
+    "xp": 25,
+    "habitat": ["caves", "forests"],
+    "type": "humanoid",
+    "group": ["kobold", "dragonspawn"],
+    "associations": ["dragons"],
+    "source": { "book": "monster_manual", "page": 195 }
   }
 ]

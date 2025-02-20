@@ -1,9 +1,17 @@
 // adversaryUI.js - Handles UI rendering for adversaries
 
+const filterObject = {
+  cr: null,
+};
+
 document.addEventListener('DOMContentLoaded', async () => {
   console.log('Initializing Adversary UI...');
   renderAdversaryList();
   populateCRFilter();
+  document
+    .getElementById('filter-cr')
+    ?.addEventListener('change', updateFilters);
+
   populateXPFilter(); // ✅ Ensure XP filter loads properly
   populateHabitatFilter();
   populateTypeFilter();
@@ -16,9 +24,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const searchInput = document.getElementById('search-adversary');
   if (searchInput) {
-    searchInput.addEventListener('input', () => {
-      renderAdversaryList(searchInput.value);
-    });
+    searchInput.addEventListener('input', updateFilters);
   }
 
   const clearFiltersButton = document.getElementById('clear-filters');
@@ -166,15 +172,45 @@ function toggleFilter(button) {
   document.getElementById(`filter-${filterId}-div`).classList.remove('d-none');
 }
 
+// Function to update filters dynamically
+function updateFilters() {
+  filterObject.search =
+    document.getElementById('search-adversary').value.trim().toLowerCase() ||
+    null;
+  filterObject.cr = document.getElementById('filter-cr').value || null;
+
+  console.log('Updated Filter Object:', filterObject);
+  renderAdversaryList();
+}
+
+// Function to render the adversary list based on filters
+
 function renderAdversaryList(searchQuery = '') {
   console.log('Rendering adversary list...');
+
+  let debugLog = `\n🔹 SEARCH QUERY: "${searchQuery}"\n`;
+  debugLog += `🔹 FILTER OBJECT: ${JSON.stringify(filterObject)}\n`;
+  debugLog += `🔹 ADVERSARIES BEFORE FILTERING: ${adversaries.length} total\n`;
 
   const adversaryList = document.getElementById('adversary-list');
   adversaryList.innerHTML = '';
 
-  const filteredAdversaries = adversaries.filter((adv) =>
-    adv.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  let filteredAdversaries = adversaries.filter((adv) => {
+    const matchesSearch =
+      !filterObject.search ||
+      adv.name.toLowerCase().includes(filterObject.search);
+    const matchesCR =
+      !filterObject.cr || adv.cr.toString() === filterObject.cr;
+
+    return matchesSearch && matchesCR;
+  });
+
+  console.log('Filtered Adversaries:', filteredAdversaries);
+
+  debugLog += `🔹 FILTERED ADVERSARIES: ${filteredAdversaries.length} total\n`;
+  debugLog += `🔹 FINAL FILTER OBJECT: ${JSON.stringify(filterObject)}\n`;
+
+  console.log(debugLog);
 
   if (filteredAdversaries.length === 0) {
     adversaryList.innerHTML = '<p>No adversaries found.</p>';
@@ -183,7 +219,6 @@ function renderAdversaryList(searchQuery = '') {
 
   const table = document.createElement('table');
   table.className = 'table table-striped';
-
   const tbody = document.createElement('tbody');
 
   filteredAdversaries.forEach((adversary) => {
@@ -212,8 +247,6 @@ function renderAdversaryList(searchQuery = '') {
 
   table.appendChild(tbody);
   adversaryList.appendChild(table);
-
-  console.log('Adversary list rendered.');
 }
 
 // ✅ Keep Text Formatting Helper
