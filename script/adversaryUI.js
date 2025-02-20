@@ -10,6 +10,9 @@ const filterObject = {
   xpMax: null,
 };
 
+let initialXPMin;
+let initialXPMax;
+
 document.addEventListener('DOMContentLoaded', async () => {
   console.log('Initializing Adversary UI...');
   renderAdversaryList();
@@ -44,11 +47,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const clearFiltersButton = document.getElementById('clear-filters');
   if (clearFiltersButton) {
-    clearFiltersButton.addEventListener('click', () => clearFilters());
+    clearFiltersButton.addEventListener('click', () => {
+      clearTooltip(); // Hide tooltip immediately
+      clearFilters();
+    });
   }
 });
 
-// ✅ New Function: Populate the XP Range Inputs
+// Populate the XP Range Inputs
 function populateXPFilter() {
   const xpMinInput = document.getElementById('filter-xp-min');
   const xpMaxInput = document.getElementById('filter-xp-max');
@@ -66,7 +72,7 @@ function populateXPFilter() {
   console.log('XP filter populated:', { min, max });
 }
 
-// ✅ Existing Function: Populate the Group Dropdown
+// Populate the Group Dropdown
 function populateGroupFilter() {
   const groupSelect = document.getElementById('filter-group');
   if (!groupSelect) return;
@@ -194,62 +200,161 @@ function updateFilters() {
     null;
   filterObject.cr = document.getElementById('filter-cr').value || null;
   filterObject.habitat =
-    document.getElementById('filter-habitat').value || null; // 🔹 Capture habitat filter
+    document.getElementById('filter-habitat').value || null;
   filterObject.type = document.getElementById('filter-type').value || null;
   filterObject.group = document.getElementById('filter-group').value || null;
-  filterObject.xpMin = document.getElementById('filter-xp-min').value
-    ? parseInt(document.getElementById('filter-xp-min').value)
-    : null;
-  filterObject.xpMax = document.getElementById('filter-xp-max').value
-    ? parseInt(document.getElementById('filter-xp-max').value)
-    : null;
+
+  const xpMinInput = document.getElementById('filter-xp-min').value;
+  const xpMaxInput = document.getElementById('filter-xp-max').value;
+
+  // Only set xpMin and xpMax if they are different from their initial values
+  const defaultXP = getXPRange(); // Get default min/max XP from population function
+
+  filterObject.xpMin =
+    xpMinInput && parseInt(xpMinInput) !== defaultXP.min
+      ? parseInt(xpMinInput)
+      : null;
+  filterObject.xpMax =
+    xpMaxInput && parseInt(xpMaxInput) !== defaultXP.max
+      ? parseInt(xpMaxInput)
+      : null;
 
   renderAdversaryList();
+  updateAppliedFilters();
   updateClearFiltersButton();
 }
 
-// Enable/Disable Clear Filters Button
-function updateClearFiltersButton() {
-  const clearBtn = document.getElementById('clear-filters');
-  const hasFilters = Object.values(filterObject).some(
-    (value) => value !== null && value !== ''
-  );
-  clearBtn.disabled = !hasFilters;
+function updateAppliedFilters() {
+  const appliedFiltersDiv = document.getElementById('applied-filters');
+  appliedFiltersDiv.innerHTML = ''; // Clear existing badges
+
+  // CR Filter Badge
+  if (filterObject.cr) {
+    const badge = createFilterBadge(`CR: ${filterObject.cr}`, () => {
+      document.getElementById('filter-cr').value = '';
+      filterObject.cr = null;
+      updateFilters();
+    });
+    appliedFiltersDiv.appendChild(badge);
+  }
+
+  // Habitat Filter Badge
+  if (filterObject.habitat) {
+    const badge = createFilterBadge(`Habitat: ${filterObject.habitat}`, () => {
+      document.getElementById('filter-habitat').value = '';
+      filterObject.habitat = null;
+      updateFilters();
+    });
+    appliedFiltersDiv.appendChild(badge);
+  }
+
+  // Type Filter Badge
+  if (filterObject.type) {
+    const badge = createFilterBadge(`Type: ${filterObject.type}`, () => {
+      document.getElementById('filter-type').value = '';
+      filterObject.type = null;
+      updateFilters();
+    });
+    appliedFiltersDiv.appendChild(badge);
+  }
+
+  // Group Filter Badge
+  if (filterObject.group) {
+    const badge = createFilterBadge(`Group: ${filterObject.group}`, () => {
+      document.getElementById('filter-group').value = '';
+      filterObject.group = null;
+      updateFilters();
+    });
+    appliedFiltersDiv.appendChild(badge);
+  }
+
+  // XP Filter Badge (Single badge for both min/max)
+  if (
+    (filterObject.xpMin !== null && filterObject.xpMin !== getXPRange().min) ||
+    (filterObject.xpMax !== null && filterObject.xpMax !== getXPRange().max)
+  ) {
+    const xpText = `XP: ${filterObject.xpMin || '0'} - ${
+      filterObject.xpMax || 'Max'
+    }`;
+    const badge = createFilterBadge(xpText, () => {
+      document.getElementById('filter-xp-min').value = getXPRange().min;
+      document.getElementById('filter-xp-max').value = getXPRange().max;
+      filterObject.xpMin = null;
+      filterObject.xpMax = null;
+      updateFilters();
+    });
+    appliedFiltersDiv.appendChild(badge);
+  }
 }
 
-// Function to Clear All Filters
+function createFilterBadge(text, onClick) {
+  const badge = document.createElement('span');
+  badge.className = 'badge bg-primary me-2 p-2';
+  badge.innerHTML = `${text} <span class="ms-1" style="cursor:pointer;">&times;</span>`;
+
+  badge.querySelector('span').addEventListener('click', onClick);
+  return badge;
+}
+
+function updateClearFiltersButton() {
+  const clearButton = document.getElementById('clear-filters');
+  const hasFilters = Object.values(filterObject).some(
+    (value) => value !== null
+  );
+  const hasSearch =
+    document.getElementById('search-adversary')?.value.trim().length > 0;
+
+  // Keep the Clear Filters button always enabled
+  clearButton.disabled = false;
+
+  clearTooltip();
+}
+
+function clearTooltip() {
+  var clearFiltersDiv = document.getElementById('clear-filters-div');
+  if (!clearFiltersDiv) return;
+
+  var tooltipInstance = bootstrap.Tooltip.getInstance(clearFiltersDiv);
+  if (tooltipInstance) {
+    tooltipInstance.hide();
+    tooltipInstance.dispose();
+  }
+
+  // Manually remove lingering tooltips from the DOM
+  document.querySelectorAll('.tooltip').forEach((tooltip) => tooltip.remove());
+
+  setTimeout(() => {
+    if (document.body.contains(clearFiltersDiv)) {
+      new bootstrap.Tooltip(clearFiltersDiv, { trigger: 'hover' });
+    }
+  }, 100);
+}
+
 function clearFilters() {
-  document.getElementById('search-adversary').value = '';
+  clearTooltip(); // Hide tooltip immediately
+  // Reset all filter values
   document.getElementById('filter-cr').value = '';
   document.getElementById('filter-habitat').value = '';
   document.getElementById('filter-type').value = '';
   document.getElementById('filter-group').value = '';
-  document.getElementById('filter-xp-min').value = '';
-  document.getElementById('filter-xp-max').value = '';
+  document.getElementById('filter-xp-min').value = getXPRange().min;
+  document.getElementById('filter-xp-max').value = getXPRange().max;
+  document.getElementById('search-adversary').value = '';
 
-  filterObject.search = null;
-  filterObject.cr = null;
-  filterObject.habitat = null;
-  filterObject.type = null;
-  filterObject.group = null;
-  filterObject.xpMin = null;
-  filterObject.xpMax = null;
-
-  // Hide any visible filter dropdowns
-  document.querySelectorAll('.filter-div').forEach((dropdown) => {
-    if (!dropdown.classList.contains('d-none')) {
-      dropdown.classList.add('d-none');
-    }
+  // Reset filter object
+  Object.keys(filterObject).forEach((key) => {
+    filterObject[key] = null;
   });
 
+  // Update applied filters (removes badges)
+  updateAppliedFilters();
+
+  // Refresh the list
   renderAdversaryList();
+
+  // Update Clear Filters button (tooltip remains intact)
   updateClearFiltersButton();
 }
-
-// Attach event listener to Clear Filters Button
-document
-  .getElementById('clear-filters')
-  .addEventListener('click', clearFilters);
 
 // Function to render the adversary list based on filters
 function renderAdversaryList(searchQuery = '') {
@@ -366,16 +471,21 @@ function renderAdversaryList(searchQuery = '') {
   table.appendChild(tbody);
   adversaryList.appendChild(table);
 
-  // Reinitialize tooltips after updating the adversary list
-  var tooltipTriggerList = [].slice.call(
-    document.querySelectorAll('[data-bs-toggle="tooltip"]')
-  );
-  tooltipTriggerList.forEach(function (tooltipTriggerEl) {
-    new bootstrap.Tooltip(tooltipTriggerEl);
-  });
+  document
+    .querySelectorAll('[data-bs-toggle="tooltip"]')
+    .forEach((tooltipTriggerEl) => {
+      let tooltip = new bootstrap.Tooltip(tooltipTriggerEl, {
+        trigger: 'hover',
+      });
+
+      // Ensure tooltip disappears if the button is clicked
+      tooltipTriggerEl.addEventListener('click', function () {
+        tooltip.hide();
+      });
+    });
 }
 
-// ✅ Keep Text Formatting Helper
+// Keep Text Formatting Helper
 function formatText(str) {
   return str.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase());
 }
