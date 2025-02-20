@@ -1,7 +1,10 @@
 // adversaryUI.js - Handles UI rendering for adversaries
 
 const filterObject = {
+  search: null,
   cr: null,
+  habitat: null,
+  type: null,
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -10,6 +13,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   populateCRFilter();
   document
     .getElementById('filter-cr')
+    ?.addEventListener('change', updateFilters);
+  document
+    .getElementById('filter-habitat')
+    ?.addEventListener('change', updateFilters);
+  document
+    .getElementById('filter-type')
     ?.addEventListener('change', updateFilters);
 
   populateXPFilter(); // ✅ Ensure XP filter loads properly
@@ -178,13 +187,14 @@ function updateFilters() {
     document.getElementById('search-adversary').value.trim().toLowerCase() ||
     null;
   filterObject.cr = document.getElementById('filter-cr').value || null;
+  filterObject.habitat =
+    document.getElementById('filter-habitat').value || null; // 🔹 Capture habitat filter
+  filterObject.type = document.getElementById('filter-type').value || null;
 
-  console.log('Updated Filter Object:', filterObject);
   renderAdversaryList();
 }
 
 // Function to render the adversary list based on filters
-
 function renderAdversaryList(searchQuery = '') {
   console.log('Rendering adversary list...');
 
@@ -201,8 +211,11 @@ function renderAdversaryList(searchQuery = '') {
       adv.name.toLowerCase().includes(filterObject.search);
     const matchesCR =
       !filterObject.cr || adv.cr.toString() === filterObject.cr;
+    const matchesHabitat =
+      !filterObject.habitat || adv.habitat.includes(filterObject.habitat); // 🔹 Add Habitat filtering
+    const matchesType = !filterObject.type || adv.type === filterObject.type; // 🔹 Add Type filtering
 
-    return matchesSearch && matchesCR;
+    return matchesSearch && matchesCR && matchesHabitat && matchesType; // 🔹 Ensure all filters apply together
   });
 
   console.log('Filtered Adversaries:', filteredAdversaries);

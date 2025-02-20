@@ -43,7 +43,7 @@
     "name": "ancient_red_dragon",
     "cr": 24,
     "xp": 62000,
-    "habitat": ["mountains", "caverns"],
+    "habitat": ["mountains", "caverns", "caves"],
     "type": "dragon",
     "group": ["chromatic_dragon"],
     "associations": [],
