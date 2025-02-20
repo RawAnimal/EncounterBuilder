@@ -5,6 +5,7 @@ const filterObject = {
   cr: null,
   habitat: null,
   type: null,
+  group: null,
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -20,8 +21,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   document
     .getElementById('filter-type')
     ?.addEventListener('change', updateFilters);
+  document
+    .getElementById('filter-group')
+    ?.addEventListener('change', updateFilters);
 
-  populateXPFilter(); // ✅ Ensure XP filter loads properly
+  populateXPFilter();
   populateHabitatFilter();
   populateTypeFilter();
   populateGroupFilter();
@@ -190,6 +194,7 @@ function updateFilters() {
   filterObject.habitat =
     document.getElementById('filter-habitat').value || null; // 🔹 Capture habitat filter
   filterObject.type = document.getElementById('filter-type').value || null;
+  filterObject.group = document.getElementById('filter-group').value || null;
 
   renderAdversaryList();
 }
@@ -212,10 +217,19 @@ function renderAdversaryList(searchQuery = '') {
     const matchesCR =
       !filterObject.cr || adv.cr.toString() === filterObject.cr;
     const matchesHabitat =
-      !filterObject.habitat || adv.habitat.includes(filterObject.habitat); // 🔹 Add Habitat filtering
-    const matchesType = !filterObject.type || adv.type === filterObject.type; // 🔹 Add Type filtering
+      !filterObject.habitat || adv.habitat.includes(filterObject.habitat);
+    const matchesType = !filterObject.type || adv.type === filterObject.type;
+    const matchesGroup =
+      !filterObject.group ||
+      (Array.isArray(adv.group) && adv.group.includes(filterObject.group));
 
-    return matchesSearch && matchesCR && matchesHabitat && matchesType; // 🔹 Ensure all filters apply together
+    return (
+      matchesSearch &&
+      matchesCR &&
+      matchesHabitat &&
+      matchesType &&
+      matchesGroup
+    );
   });
 
   console.log('Filtered Adversaries:', filteredAdversaries);

@@ -5,7 +5,7 @@
     "xp": 50,
     "habitat": ["caves", "forests"],
     "type": "humanoid",
-    "group": ["goblinoid"],
+    "group": ["goblinoids"],
     "associations": ["orcs", "hobgoblins"],
     "source": { "book": "monster_manual", "page": 166 }
   },
@@ -15,7 +15,7 @@
     "xp": 200,
     "habitat": ["plains", "mountains"],
     "type": "humanoid",
-    "group": ["orc", "goblinoid"],
+    "group": ["orc", "goblinoids"],
     "associations": ["goblins", "ogres"],
     "source": { "book": "monster_manual", "page": 246 }
   },
@@ -35,7 +35,7 @@
     "xp": 3900,
     "habitat": ["forests", "swamps"],
     "type": "dragon",
-    "group": ["chromatic_dragon"],
+    "group": ["chromatic_dragons"],
     "associations": [],
     "source": { "book": "monster_manual", "page": 95 }
   },
@@ -45,7 +45,7 @@
     "xp": 62000,
     "habitat": ["mountains", "caverns", "caves"],
     "type": "dragon",
-    "group": ["chromatic_dragon"],
+    "group": ["chromatic_dragons"],
     "associations": [],
     "source": { "book": "monster_manual", "page": 98 }
   },
