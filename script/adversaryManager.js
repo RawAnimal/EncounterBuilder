@@ -68,6 +68,8 @@ function addAdversary(adversary) {
 
   tableBody.appendChild(row);
 
+  updateTotalAdversaryXP();
+
   showToast(`${formatText(adversary.name)} added to Bad Guys.`);
 }
 
@@ -95,6 +97,7 @@ function removeAdversary(name) {
       showToast(`${formatText(name)} removed from Bad Guys.`, 'danger');
     }
   }
+  updateTotalAdversaryXP();
 }
 
 // Function to show toast notification
@@ -107,6 +110,19 @@ function showToast(message, type = 'success') {
 
   const toast = new bootstrap.Toast(toastElement);
   toast.show();
+}
+
+function updateTotalAdversaryXP() {
+  let totalXP = 0;
+
+  for (const adversaryName in addedAdversaries) {
+    const adversary = addedAdversaries[adversaryName];
+    totalXP += adversary.xp * adversary.quantity;
+  }
+
+  // Update the encounter summary panel
+  document.getElementById('bad-guys-xp').textContent =
+    totalXP.toLocaleString();
 }
 
 // Utility function to format text (capitalization & remove underscores)
