@@ -205,7 +205,51 @@ function updateFilters() {
     : null;
 
   renderAdversaryList();
+  updateClearFiltersButton();
 }
+
+// Enable/Disable Clear Filters Button
+function updateClearFiltersButton() {
+  const clearBtn = document.getElementById('clear-filters');
+  const hasFilters = Object.values(filterObject).some(
+    (value) => value !== null && value !== ''
+  );
+  clearBtn.disabled = !hasFilters;
+}
+
+// Function to Clear All Filters
+function clearFilters() {
+  document.getElementById('search-adversary').value = '';
+  document.getElementById('filter-cr').value = '';
+  document.getElementById('filter-habitat').value = '';
+  document.getElementById('filter-type').value = '';
+  document.getElementById('filter-group').value = '';
+  document.getElementById('filter-xp-min').value = '';
+  document.getElementById('filter-xp-max').value = '';
+
+  filterObject.search = null;
+  filterObject.cr = null;
+  filterObject.habitat = null;
+  filterObject.type = null;
+  filterObject.group = null;
+  filterObject.xpMin = null;
+  filterObject.xpMax = null;
+
+  // Hide any visible filter dropdowns
+  document.querySelectorAll('.filter-div').forEach((dropdown) => {
+    if (!dropdown.classList.contains('d-none')) {
+      dropdown.classList.add('d-none');
+    }
+  });
+
+  renderAdversaryList();
+  updateClearFiltersButton();
+}
+
+// Attach event listener to Clear Filters Button
+document
+  .getElementById('clear-filters')
+  .addEventListener('click', clearFilters);
 
 // Function to render the adversary list based on filters
 function renderAdversaryList(searchQuery = '') {

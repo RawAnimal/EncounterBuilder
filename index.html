@@ -115,8 +115,8 @@
           <div class="card p-4 equal-height">
             <section id="adversary-selection">
               <h2>Adversaries</h2>
-              <div>
-                <!-- Filter Buttons -->
+              <!-- Filter Buttons & Clear Filters -->
+              <div class="d-flex align-items-center justify-content-between">
                 <div class="btn-group mb-2" role="group">
                   <button
                     id="toggle-cr"
@@ -154,14 +154,17 @@
                     Group
                   </button>
                 </div>
-                <!-- Clear Filters Button -->
+
+                <!-- Clear Filters Icon Button (Disabled by Default) -->
                 <button
                   id="clear-filters"
-                  class="btn btn-danger btn-sm d-none"
+                  class="btn btn-primary ms-2"
+                  disabled
                 >
-                  X
+                  <i class="bi bi-x"></i>
                 </button>
               </div>
+
               <!-- Filter Dropdowns (Initially Hidden) -->
               <div id="filter-dropdowns" class="mb-3">
                 <div id="filter-cr-div" class="filter-div d-none">
