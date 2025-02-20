@@ -253,12 +253,6 @@ document
 
 // Function to render the adversary list based on filters
 function renderAdversaryList(searchQuery = '') {
-  console.log('Rendering adversary list...');
-
-  let debugLog = `\n🔹 SEARCH QUERY: "${searchQuery}"\n`;
-  debugLog += `🔹 FILTER OBJECT: ${JSON.stringify(filterObject)}\n`;
-  debugLog += `🔹 ADVERSARIES BEFORE FILTERING: ${adversaries.length} total\n`;
-
   const adversaryList = document.getElementById('adversary-list');
   adversaryList.innerHTML = '';
 
@@ -304,13 +298,6 @@ function renderAdversaryList(searchQuery = '') {
     adversaryCount.innerText = `${filteredCount}~${totalAdversaries}`;
   }
 
-  console.log('Filtered Adversaries:', filteredAdversaries);
-
-  debugLog += `🔹 FILTERED ADVERSARIES: ${filteredAdversaries.length} total\n`;
-  debugLog += `🔹 FINAL FILTER OBJECT: ${JSON.stringify(filterObject)}\n`;
-
-  console.log(debugLog);
-
   if (filteredAdversaries.length === 0) {
     adversaryList.innerHTML = 'No bad guys matching your criteria.';
     return;
@@ -330,15 +317,47 @@ function renderAdversaryList(searchQuery = '') {
     )}</strong> (CR: ${adversary.cr}, XP: ${adversary.xp})`;
     row.appendChild(nameCell);
 
+    // Create a table cell for buttons (same column for Associations + Add)
     const buttonCell = document.createElement('td');
     buttonCell.className = 'text-end align-middle';
 
+    // Create a div to wrap both buttons (ensures correct spacing)
+    const buttonWrapper = document.createElement('div');
+    buttonWrapper.className = 'd-flex gap-1 justify-content-end';
+
+    // Create the Add button
     const addButton = document.createElement('button');
     addButton.className = 'btn btn-primary btn-sm';
     addButton.innerHTML = '+';
     addButton.onclick = () => addAdversary(adversary);
 
-    buttonCell.appendChild(addButton);
+    // Append Add button to wrapper
+    buttonWrapper.appendChild(addButton);
+
+    // Only create the Associations button if associations exist
+    if (adversary.associations && adversary.associations.length > 0) {
+      const assocButton = document.createElement('div');
+      assocButton.className =
+        'btn btn-primary btn-sm p-1 assoc-btn d-flex align-items-center justify-content-center';
+      assocButton.setAttribute('data-bs-toggle', 'tooltip');
+      assocButton.setAttribute('data-bs-placement', 'top');
+      const formattedAssociations = adversary.associations
+        .map((a) => formatText(a)) // Capitalize words
+        .join('<br>'); // Use `<br>` instead of `\n` for line breaks
+
+      assocButton.removeAttribute('title'); // Remove default title attribute
+      assocButton.setAttribute('data-bs-toggle', 'tooltip');
+      assocButton.setAttribute('data-bs-html', 'true'); // Enable HTML
+      assocButton.setAttribute('data-bs-title', formattedAssociations); // Use HTML-friendly title
+
+      assocButton.innerHTML = '<i class="bi bi-link"></i>'; // Bootstrap link icon
+
+      // Append Associations button to wrapper (it appears to the left of the Add button)
+      buttonWrapper.prepend(assocButton);
+    }
+
+    // Append the button wrapper to the table cell
+    buttonCell.appendChild(buttonWrapper);
     row.appendChild(buttonCell);
 
     tbody.appendChild(row);
@@ -346,6 +365,14 @@ function renderAdversaryList(searchQuery = '') {
 
   table.appendChild(tbody);
   adversaryList.appendChild(table);
+
+  // Reinitialize tooltips after updating the adversary list
+  var tooltipTriggerList = [].slice.call(
+    document.querySelectorAll('[data-bs-toggle="tooltip"]')
+  );
+  tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+    new bootstrap.Tooltip(tooltipTriggerEl);
+  });
 }
 
 // ✅ Keep Text Formatting Helper

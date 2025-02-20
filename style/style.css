@@ -10,3 +10,17 @@
   width: 32px;
   padding: 0;
 }
+
+.assoc-btn {
+  width: 32px; /* Match the size of the Add button */
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 5px;
+}
+.assoc-btn.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
