@@ -6,6 +6,8 @@ const filterObject = {
   habitat: null,
   type: null,
   group: null,
+  xpMin: null,
+  xpMax: null,
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -24,6 +26,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   document
     .getElementById('filter-group')
     ?.addEventListener('change', updateFilters);
+  document
+    .getElementById('filter-xp-min')
+    ?.addEventListener('input', updateFilters);
+  document
+    .getElementById('filter-xp-max')
+    ?.addEventListener('input', updateFilters);
 
   populateXPFilter();
   populateHabitatFilter();
@@ -195,6 +203,12 @@ function updateFilters() {
     document.getElementById('filter-habitat').value || null; // 🔹 Capture habitat filter
   filterObject.type = document.getElementById('filter-type').value || null;
   filterObject.group = document.getElementById('filter-group').value || null;
+  filterObject.xpMin = document.getElementById('filter-xp-min').value
+    ? parseInt(document.getElementById('filter-xp-min').value)
+    : null;
+  filterObject.xpMax = document.getElementById('filter-xp-max').value
+    ? parseInt(document.getElementById('filter-xp-max').value)
+    : null;
 
   renderAdversaryList();
 }
@@ -222,13 +236,17 @@ function renderAdversaryList(searchQuery = '') {
     const matchesGroup =
       !filterObject.group ||
       (Array.isArray(adv.group) && adv.group.includes(filterObject.group));
+    const matchesXP =
+      (!filterObject.xpMin || adv.xp >= filterObject.xpMin) &&
+      (!filterObject.xpMax || adv.xp <= filterObject.xpMax);
 
     return (
       matchesSearch &&
       matchesCR &&
       matchesHabitat &&
       matchesType &&
-      matchesGroup
+      matchesGroup &&
+      matchesXP
     );
   });
 
