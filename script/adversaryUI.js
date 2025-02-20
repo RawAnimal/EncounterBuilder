@@ -287,6 +287,22 @@ function renderAdversaryList(searchQuery = '') {
       matchesXP
     );
   });
+  // Update the adversary count display
+  const adversaryCount = document.getElementById('adversary-count');
+  const totalAdversaries = adversaries.length;
+  const filteredCount = filteredAdversaries.length;
+
+  // Show total records when no filters are applied
+  if (
+    filteredCount === totalAdversaries &&
+    Object.values(filterObject).every(
+      (value) => value === null || value === ''
+    )
+  ) {
+    adversaryCount.innerText = `${totalAdversaries}~${totalAdversaries}`;
+  } else {
+    adversaryCount.innerText = `${filteredCount}~${totalAdversaries}`;
+  }
 
   console.log('Filtered Adversaries:', filteredAdversaries);
 
@@ -296,7 +312,7 @@ function renderAdversaryList(searchQuery = '') {
   console.log(debugLog);
 
   if (filteredAdversaries.length === 0) {
-    adversaryList.innerHTML = '<p>No adversaries found.</p>';
+    adversaryList.innerHTML = 'No bad guys matching your criteria.';
     return;
   }
 

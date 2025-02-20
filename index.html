@@ -155,13 +155,21 @@
                   </button>
                 </div>
 
-                <!-- Clear Filters Icon Button (Disabled by Default) -->
+                <!-- Clear Filters Icon Button with Tooltip (Disabled by Default) -->
                 <button
                   id="clear-filters"
                   class="btn btn-primary ms-2"
                   disabled
+                  data-bs-toggle="tooltip"
+                  data-bs-placement="top"
+                  title="Clear all filters"
                 >
-                  <i class="bi bi-x"></i>
+                  <img
+                    src="images/icons/icon_sweep.svg"
+                    alt="Clear"
+                    width="16"
+                    height="16"
+                  />
                 </button>
               </div>
 
@@ -212,19 +220,22 @@
                   </select>
                 </div>
               </div>
-              <div>
+              <div class="d-flex align-items-center justify-content-between">
                 <!-- Search Bar -->
                 <input
                   type="text"
                   id="search-adversary"
-                  class="form-control mb-2"
+                  class="form-control w-75"
                   placeholder="Search adversaries..."
                 />
-                <!-- Applied Filters -->
-                <div id="applied-filters" class="mb-2"></div>
-                <p id="adversary-count">Showing All</p>
+                <!-- Adversary Count -->
+                <div
+                  id="adversary-count"
+                  class="p-2 bg-primary text-white rounded"
+                ></div>
               </div>
-
+              <!-- Applied Filters -->
+              <div id="applied-filters" class="mb-2"></div>
               <!-- Adversary List -->
               <div id="adversary-list" class="overflow-auto border p-2"></div>
             </section>
@@ -347,5 +358,15 @@
     <script src="script/partyPanel.js"></script>
     <script src="script/partyCalculations.js"></script>
     <script src="script/script.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        var tooltipTriggerList = [].slice.call(
+          document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        );
+        tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+          new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+      });
+    </script>
   </body>
 </html>
