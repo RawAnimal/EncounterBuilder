@@ -244,70 +244,148 @@
       <!-- Second Row: Encounter Details Panel (Full Width) -->
       <div class="row mt-4">
         <div class="col-md-12">
-          <div class="card p-4">
-            <section id="encounter-summary">
-              <h2>Encounter Summary</h2>
-              <!-- This section will include calculations and options in the future -->
-              <p>APL: <span id="average-party-level">0</span></p>
-              <div
-                class="btn-group mt-3"
-                role="group"
-                id="encounter-difficulty"
-              >
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  id="difficulty-low"
+          <div class="card p-3">
+            <section
+              id="encounter-summary"
+              class="d-flex flex-wrap align-items-center justify-content-between"
+            >
+              <!-- Left Group -->
+              <div class="d-flex align-items-center flex-wrap gap-3">
+                <!-- Average Party Level -->
+                <div
+                  class="d-flex align-items-center stat-box btn-group-height"
                 >
-                  Low
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-primary active"
-                  id="difficulty-moderate"
-                >
-                  Moderate
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  id="difficulty-high"
-                >
-                  High
-                </button>
-              </div>
-              <!-- Encounter XP Budget Section -->
-              <div class="d-flex align-items-center mt-3">
-                <strong>XP Budget:</strong>
-                <span id="xp-budget" class="ms-2">0</span>
-              </div>
-              <!-- Total XP for Adversaries -->
-              <div class="d-flex align-items-center mt-2">
-                <strong>Total Adversary XP:</strong>
-                <span id="bad-guys-xp" class="ms-2">0</span>
-              </div>
-              <!-- Encounter Balance -->
-              <div class="d-flex align-items-center mt-2">
-                <strong>Encounter Balance:</strong>
-                <span id="encounter-balance" class="ms-2">0</span>
+                  <div class="stat-label bg-secondary text-white px-3 py-2">
+                    APL
+                  </div>
+                  <div
+                    class="stat-value border border-secondary border-3 border-l-0"
+                    style="border-left: 0px"
+                  >
+                    <span
+                      id="average-party-level"
+                      class="mx-4 my-1 text-secondary"
+                      >0</span
+                    >
+                  </div>
+                </div>
+
+                <!-- Encounter Difficulty -->
+                <div class="btn-group" role="group" id="encounter-difficulty">
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    id="difficulty-low"
+                  >
+                    Low
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-primary active"
+                    id="difficulty-moderate"
+                  >
+                    Moderate
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    id="difficulty-high"
+                  >
+                    High
+                  </button>
+                </div>
+
+                <!-- XP Calculation Mode -->
+                <div class="btn-group" role="group" id="xp-mode">
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    id="xp-individual"
+                  >
+                    <i class="bi bi-person"></i>
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-primary active"
+                    id="xp-group"
+                  >
+                    <i class="bi bi-people"></i>
+                  </button>
+                </div>
               </div>
 
-              <!-- Encounter XP Calculation Mode -->
-              <div class="btn-group mt-3" role="group" id="xp-mode">
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  id="xp-individual"
+              <!-- Right Group -->
+              <div class="d-flex align-items-center flex-wrap gap-3">
+                <!-- XP Budget -->
+                <div
+                  class="d-flex align-items-center stat-box btn-group-height"
                 >
-                  <i class="bi bi-person"></i>
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-primary active"
-                  id="xp-group"
+                  <div
+                    class="stat-label bg-secondary text-white px-3 py-2 text-uppercase"
+                  >
+                    Budget
+                  </div>
+                  <div
+                    class="stat-value border border-secondary border-3 border-l-0"
+                    style="border-left: 0px"
+                  >
+                    <span id="xp-budget" class="mx-4 my-1 text-secondary"
+                      >0</span
+                    >
+                  </div>
+                </div>
+
+                <!-- <div class="d-flex align-items-center">
+                  <strong>XP Budget:</strong>
+                  <span id="xp-budget" class="ms-2">0</span>
+                </div> -->
+
+                <!-- Total Adversary XP -->
+
+                <div
+                  class="d-flex align-items-center stat-box btn-group-height"
                 >
-                  <i class="bi bi-people"></i>
-                </button>
+                  <div
+                    class="stat-label bg-secondary text-white px-3 py-2 text-uppercase"
+                  >
+                    Encounter
+                  </div>
+                  <div
+                    class="stat-value border border-secondary border-3 border-l-0"
+                    style="border-left: 0px"
+                  >
+                    <span id="bad-guys-xp" class="mx-4 my-1 text-secondary"
+                      >0</span
+                    >
+                  </div>
+                </div>
+
+                <!-- <div class="d-flex align-items-center">
+                  <strong>Total Adversary XP:</strong>
+                  <span id="bad-guys-xp" class="ms-2">0</span>
+                </div> -->
+
+                <!-- Encounter Balance -->
+                <div
+                  class="d-flex align-items-center stat-box btn-group-height"
+                >
+                  <div
+                    class="stat-label bg-secondary text-white px-3 py-2 text-uppercase"
+                  >
+                    Balance
+                  </div>
+                  <div
+                    class="stat-value border border-secondary border-3 border-l-0"
+                    style="border-left: 0px"
+                  >
+                    <span id="encounter-balance" class="mx-4 my-1">0</span>
+                  </div>
+                </div>
+
+                <!-- <div class="d-flex align-items-center">
+                  <strong>Encounter Balance:</strong>
+                  <span id="encounter-balance" class="ms-2">0</span>
+                </div> -->
               </div>
             </section>
           </div>

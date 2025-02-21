@@ -24,3 +24,34 @@
   opacity: 0.5;
   pointer-events: none;
 }
+
+.stat-box {
+  border-radius: 10px; /* Matches button group */
+  overflow: hidden;
+  display: flex;
+  height: 38px; /* Adjust to match btn-group height */
+}
+
+.stat-label {
+  font-weight: bold;
+  font-size: 1rem; /* Adjusted to match btn-group text */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px 0 0 10px;
+}
+
+.stat-value {
+  font-size: 1rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-left: none; /* Removes left border to merge with label */
+  border-radius: 0 10px 10px 0; /* Matches btn-group corners */
+}
+
+/* Ensures this component matches the Bootstrap button group height */
+.btn-group-height {
+  height: 38px; /* Default btn-group height */
+}
