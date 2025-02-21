@@ -137,10 +137,33 @@ function updateEncounterBalance() {
     ) || 0;
 
   const balance = xpBudget - totalXP;
+  const balanceElement = document.getElementById('encounter-balance');
+  const labelElement = balanceElement
+    .closest('.stat-box')
+    .querySelector('.stat-label');
+  const valueContainer = balanceElement.closest('.stat-value');
 
-  // Update the encounter summary panel
-  document.getElementById('encounter-balance').textContent =
-    balance.toLocaleString();
+  // Set color based on the balance
+  let colorClass, borderClass, textColor;
+  if (balance > 0) {
+    colorClass = 'bg-success';
+    borderClass = 'border-success';
+    textColor = 'text-success';
+  } else if (balance < 0) {
+    colorClass = 'bg-danger';
+    borderClass = 'border-danger';
+    textColor = 'text-danger';
+  } else {
+    colorClass = 'bg-dark';
+    borderClass = 'border-dark';
+    textColor = 'text-dark';
+  }
+
+  // Apply classes to elements
+  balanceElement.textContent = balance.toLocaleString();
+  balanceElement.className = `mx-4 my-1 ${textColor}`;
+  labelElement.className = `stat-label px-3 py-2 text-white ${colorClass}`;
+  valueContainer.className = `stat-value border border-3 border-l-0 ${borderClass}`;
 }
 
 // Utility function to format text (capitalization & remove underscores)
