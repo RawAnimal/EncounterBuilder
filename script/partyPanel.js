@@ -45,11 +45,11 @@ document.addEventListener('DOMContentLoaded', () => {
     characters.forEach((character, index) => {
       const row = document.createElement('tr');
       row.innerHTML = `
-                <td>${character.name}</td>
-                <td>Level ${character.level}</td>
-                <td>${character.characterClass}</td>
-                <td class="text-end"><button class="btn btn-danger btn-sm remove-character" data-index="${index}">
-                    <i class="bi bi-trash"></i>
+                <td class="align-middle fw-bold">${character.name}</td>
+                <td class="align-middle">${character.level}</td>
+                <td class="align-middle">${character.characterClass}</td>
+                <td class="align-middle text-end"><button class="btn btn-danger btn-sm remove-character" data-index="${index}">
+                    <i class="bi bi-dash"></i>
                 </button></td>
             `;
       characterTableBody.appendChild(row);

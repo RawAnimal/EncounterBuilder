@@ -433,7 +433,7 @@ function renderAdversaryList(searchQuery = '') {
     // Create the Add button
     const addButton = document.createElement('button');
     addButton.className = 'btn btn-primary btn-sm';
-    addButton.innerHTML = '+';
+    addButton.innerHTML = '<i class="bi bi-plus"></i>';
     addButton.onclick = () => addAdversary(adversary);
 
     // Append Add button to wrapper

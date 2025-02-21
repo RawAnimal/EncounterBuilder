@@ -55,3 +55,8 @@
 .btn-group-height {
   height: 38px; /* Default btn-group height */
 }
+
+.silhouette_color {
+  filter: brightness(0) saturate(100%) invert(49%) sepia(9%) saturate(334%)
+    hue-rotate(169deg) brightness(92%) contrast(97%);
+}

@@ -36,31 +36,35 @@ function addAdversary(adversary) {
   // Column 1: Quantity
   const qtyCell = document.createElement('td');
   qtyCell.id = `qty-${adversary.name}`;
+  qtyCell.className = 'align-middle fw-bold';
   qtyCell.innerText = '1';
   row.appendChild(qtyCell);
 
   // Column 2: Name
   const nameCell = document.createElement('td');
+  nameCell.className = 'align-middle fw-bold';
   nameCell.innerText = formatText(adversary.name);
   row.appendChild(nameCell);
 
   // Column 3: CR
   const crCell = document.createElement('td');
+  crCell.className = 'align-middle';
   crCell.innerText = adversary.cr;
   row.appendChild(crCell);
 
   // Column 4: XP
   const xpCell = document.createElement('td');
+  xpCell.className = 'align-middle';
   xpCell.innerText = adversary.xp;
   row.appendChild(xpCell);
 
   // Column 5: Remove Button
   const removeCell = document.createElement('td');
-  removeCell.className = 'text-end';
+  removeCell.className = 'text-end align-middle';
 
   const removeButton = document.createElement('button');
   removeButton.className = 'btn btn-danger btn-sm';
-  removeButton.innerHTML = '−';
+  removeButton.innerHTML = '<i class="bi bi-dash"></i>';
   removeButton.onclick = () => removeAdversary(adversary.name);
 
   removeCell.appendChild(removeButton);
