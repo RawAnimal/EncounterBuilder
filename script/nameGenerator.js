@@ -42,7 +42,6 @@ document.addEventListener('DOMContentLoaded', () => {
   function setDefaultCharacterName() {
     const newName = generateRandomName();
     characterNameInput.value = newName;
-    console.log('New name set:', newName);
   }
 
   // Attach function globally so other scripts can access it

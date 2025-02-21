@@ -5,21 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let characters = [];
 
-  // Function to show toast notification
-  function showToast(message, type = 'success') {
-    const toastElement = document.getElementById('notification-toast');
-    const toastBody = document.getElementById('toast-message');
-
-    toastBody.textContent = message;
-    toastElement.className = `toast align-items-center text-white bg-${type} border-0`;
-
-    const toast = new bootstrap.Toast(toastElement);
-    toast.show();
-  }
-
-  // Attach function globally so script.js can use it
-  window.showToast = showToast;
-
   // Function to add a character to the party list
   function addCharacter() {
     const name = document.getElementById('character-name').value.trim();
@@ -35,7 +20,12 @@ document.addEventListener('DOMContentLoaded', () => {
     characters.push(character);
     updatePartyTable();
 
-    showToast(`${name} has been added to the party!`);
+    showToast(
+      `<strong>${name}</strong> the <strong>Level ${level} ${characterClass}</strong> has joined the party of adventurers.`,
+      'success',
+      'Party Member Added',
+      2500
+    );
   }
 
   // Function to update the party table
@@ -56,18 +46,24 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Add event listeners to remove buttons
+    // Add event listeners to remove buttons
     document.querySelectorAll('.remove-character').forEach((button) => {
       button.addEventListener('click', (event) => {
         const index = event.target.closest('button').dataset.index;
         const removedCharacter = characters[index];
+
         characters.splice(index, 1);
         updatePartyTable();
 
-        // Show toast notification for character removal
-        showToast(
-          `${removedCharacter.name} has been removed from the party!`,
-          'danger'
-        );
+        let removalMessage = `<strong>${removedCharacter.name}</strong> the <strong>Level ${removedCharacter.level} ${removedCharacter.characterClass}</strong> has left the party of adventurers.`;
+
+        // Append extra message if the party is now empty
+        if (characters.length === 0) {
+          removalMessage += ` <strong>The party is now empty.</strong>`;
+        }
+
+        // Show toast notification
+        showToast(removalMessage, 'danger', 'Party Member Removed', 2500);
       });
     });
   }

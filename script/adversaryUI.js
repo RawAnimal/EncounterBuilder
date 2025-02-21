@@ -14,7 +14,6 @@ let initialXPMin;
 let initialXPMax;
 
 document.addEventListener('DOMContentLoaded', async () => {
-  console.log('Initializing Adversary UI...');
   renderAdversaryList();
   populateCRFilter();
   const filterIds = [
@@ -68,8 +67,6 @@ function populateXPFilter() {
   xpMinInput.max = max;
   xpMaxInput.min = min;
   xpMaxInput.max = max;
-
-  console.log('XP filter populated:', { min, max });
 }
 
 // Populate the Group Dropdown
@@ -92,8 +89,6 @@ function populateGroupFilter() {
     option.textContent = display;
     groupSelect.appendChild(option);
   });
-
-  console.log('Group filter populated:', groups);
 }
 
 // ✅ Existing Function: Populate the Habitat Dropdown
@@ -116,8 +111,6 @@ function populateHabitatFilter() {
     option.textContent = display;
     habitatSelect.appendChild(option);
   });
-
-  console.log('Habitat filter populated:', habitats);
 }
 
 // ✅ Existing Function: Populate the Type Dropdown
@@ -140,8 +133,6 @@ function populateTypeFilter() {
     option.textContent = display;
     typeSelect.appendChild(option);
   });
-
-  console.log('Type filter populated:', types);
 }
 
 // ✅ Existing Function: Populate the CR Dropdown
@@ -164,8 +155,6 @@ function populateCRFilter() {
     option.textContent = display;
     crSelect.appendChild(option);
   });
-
-  console.log('CR filter populated:', crValues);
 }
 
 // ✅ Keep Existing UI Logic

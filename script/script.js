@@ -1,6 +1,4 @@
 window.addEventListener('load', () => {
-  console.log('script.js loaded successfully.');
-
   // Ensure functions from other scripts are available before proceeding
   if (typeof window.setDefaultCharacterName !== 'function') {
     console.error(
@@ -50,7 +48,6 @@ window.addEventListener('load', () => {
 
       // Set initial image
       updateClassImage(characterClassInput.value);
-      console.log('Class dropdown initialized.');
     } catch (error) {
       console.error('Error loading class data:', error);
     }
@@ -67,8 +64,6 @@ window.addEventListener('load', () => {
       if (i === 5) option.selected = true; // Default to Level 5
       characterLevelInput.appendChild(option);
     }
-
-    console.log('Level dropdown initialized.');
   }
 
   // Function to update class image based on selected class
@@ -76,7 +71,6 @@ window.addEventListener('load', () => {
     if (classData[selectedClass]) {
       classImageElement.src = classData[selectedClass];
       classImageElement.style.display = 'block'; // Ensure it's visible
-      console.log(`Class image updated: ${classData[selectedClass]}`);
     } else {
       classImageElement.style.display = 'none';
     }
@@ -105,9 +99,6 @@ window.addEventListener('load', () => {
 
     // Ensure the correct name is generated
     window.setDefaultCharacterName();
-    console.log(
-      `Gender toggled: Male(${useMaleNames}) Female(${useFemaleNames})`
-    );
   }
 
   // Attach event listeners for gender buttons
@@ -120,7 +111,6 @@ window.addEventListener('load', () => {
 
     setTimeout(() => {
       window.setDefaultCharacterName(); // Generate new name AFTER adding
-      console.log('New name generated after adding character.');
     }, 50);
   }
 

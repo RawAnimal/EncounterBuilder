@@ -11,8 +11,6 @@ async function loadAdversaries() {
     // Sort adversaries alphabetically by name
     adversaries = data.sort((a, b) => a.name.localeCompare(b.name));
 
-    console.log('Adversaries loaded successfully:', adversaries);
-
     populateCRFilter();
     populateXPFilter(); // ✅ Ensure XP filter loads after data
   } catch (error) {
@@ -27,8 +25,6 @@ async function loadAdversaryMetadata() {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
     adversaryMetadata = await response.json();
-
-    console.log('Adversary metadata loaded successfully:', adversaryMetadata);
 
     populateHabitatFilter();
     populateTypeFilter();
