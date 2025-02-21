@@ -22,6 +22,9 @@ function addAdversary(adversary) {
         addedAdversaries[adversary.name].quantity
       }.`
     );
+
+    updateTotalAdversaryXP();
+
     return;
   }
 
