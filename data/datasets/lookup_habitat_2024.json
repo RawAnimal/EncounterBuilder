@@ -1,0 +1,18 @@
+{
+  "version": "1.0",
+  "generated": "2025-02-23T02:42:49.802Z",
+  "habitats": [
+    "any",
+    "arctic",
+    "coastal",
+    "desert",
+    "forest",
+    "grassland",
+    "hill",
+    "mountain",
+    "swamp",
+    "underdark",
+    "underwater",
+    "urban"
+  ]
+}

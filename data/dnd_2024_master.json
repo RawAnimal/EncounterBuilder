@@ -1,0 +1,10 @@
+{
+  "version": "2024",
+  "data": {
+    "adversaries": "datasets/adversaries_2024.json",
+    "crs": "datasets/lookup_cr_2024.json",
+    "groups": "datasets/lookup_group_2024.json",
+    "habitats": "datasets/lookup_habitat_2024.json",
+    "types": "datasets/lookup_type_2024.json"
+  }
+}
