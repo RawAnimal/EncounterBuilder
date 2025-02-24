@@ -63,6 +63,28 @@ document.addEventListener('DOMContentLoaded', async () => {
       clearFilters();
     });
   }
+
+  // Ensure resetFilterUI is triggered when Enter is pressed in XP input fields
+  document
+    .getElementById('filter-xp-min')
+    ?.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        resetFilterUI();
+      }
+    });
+
+  document
+    .getElementById('filter-xp-max')
+    ?.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        resetFilterUI();
+      }
+    });
+
+  // Ensure resetFilterUI is triggered when user tabs out of XP Max input field
+  document.getElementById('filter-xp-max')?.addEventListener('blur', () => {
+    resetFilterUI();
+  });
 });
 
 // Populate the XP Range Inputs
@@ -179,6 +201,7 @@ function toggleFilter(button) {
     button.classList.remove('active', 'btn-primary');
     button.classList.add('btn-secondary');
     document.getElementById(`filter-${filterId}-div`).classList.add('d-none');
+    resetFilterUI();
     return;
   }
 
@@ -223,6 +246,9 @@ function updateFilters() {
   renderAdversaryList();
   updateAppliedFilters();
   updateClearFiltersButton();
+  if (!document.activeElement.matches('#filter-xp-min, #filter-xp-max')) {
+    resetFilterUI();
+  }
 }
 
 function updateAppliedFilters() {
@@ -369,6 +395,8 @@ function clearFilters() {
 
   // Update Clear Filters button (tooltip remains intact)
   updateClearFiltersButton();
+
+  resetFilterUI();
 }
 
 // Function to render the adversary list based on filters
@@ -558,7 +586,7 @@ function applyFilters() {
       matchesGroup
     );
   });
-
+  resetFilterUI();
   renderAdversaryList(filteredAdversaries);
 }
 
@@ -566,6 +594,19 @@ function capitalizeWords(str) {
   return str
     .replace(/_/g, ' ') // Replace underscores with spaces
     .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitalize each word
+}
+
+function resetFilterUI() {
+  // Find all filter buttons and unselect them
+  document.querySelectorAll('.filter-btn').forEach((button) => {
+    button.classList.remove('active', 'btn-primary'); // Remove active state
+    button.classList.add('btn-secondary'); // Remove active state
+  });
+
+  // Hide all dropdown menus
+  document.querySelectorAll('.filter-div').forEach((dropdown) => {
+    dropdown.classList.add('d-none'); // Hide dropdown
+  });
 }
 
 export {
