@@ -1,0 +1,169 @@
+{
+  "meta": {
+    "record_count": 10,
+    "last_updated": "2025-02-22T18:00:07.753Z",
+    "version": "1.0"
+  },
+  "species": {
+    "aasimar": {
+      "name": "Aasimar",
+      "image": "",
+      "source": [
+        {
+          "book": "Player's Handbook 2024",
+          "acronym": "PHB",
+          "page": null
+        },
+        {
+          "web": "D&D Beyond",
+          "acronym": "DDB",
+          "link": ""
+        }
+      ]
+    },
+    "dragonborn": {
+      "name": "Dragonborn",
+      "image": "",
+      "source": [
+        {
+          "book": "Player's Handbook 2024",
+          "acronym": "PHB",
+          "page": null
+        },
+        {
+          "web": "D&D Beyond",
+          "acronym": "DDB",
+          "link": ""
+        }
+      ]
+    },
+    "dwarf": {
+      "name": "Dwarf",
+      "image": "",
+      "source": [
+        {
+          "book": "Player's Handbook 2024",
+          "acronym": "PHB",
+          "page": null
+        },
+        {
+          "web": "D&D Beyond",
+          "acronym": "DDB",
+          "link": ""
+        }
+      ]
+    },
+    "elf": {
+      "name": "Elf",
+      "image": "",
+      "source": [
+        {
+          "book": "Player's Handbook 2024",
+          "acronym": "PHB",
+          "page": null
+        },
+        {
+          "web": "D&D Beyond",
+          "acronym": "DDB",
+          "link": ""
+        }
+      ]
+    },
+    "gnome": {
+      "name": "Gnome",
+      "image": "",
+      "source": [
+        {
+          "book": "Player's Handbook 2024",
+          "acronym": "PHB",
+          "page": null
+        },
+        {
+          "web": "D&D Beyond",
+          "acronym": "DDB",
+          "link": ""
+        }
+      ]
+    },
+    "goliath": {
+      "name": "Goliath",
+      "image": "",
+      "source": [
+        {
+          "book": "Player's Handbook 2024",
+          "acronym": "PHB",
+          "page": null
+        },
+        {
+          "web": "D&D Beyond",
+          "acronym": "DDB",
+          "link": ""
+        }
+      ]
+    },
+    "halfling": {
+      "name": "Halfling",
+      "image": "",
+      "source": [
+        {
+          "book": "Player's Handbook 2024",
+          "acronym": "PHB",
+          "page": null
+        },
+        {
+          "web": "D&D Beyond",
+          "acronym": "DDB",
+          "link": ""
+        }
+      ]
+    },
+    "human": {
+      "name": "Human",
+      "image": "",
+      "source": [
+        {
+          "book": "Player's Handbook 2024",
+          "acronym": "PHB",
+          "page": null
+        },
+        {
+          "web": "D&D Beyond",
+          "acronym": "DDB",
+          "link": ""
+        }
+      ]
+    },
+    "orc": {
+      "name": "Orc",
+      "image": "",
+      "source": [
+        {
+          "book": "Player's Handbook 2024",
+          "acronym": "PHB",
+          "page": null
+        },
+        {
+          "web": "D&D Beyond",
+          "acronym": "DDB",
+          "link": ""
+        }
+      ]
+    },
+    "tiefling": {
+      "name": "Tiefling",
+      "image": "",
+      "source": [
+        {
+          "book": "Player's Handbook 2024",
+          "acronym": "PHB",
+          "page": null
+        },
+        {
+          "web": "D&D Beyond",
+          "acronym": "DDB",
+          "link": ""
+        }
+      ]
+    }
+  }
+}

@@ -5,6 +5,9 @@
     "crs": "data/datasets/lookup_cr_2024.json",
     "groups": "data/datasets/lookup_group_2024.json",
     "habitats": "data/datasets/lookup_habitat_2024.json",
-    "types": "data/datasets/lookup_type_2024.json"
+    "types": "data/datasets/lookup_type_2024.json",
+    "classes": "data/datasets/lookup_classes_2024.json",
+    "species": "data/datasets/lookup_species_2024.json",
+    "names": "data/datasets/lookup_random_names.json"
   }
 }
