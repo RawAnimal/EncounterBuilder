@@ -181,4 +181,5 @@ export {
   getTypeList,
   getHabitatList,
   getUniqueCRValues,
+  formatCR,
 };

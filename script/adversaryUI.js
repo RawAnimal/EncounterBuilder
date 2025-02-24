@@ -9,6 +9,7 @@ import {
   extractWebSource,
 } from './adversaryData.js';
 import { addAdversary } from './adversaryManager.js';
+import { formatCR } from './adversaryData.js';
 
 import { showToast } from './toastManager.js';
 
@@ -484,7 +485,7 @@ function renderAdversaryList(searchQuery = '') {
     // ✅ CR Cell
     const crCell = document.createElement('td');
     crCell.className = 'align-middle';
-    crCell.textContent = adversary.cr; // Ensure CR is displayed
+    crCell.textContent = formatCR(adversary.cr); // Ensure CR is displayed
 
     // ✅ XP Cell
     const xpCell = document.createElement('td');

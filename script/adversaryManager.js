@@ -1,5 +1,6 @@
 // adversaryManager.js - Handles adding/removing adversaries to Bad Guys table
 import { showToast } from './toastManager.js';
+import { formatCR } from './adversaryData.js';
 
 let addedAdversaries = {}; // Tracks added adversaries
 
@@ -40,7 +41,7 @@ function addAdversary(adversary) {
   row.innerHTML = `
         <td id="qty-${adversary.name}" class="adversary-quantity">1</td>
         <td><strong>${formatText(adversary.name)}</strong></td>
-        <td>${adversary.cr}</td>
+        <td>${formatCR(adversary.cr)}</td>
         <td>${adversary.xp.toLocaleString()}</td>
         <td><button class="btn btn-danger btn-sm remove-adversary" data-name="${
           adversary.name
