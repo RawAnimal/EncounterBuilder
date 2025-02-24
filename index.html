@@ -260,7 +260,7 @@
                 ></div>
               </div>
               <!-- Applied Filters -->
-              <div id="applied-filters" class="mb-2"></div>
+              <div id="applied-filters"></div>
               <!-- Adversary List -->
               <div id="adversary-list" class="overflow-auto border p-2"></div>
             </section>
@@ -269,15 +269,15 @@
       </div>
 
       <!-- Second Row: Encounter Details Panel (Full Width) -->
-      <div class="row mt-4">
+      <div class="row">
         <div class="col-md-12">
-          <div class="card p-3">
+          <div class="card mt-4">
             <section
               id="encounter-summary"
-              class="d-flex flex-wrap align-items-center justify-content-between"
+              class="d-flex flex-wrap align-items-center justify-content-between px-2 pb-2"
             >
               <!-- Left Group -->
-              <div class="d-flex align-items-center flex-wrap gap-3">
+              <div class="d-flex align-items-center flex-wrap gap-2 mt-2">
                 <!-- Average Party Level -->
                 <div
                   class="d-flex align-items-center stat-box btn-group-height"
@@ -342,10 +342,10 @@
               </div>
 
               <!-- Right Group -->
-              <div class="d-flex align-items-center flex-wrap gap-3">
+              <div class="d-flex align-items-center flex-wrap gap-2">
                 <!-- XP Budget -->
                 <div
-                  class="d-flex align-items-center stat-box btn-group-height"
+                  class="d-flex align-items-center stat-box btn-group-height mt-2"
                 >
                   <div
                     class="stat-label bg-secondary text-white px-3 py-2 text-uppercase"
@@ -363,7 +363,7 @@
                 </div>
                 <!-- Encounter XP -->
                 <div
-                  class="d-flex align-items-center stat-box btn-group-height"
+                  class="d-flex align-items-center stat-box btn-group-height mt-2"
                 >
                   <div
                     class="stat-label bg-secondary text-white px-3 py-2 text-uppercase"
@@ -382,7 +382,7 @@
 
                 <!-- Encounter Balance -->
                 <div
-                  class="d-flex align-items-center stat-box btn-group-height"
+                  class="d-flex align-items-center stat-box btn-group-height mt-2"
                 >
                   <div
                     class="stat-label bg-secondary text-white px-3 py-2 text-uppercase"
@@ -468,14 +468,13 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="script/toastManager.js"></script>
-    <script src="script/adversaryData.js"></script>
-    <script src="script/adversaryManager.js"></script>
-    <script src="script/adversaryUI.js"></script>
-    <script src="script/adversaryFilters.js"></script>
-    <script src="script/adversaryController.js"></script>
+    <script type="module" src="script/toastManager.js"></script>
+    <script type="module" src="script/adversaryData.js"></script>
+    <script type="module" src="script/adversaryManager.js"></script>
+    <script type="module" src="script/adversaryController.js"></script>
+    <script type="module" src="script/adversaryUI.js"></script>
     <script src="script/nameGenerator.js"></script>
-    <script src="script/partyPanel.js"></script>
+    <script type="module" src="script/partyPanel.js"></script>
     <script src="script/partyCalculations.js"></script>
     <script src="script/script.js"></script>
     <script>

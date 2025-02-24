@@ -1,4 +1,16 @@
 // adversaryUI.js - Handles UI rendering for adversaries
+import {
+  getAdversaries,
+  getUniqueCRValues,
+  getXPRange,
+  getHabitatList,
+  getTypeList,
+  getGroupList,
+  extractWebSource,
+} from './adversaryData.js';
+import { addAdversary } from './adversaryManager.js';
+
+import { showToast } from './toastManager.js';
 
 const filterObject = {
   search: null,
@@ -219,45 +231,57 @@ function updateAppliedFilters() {
 
   // CR Filter Badge
   if (filterObject.cr) {
-    const badge = createFilterBadge(`CR: ${filterObject.cr}`, () => {
-      document.getElementById('filter-cr').value = '';
-      filterObject.cr = null;
-      updateFilters();
-    });
+    const badge = createFilterBadge(
+      `CR: ${formatText(filterObject.cr)}`,
+      () => {
+        document.getElementById('filter-cr').value = '';
+        filterObject.cr = null;
+        updateFilters();
+      }
+    );
     appliedFiltersDiv.appendChild(badge);
   }
 
   // Habitat Filter Badge
   if (filterObject.habitat) {
-    const badge = createFilterBadge(`Habitat: ${filterObject.habitat}`, () => {
-      document.getElementById('filter-habitat').value = '';
-      filterObject.habitat = null;
-      updateFilters();
-    });
+    const badge = createFilterBadge(
+      `Habitat: ${formatText(filterObject.habitat)}`,
+      () => {
+        document.getElementById('filter-habitat').value = '';
+        filterObject.habitat = null;
+        updateFilters();
+      }
+    );
     appliedFiltersDiv.appendChild(badge);
   }
 
   // Type Filter Badge
   if (filterObject.type) {
-    const badge = createFilterBadge(`Type: ${filterObject.type}`, () => {
-      document.getElementById('filter-type').value = '';
-      filterObject.type = null;
-      updateFilters();
-    });
+    const badge = createFilterBadge(
+      `Type: ${formatText(filterObject.type)}`,
+      () => {
+        document.getElementById('filter-type').value = '';
+        filterObject.type = null;
+        updateFilters();
+      }
+    );
     appliedFiltersDiv.appendChild(badge);
   }
 
   // Group Filter Badge
   if (filterObject.group) {
-    const badge = createFilterBadge(`Group: ${filterObject.group}`, () => {
-      document.getElementById('filter-group').value = '';
-      filterObject.group = null;
-      updateFilters();
-    });
+    const badge = createFilterBadge(
+      `Group: ${formatText(filterObject.group)}`,
+      () => {
+        document.getElementById('filter-group').value = '';
+        filterObject.group = null;
+        updateFilters();
+      }
+    );
     appliedFiltersDiv.appendChild(badge);
   }
 
-  // XP Filter Badge (Single badge for both min/max)
+  // XP Filter Badge
   if (
     (filterObject.xpMin !== null && filterObject.xpMin !== getXPRange().min) ||
     (filterObject.xpMax !== null && filterObject.xpMax !== getXPRange().max)
@@ -278,7 +302,7 @@ function updateAppliedFilters() {
 
 function createFilterBadge(text, onClick) {
   const badge = document.createElement('span');
-  badge.className = 'badge bg-primary me-2 p-2';
+  badge.className = 'badge bg-primary m-2 p-2';
   badge.innerHTML = `${text} <span class="ms-1" style="cursor:pointer;">&times;</span>`;
 
   badge.querySelector('span').addEventListener('click', onClick);
@@ -310,13 +334,15 @@ function clearTooltip() {
   }
 
   // Manually remove lingering tooltips from the DOM
-  document.querySelectorAll('.tooltip').forEach((tooltip) => tooltip.remove());
-
   setTimeout(() => {
-    if (document.body.contains(clearFiltersDiv)) {
-      new bootstrap.Tooltip(clearFiltersDiv, { trigger: 'hover' });
-    }
-  }, 100);
+    document
+      .querySelectorAll('[data-bs-toggle="tooltip"]')
+      .forEach((tooltipTriggerEl) => {
+        new bootstrap.Tooltip(tooltipTriggerEl, {
+          html: true, // ✅ Allows HTML content inside the tooltip
+        });
+      });
+  }, 500);
 }
 
 function clearFilters() {
@@ -350,6 +376,8 @@ function renderAdversaryList(searchQuery = '') {
   const adversaryList = document.getElementById('adversary-list');
   adversaryList.innerHTML = '';
 
+  let adversaries = getAdversaries(); // Fetch the adversary list
+
   let filteredAdversaries = adversaries.filter((adv) => {
     const matchesSearch =
       !filterObject.search ||
@@ -361,7 +389,10 @@ function renderAdversaryList(searchQuery = '') {
     const matchesType = !filterObject.type || adv.type === filterObject.type;
     const matchesGroup =
       !filterObject.group ||
-      (Array.isArray(adv.group) && adv.group.includes(filterObject.group));
+      (adv.group &&
+        Array.isArray(adv.group) &&
+        adv.group.includes(filterObject.group));
+
     const matchesXP =
       (!filterObject.xpMin || adv.xp >= filterObject.xpMin) &&
       (!filterObject.xpMax || adv.xp <= filterObject.xpMax);
@@ -406,10 +437,39 @@ function renderAdversaryList(searchQuery = '') {
 
     const nameCell = document.createElement('td');
     nameCell.className = 'align-middle';
-    nameCell.innerHTML = `<strong>${formatText(
-      adversary.name
-    )}</strong> (CR: ${adversary.cr}, XP: ${adversary.xp})`;
+
+    const sourceLink = adversary.source ? extractWebSource(adversary) : null;
+
+    if (sourceLink) {
+      const nameLink = document.createElement('a');
+      nameLink.href = sourceLink;
+      nameLink.target = '_blank'; // Open in new tab
+      nameLink.rel = 'noopener noreferrer'; // Security best practice
+      nameLink.className = 'fw-bold text-primary text-decoration-none';
+      nameLink.textContent = formatText(adversary.name);
+
+      nameCell.appendChild(nameLink);
+    } else {
+      nameCell.innerHTML = `<strong>${formatText(adversary.name)}</strong>`;
+    }
+
+    // ✅ CR Cell
+    const crCell = document.createElement('td');
+    crCell.className = 'align-middle';
+    crCell.textContent = adversary.cr; // Ensure CR is displayed
+
+    // ✅ XP Cell
+    const xpCell = document.createElement('td');
+    xpCell.className = 'align-middle';
+    xpCell.textContent = adversary.xp; // Ensure XP is displayed
+
+    // ✅ Append Cells to Row
     row.appendChild(nameCell);
+    row.appendChild(crCell);
+    row.appendChild(xpCell);
+
+    // ✅ Append Row to Table Body
+    tbody.appendChild(row);
 
     // Create a table cell for buttons (same column for Associations + Add)
     const buttonCell = document.createElement('td');
@@ -430,23 +490,18 @@ function renderAdversaryList(searchQuery = '') {
 
     // Only create the Associations button if associations exist
     if (adversary.associations && adversary.associations.length > 0) {
-      const assocButton = document.createElement('div');
-      assocButton.className =
-        'btn btn-primary btn-sm p-1 assoc-btn d-flex align-items-center justify-content-center';
+      const assocButton = document.createElement('button');
+      assocButton.className = 'btn btn-primary btn-sm assoc-btn';
       assocButton.setAttribute('data-bs-toggle', 'tooltip');
       assocButton.setAttribute('data-bs-placement', 'top');
+      assocButton.innerHTML = '<i class="bi bi-link"></i>';
+
       const formattedAssociations = adversary.associations
-        .map((a) => formatText(a)) // Capitalize words
-        .join('<br>'); // Use `<br>` instead of `\n` for line breaks
+        .map((a) => formatText(a))
+        .join('<br>');
 
-      assocButton.removeAttribute('title'); // Remove default title attribute
-      assocButton.setAttribute('data-bs-toggle', 'tooltip');
-      assocButton.setAttribute('data-bs-html', 'true'); // Enable HTML
-      assocButton.setAttribute('data-bs-title', formattedAssociations); // Use HTML-friendly title
+      assocButton.setAttribute('title', formattedAssociations);
 
-      assocButton.innerHTML = '<i class="bi bi-link"></i>'; // Bootstrap link icon
-
-      // Append Associations button to wrapper (it appears to the left of the Add button)
       buttonWrapper.prepend(assocButton);
     }
 
@@ -465,6 +520,7 @@ function renderAdversaryList(searchQuery = '') {
     .forEach((tooltipTriggerEl) => {
       let tooltip = new bootstrap.Tooltip(tooltipTriggerEl, {
         trigger: 'hover',
+        html: true,
       });
 
       // Ensure tooltip disappears if the button is clicked
@@ -478,3 +534,46 @@ function renderAdversaryList(searchQuery = '') {
 function formatText(str) {
   return str.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase());
 }
+
+function applyFilters() {
+  let filteredAdversaries = getAdversaries().filter((adv) => {
+    const matchesSearch =
+      !filterObject.search ||
+      adv.name.toLowerCase().includes(filterObject.search);
+    const matchesCR =
+      !filterObject.cr || adv.cr.toString() === filterObject.cr;
+    const matchesHabitat =
+      !filterObject.habitat ||
+      (adv.habitat && adv.habitat.includes(filterObject.habitat));
+    const matchesType = !filterObject.type || adv.type === filterObject.type;
+    const matchesGroup =
+      !filterObject.group ||
+      (Array.isArray(adv.group) && adv.group.includes(filterObject.group));
+
+    return (
+      matchesSearch &&
+      matchesCR &&
+      matchesHabitat &&
+      matchesType &&
+      matchesGroup
+    );
+  });
+
+  renderAdversaryList(filteredAdversaries);
+}
+
+function capitalizeWords(str) {
+  return str
+    .replace(/_/g, ' ') // Replace underscores with spaces
+    .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitalize each word
+}
+
+export {
+  renderAdversaryList,
+  populateCRFilter,
+  populateXPFilter,
+  populateHabitatFilter,
+  populateTypeFilter,
+  populateGroupFilter,
+  applyFilters,
+};

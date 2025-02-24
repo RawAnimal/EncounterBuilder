@@ -1,16 +1,17 @@
 // adversaryManager.js - Handles adding/removing adversaries to Bad Guys table
+import { showToast } from './toastManager.js';
 
 let addedAdversaries = {}; // Tracks added adversaries
 
 // Function to add an adversary to the Bad Guys table
 function addAdversary(adversary) {
   const tableBody = document.getElementById('adversary-table-body');
+  if (!tableBody) return;
 
   if (!addedAdversaries) {
     addedAdversaries = {};
   }
 
-  // Check if adversary already exists
   if (addedAdversaries[adversary.name]) {
     addedAdversaries[adversary.name].quantity += 1;
     document.getElementById(`qty-${adversary.name}`).innerText =
@@ -20,10 +21,10 @@ function addAdversary(adversary) {
       `<strong>${formatText(
         adversary.name
       )}</strong> count on the Adversary List has increased to 
-      <strong>${addedAdversaries[adversary.name].quantity}</strong>, adding 
-      <strong>${adversary.xp.toLocaleString()} XP</strong> to the Encounter for a tougher challenge.`,
+		      <strong>${addedAdversaries[adversary.name].quantity}</strong>, adding 
+		      <strong>${adversary.xp.toLocaleString()} XP</strong> to the Encounter for a tougher challenge.`,
       'success',
-      'Adversary Increased',
+      'Adversary Increase',
       2500
     );
 
@@ -31,45 +32,28 @@ function addAdversary(adversary) {
     return;
   }
 
-  // Add new adversary entry
-  addedAdversaries[adversary.name] = { ...adversary, quantity: 1 };
+  // Otherwise, create a new row for the adversary
+  addedAdversaries[adversary.name] = { adversary, quantity: 1 };
 
   const row = document.createElement('tr');
-
-  const qtyCell = document.createElement('td');
-  qtyCell.id = `qty-${adversary.name}`;
-  qtyCell.className = 'align-middle fw-bold';
-  qtyCell.innerText = '1';
-  row.appendChild(qtyCell);
-
-  const nameCell = document.createElement('td');
-  nameCell.className = 'align-middle fw-bold';
-  nameCell.innerText = formatText(adversary.name);
-  row.appendChild(nameCell);
-
-  const crCell = document.createElement('td');
-  crCell.className = 'align-middle';
-  crCell.innerText = adversary.cr;
-  row.appendChild(crCell);
-
-  const xpCell = document.createElement('td');
-  xpCell.className = 'align-middle';
-  xpCell.innerText = adversary.xp;
-  row.appendChild(xpCell);
-
-  const removeCell = document.createElement('td');
-  removeCell.className = 'text-end align-middle';
-
-  const removeButton = document.createElement('button');
-  removeButton.className = 'btn btn-danger btn-sm';
-  removeButton.innerHTML = '<i class="bi bi-dash"></i>';
-  removeButton.onclick = () => removeAdversary(adversary.name);
-
-  removeCell.appendChild(removeButton);
-  row.appendChild(removeCell);
+  row.dataset.adversaryId = adversary.name;
+  row.innerHTML = `
+        <td id="qty-${adversary.name}" class="adversary-quantity">1</td>
+        <td><strong>${formatText(adversary.name)}</strong></td>
+        <td>${adversary.cr}</td>
+        <td>${adversary.xp.toLocaleString()}</td>
+        <td><button class="btn btn-danger btn-sm remove-adversary" data-name="${
+          adversary.name
+        }">X</button></td>
+    `;
 
   tableBody.appendChild(row);
-  updateTotalAdversaryXP();
+
+  // Add remove button event listener
+  const removeButton = row.querySelector('.remove-adversary');
+  removeButton.addEventListener('click', () =>
+    removeAdversary(adversary.name)
+  );
 
   showToast(
     `<strong>${formatText(
@@ -80,47 +64,50 @@ function addAdversary(adversary) {
     'Adversary Added',
     2500
   );
+
+  updateTotalAdversaryXP();
 }
 
-// Function to remove an adversary from the Bad Guys table
 function removeAdversary(name) {
-  if (addedAdversaries[name]) {
-    const qtyElement = document.getElementById(`qty-${name}`);
-    const adversaryXP = addedAdversaries[name].xp; // 🔥 Store XP before deleting
+  if (!addedAdversaries[name]) return;
 
-    let finalMessage = ''; // 🔥 Will store the toast message
+  const adversaryData = addedAdversaries[name];
+  if (adversaryData.quantity > 1) {
+    adversaryData.quantity -= 1;
+    document.getElementById(`qty-${name}`).innerText = adversaryData.quantity;
 
-    // Reduce quantity if more than 1
-    if (addedAdversaries[name].quantity > 1) {
-      addedAdversaries[name].quantity -= 1;
-      qtyElement.innerText = addedAdversaries[name].quantity;
-
-      finalMessage = `<strong>${formatText(
+    showToast(
+      `<strong>${formatText(
         name
-      )}</strong> has been removed from the Adversary List, 
-        lowering its quantity to <strong>${
-          addedAdversaries[name].quantity
-        }</strong> and 
-        decreasing the Encounter by <strong>${adversaryXP.toLocaleString()} XP</strong>, easing the difficulty.`;
-    } else {
-      // 🔥 Store name before deletion for the toast message
-      delete addedAdversaries[name]; // ✅ Delete after storing needed values
-      qtyElement.closest('tr').remove();
+      )}</strong> count on the Adversary List has decreased to 
+		      <strong>${adversaryData.quantity}</strong>, removing 
+		      <strong>${adversaryData.adversary.xp.toLocaleString()} XP</strong> from the Encounter for an easier challenge.`,
+      'danger',
+      'Adversary Decrease',
+      2500
+    );
 
-      finalMessage = `<strong>${formatText(
-        name
-      )}</strong> (last) has been removed from the Adversary List, 
-        reducing the Encounter by <strong>${adversaryXP.toLocaleString()} XP</strong>, making it less challenging.`;
-
-      // ✅ If all adversaries are removed, append additional text
-      if (Object.keys(addedAdversaries).length === 0) {
-        finalMessage += ` <strong>The Encounter is now empty.</strong>`;
-      }
-    }
-
-    // Show the toast with the final message
-    showToast(finalMessage, 'danger', 'Adversary Removed', 2500);
+    updateTotalAdversaryXP();
+    return;
   }
+
+  // If only one adversary left, remove from table
+  delete addedAdversaries[name];
+
+  const row = document.querySelector(`[data-adversary-id="${name}"]`);
+  if (row) {
+    row.remove();
+  }
+
+  showToast(
+    `The last <strong>${formatText(
+      name
+    )}</strong> has been removed from the Encounter decreasing the challenge by ${adversaryData.adversary.xp.toLocaleString()} XP.`,
+    'danger',
+    'Adversary Removed',
+    2500
+  );
+
   updateTotalAdversaryXP();
 }
 
@@ -128,13 +115,18 @@ function updateTotalAdversaryXP() {
   let totalXP = 0;
 
   for (const adversaryName in addedAdversaries) {
-    const adversary = addedAdversaries[adversaryName];
-    totalXP += adversary.xp * adversary.quantity;
+    const adversaryData = addedAdversaries[adversaryName]; // Get the stored adversary data
+    totalXP += adversaryData.adversary.xp * adversaryData.quantity; // Access XP correctly
   }
 
   // Update the encounter summary panel
-  document.getElementById('bad-guys-xp').textContent =
-    totalXP.toLocaleString();
+  const xpElement = document.getElementById('bad-guys-xp');
+  if (xpElement) {
+    xpElement.textContent = totalXP.toLocaleString();
+  }
+
+  // Ensure encounter balance updates properly
+  updateEncounterBalance();
 }
 
 // Function to update encounter balance
@@ -178,7 +170,7 @@ function updateEncounterBalance() {
   valueContainer.className = `stat-value border border-3 border-l-0 ${borderClass}`;
 }
 
-// Utility function to format text (capitalization & remove underscores)
+// Utility function to capitalize words and replace underscores
 function formatText(str) {
   return str
     .replace(/_/g, ' ') // Replace underscores with spaces
@@ -205,3 +197,5 @@ function setupEncounterBalanceObserver() {
 
 // Call observer setup on page load
 document.addEventListener('DOMContentLoaded', setupEncounterBalanceObserver);
+
+export { addAdversary };

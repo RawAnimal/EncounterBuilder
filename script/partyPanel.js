@@ -1,3 +1,5 @@
+import { showToast } from './toastManager.js';
+
 document.addEventListener('DOMContentLoaded', () => {
   const characterClassInput = document.getElementById('character-class');
   const characterLevelInput = document.getElementById('character-level');
@@ -21,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updatePartyTable();
 
     showToast(
-      `<strong>${name}</strong> the <strong>Level ${level} ${characterClass}</strong> has joined the party of adventurers.`,
+      `<strong>${name}</strong> the <strong>Level ${level} ${characterClass}</strong> has joined the party of adventurers. Pity the foe that dares cross their path!`,
       'success',
       'Party Member Added',
       2500

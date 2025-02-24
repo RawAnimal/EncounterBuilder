@@ -1,45 +1,47 @@
 // adversaryData.js - Handles adversary data loading
 
 let adversaries = [];
-let adversaryMetadata = {};
+let lookupCR = [];
+let lookupHabitats = [];
+let lookupTypes = [];
+let lookupGroups = [];
 
 async function loadAdversaries() {
   try {
-    const response = await fetch('data/adversaries.json');
-    const data = await response.json();
+    const masterResponse = await fetch('data/dnd_2024_master.json');
+    const masterData = await masterResponse.json();
+
+    const adversaryResponse = await fetch(masterData.data.adversaries);
+
+    const data = await adversaryResponse.json();
 
     // Sort adversaries alphabetically by name
-    adversaries = data.sort((a, b) => a.name.localeCompare(b.name));
+    if (data.adversaries) {
+      adversaries = Object.values(data.adversaries)
+        .filter((adv) => adv && adv.name) // Remove empty/undefined entries
+        .map((adv) => ({
+          name: adv.name || 'Unknown',
+          cr: adv.cr || 0,
+          type: adv.type || 'Unknown',
+          habitat: adv.habitat || [],
+          group: adv.group || [],
+          xp: adv.xp || 0,
+          associations: adv.associations || [],
+          source: adv.source || [], // ✅ Keep the full source array intact
+        }))
+        .sort((a, b) => a.name.localeCompare(b.name));
+    } else {
+      console.error(
+        'Adversary data is missing or incorrectly formatted:',
+        data
+      );
+    }
 
-    populateCRFilter();
-    populateXPFilter(); // ✅ Ensure XP filter loads after data
+    // populateCRFilter();
+    // populateXPFilter(); // Ensure XP filter loads after data
   } catch (error) {
     console.error('Error loading adversaries:', error);
   }
-}
-
-async function loadAdversaryMetadata() {
-  try {
-    const response = await fetch('data/adversary_metadata.json');
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-    adversaryMetadata = await response.json();
-
-    populateHabitatFilter();
-    populateTypeFilter();
-    populateGroupFilter();
-  } catch (error) {
-    console.error('Error loading adversary metadata:', error);
-  }
-}
-
-function getAdversaries() {
-  return adversaries;
-}
-
-function getAdversaryMetadata() {
-  return adversaryMetadata;
 }
 
 // ✅ New Function: Get XP Range (Min & Max)
@@ -56,40 +58,32 @@ function getXPRange() {
   return { min: minXP, max: maxXP };
 }
 
-// ✅ Function: Get Unique, Sorted Group Values with Formatted Display
 function getGroupList() {
-  if (!adversaryMetadata.groups) return [];
-
-  const groupValues = adversaryMetadata.groups.map((group) => ({
-    value: group,
-    display: formatText(group),
-  }));
-
-  return groupValues.sort((a, b) => a.display.localeCompare(b.display));
+  return lookupGroups
+    .filter((group) => typeof group === 'string' && group.trim().length > 0) // Ensure valid strings
+    .map((group) => {
+      const formattedText = formatText(group); // Ensure text is formatted properly
+      return { value: group, display: formattedText };
+    })
+    .sort((a, b) => a.display.localeCompare(b.display));
 }
 
-// ✅ Function: Get Unique, Sorted Type Values with Formatted Display
 function getTypeList() {
-  if (!adversaryMetadata.types) return [];
-
-  const typeValues = adversaryMetadata.types.map((type) => ({
-    value: type,
-    display: formatText(type),
-  }));
-
-  return typeValues.sort((a, b) => a.display.localeCompare(b.display));
+  return lookupTypes
+    .map((type) => ({
+      value: type,
+      display: formatText(type),
+    }))
+    .sort((a, b) => a.display.localeCompare(b.display));
 }
 
-// ✅ Function: Get Unique, Sorted Habitat Values with Formatted Display
 function getHabitatList() {
-  if (!adversaryMetadata.habitats) return [];
-
-  const habitatValues = adversaryMetadata.habitats.map((habitat) => ({
-    value: habitat,
-    display: formatText(habitat),
-  }));
-
-  return habitatValues.sort((a, b) => a.display.localeCompare(b.display));
+  return lookupHabitats
+    .map((habitat) => ({
+      value: habitat,
+      display: formatText(habitat),
+    }))
+    .sort((a, b) => a.display.localeCompare(b.display));
 }
 
 // ✅ Helper Function: Convert Text (Capitalize & Remove Underscores)
@@ -123,3 +117,68 @@ function formatCR(cr) {
   };
   return fractionMap[cr] || cr.toString();
 }
+
+function getAdversaries() {
+  return adversaries;
+}
+
+function getLookupCR() {
+  return lookupCR;
+}
+
+function getLookupHabitats() {
+  return lookupHabitats;
+}
+
+function getLookupTypes() {
+  return lookupTypes;
+}
+
+function getLookupGroups() {
+  return lookupGroups;
+}
+
+async function loadLookupData() {
+  try {
+    const masterResponse = await fetch('data/dnd_2024_master.json');
+    const masterData = await masterResponse.json();
+
+    const [crResponse, habitatResponse, typeResponse, groupResponse] =
+      await Promise.all([
+        fetch(masterData.data.crs),
+        fetch(masterData.data.habitats),
+        fetch(masterData.data.types),
+        fetch(masterData.data.groups),
+      ]);
+
+    lookupCR = (await crResponse.json()).crs || [];
+    lookupHabitats = (await habitatResponse.json()).habitats || [];
+    lookupTypes = (await typeResponse.json()).types || [];
+    lookupGroups = (await groupResponse.json()).groups || [];
+  } catch (error) {
+    console.error('Error loading lookup data:', error);
+  }
+}
+
+export function extractWebSource(adversary) {
+  if (adversary.source && Array.isArray(adversary.source)) {
+    const webSource = adversary.source.find((src) => src.web && src.link);
+    return webSource ? webSource.link : null;
+  }
+  return null;
+}
+
+export {
+  loadAdversaries,
+  loadLookupData,
+  getAdversaries,
+  getLookupCR,
+  getLookupHabitats,
+  getLookupTypes,
+  getLookupGroups,
+  getXPRange,
+  getGroupList,
+  getTypeList,
+  getHabitatList,
+  getUniqueCRValues,
+};

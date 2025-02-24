@@ -1,9 +1,9 @@
 // toastManager.js - Centralized toast handling for the entire application
-function showToast(
+export function showToast(
   message,
   type = 'success',
   header = 'Notification',
-  duration = 3000
+  duration = 2500
 ) {
   const toastElement = document.getElementById('notification-toast');
   const toastBody = document.getElementById('toast-message');

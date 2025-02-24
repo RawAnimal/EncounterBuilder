@@ -1,12 +1,28 @@
-// adversaryController.js - Handles control logic for adversary interactions
+import { loadAdversaries, loadLookupData } from './adversaryData.js';
+import {
+  applyFilters,
+  renderAdversaryList,
+  populateCRFilter,
+  populateXPFilter,
+  populateHabitatFilter,
+  populateTypeFilter,
+  populateGroupFilter,
+} from './adversaryUI.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
-  console.log('Initializing Adversary System...');
-
-  // Load adversary data
   await loadAdversaries();
-  await loadAdversaryMetadata();
+  await loadLookupData();
 
-  // Render the adversary list
+  // Ensure filters populate only AFTER lookup data is loaded
+  populateCRFilter();
+  populateXPFilter();
+  populateHabitatFilter();
+  populateTypeFilter();
+  populateGroupFilter();
+
+  document.getElementById('filter-group').addEventListener('change', () => {
+    applyFilters();
+  });
+
   renderAdversaryList();
 });
