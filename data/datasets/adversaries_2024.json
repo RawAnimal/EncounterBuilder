@@ -4967,7 +4967,7 @@
       ],
       "type": "fey",
       "group": ["goblinoids"],
-      "associations": [],
+      "associations": ["hobgoblin", "hobgoblin_warrior", "hobgoblin_warlord"],
       "tags": [],
       "source": [
         {
