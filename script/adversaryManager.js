@@ -39,13 +39,15 @@ function addAdversary(adversary) {
   const row = document.createElement('tr');
   row.dataset.adversaryId = adversary.name;
   row.innerHTML = `
-        <td id="qty-${adversary.name}" class="adversary-quantity">1</td>
-        <td><strong>${formatText(adversary.name)}</strong></td>
-        <td>${formatCR(adversary.cr)}</td>
-        <td>${adversary.xp.toLocaleString()}</td>
-        <td><button class="btn btn-danger btn-sm remove-adversary" data-name="${
+        <td id="qty-${
           adversary.name
-        }">X</button></td>
+        }" class="adversary-quantity align-middle fw-bold">1</td>
+        <td class="align-middle fw-bold">${formatText(adversary.name)}</td>
+        <td class="align-middle">${formatCR(adversary.cr)}</td>
+        <td class="align-middle">${adversary.xp.toLocaleString()}</td>
+        <td class="align-middle  text-end"><button class="btn btn-danger btn-sm remove-adversary" data-name="${
+          adversary.name
+        }"><i class="bi bi-dash"></i></button></td>
     `;
 
   tableBody.appendChild(row);
