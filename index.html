@@ -99,16 +99,36 @@
                     class="form-control"
                     placeholder="Enter Name"
                   />
-                  <button id="regenerate-name" class="btn btn-secondary">
+                  <button
+                    id="regenerate-name"
+                    class="btn btn-secondary"
+                    data-tooltip="top"
+                    title="Regenerate"
+                  >
                     <i class="bi bi-arrow-clockwise"></i>
                   </button>
-                  <button id="toggle-male" class="btn btn-secondary">
+                  <button
+                    id="toggle-male"
+                    class="btn btn-secondary"
+                    data-tooltip="top"
+                    title="Limit to Male"
+                  >
                     <i class="bi bi-gender-male"></i>
                   </button>
-                  <button id="toggle-female" class="btn btn-secondary">
+                  <button
+                    id="toggle-female"
+                    class="btn btn-secondary"
+                    data-tooltip="top"
+                    title="Limit to Female"
+                  >
                     <i class="bi bi-gender-female"></i>
                   </button>
-                  <button id="limit-to-species" class="btn btn-primary active">
+                  <button
+                    id="limit-to-species"
+                    class="btn btn-primary active"
+                    data-tooltip="top"
+                    title="Limit to Species"
+                  >
                     <img
                       src="images/icons/icon_orc.svg"
                       alt="Limit Names"
@@ -175,6 +195,8 @@
                     id="toggle-cr"
                     class="btn btn-secondary filter-btn"
                     data-filter="cr"
+                    data-tooltip="top"
+                    title="Filter by CR"
                   >
                     CR
                   </button>
@@ -182,6 +204,8 @@
                     id="toggle-xp"
                     class="btn btn-secondary filter-btn"
                     data-filter="xp"
+                    data-tooltip="top"
+                    title="Filter by XP"
                   >
                     XP
                   </button>
@@ -189,6 +213,8 @@
                     id="toggle-habitat"
                     class="btn btn-secondary filter-btn"
                     data-filter="habitat"
+                    data-tooltip="top"
+                    title="Filter by Habitat"
                   >
                     Habitat
                   </button>
@@ -196,6 +222,8 @@
                     id="toggle-type"
                     class="btn btn-secondary filter-btn"
                     data-filter="type"
+                    data-tooltip="top"
+                    title="Filter by Type"
                   >
                     Type
                   </button>
@@ -203,6 +231,8 @@
                     id="toggle-group"
                     class="btn btn-secondary filter-btn"
                     data-filter="group"
+                    data-tooltip="top"
+                    title="Filter by Group"
                   >
                     Group
                   </button>
@@ -213,8 +243,8 @@
                   <button
                     id="clear-filters"
                     class="btn btn-primary"
-                    data-bs-toggle="tooltip"
-                    title="Clear all filters"
+                    data-tooltip="top"
+                    title="Clear All Filters"
                     style="height: 38px; width: 38px"
                   >
                     <img
@@ -497,6 +527,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="script/tooltipManager.js"></script>
     <script type="module" src="script/toastManager.js"></script>
     <script type="module" src="script/adversaryData.js"></script>
     <script type="module" src="script/adversaryManager.js"></script>
@@ -506,15 +537,5 @@
     <script type="module" src="script/partyPanel.js"></script>
     <script src="script/partyCalculations.js"></script>
     <script src="script/script.js"></script>
-    <script>
-      document.addEventListener('DOMContentLoaded', function () {
-        var tooltipTriggerList = [].slice.call(
-          document.querySelectorAll('[data-bs-toggle="tooltip"]')
-        );
-        tooltipTriggerList.forEach(function (tooltipTriggerEl) {
-          new bootstrap.Tooltip(tooltipTriggerEl);
-        });
-      });
-    </script>
   </body>
 </html>

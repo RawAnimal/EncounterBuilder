@@ -10,8 +10,9 @@ import {
 } from './adversaryData.js';
 import { addAdversary } from './adversaryManager.js';
 import { formatCR } from './adversaryData.js';
+import { initializeTooltip } from './tooltipManager.js';
 
-import { showToast } from './toastManager.js';
+// import { showToast } from './toastManager.js';
 
 const filterObject = {
   search: null,
@@ -86,6 +87,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('filter-xp-max')?.addEventListener('blur', () => {
     resetFilterUI();
   });
+  initializeTooltip();
 });
 
 // Populate the XP Range Inputs
@@ -250,6 +252,7 @@ function updateFilters() {
   if (!document.activeElement.matches('#filter-xp-min, #filter-xp-max')) {
     resetFilterUI();
   }
+  initializeTooltip();
 }
 
 function updateAppliedFilters() {
@@ -359,17 +362,6 @@ function clearTooltip() {
     tooltipInstance.hide();
     tooltipInstance.dispose();
   }
-
-  // Manually remove lingering tooltips from the DOM
-  setTimeout(() => {
-    document
-      .querySelectorAll('[data-bs-toggle="tooltip"]')
-      .forEach((tooltipTriggerEl) => {
-        new bootstrap.Tooltip(tooltipTriggerEl, {
-          html: true, // ✅ Allows HTML content inside the tooltip
-        });
-      });
-  }, 500);
 }
 
 function clearFilters() {
@@ -398,6 +390,7 @@ function clearFilters() {
   updateClearFiltersButton();
 
   resetFilterUI();
+  initializeTooltip();
 }
 
 // Function to render the adversary list based on filters
@@ -447,8 +440,18 @@ function renderAdversaryList(searchQuery = '') {
       (value) => value === null || value === ''
     )
   ) {
+    adversaryCount.setAttribute('data-tooltip', 'top');
+    adversaryCount.setAttribute(
+      'title',
+      `Showing ${totalAdversaries} Adversaries`
+    );
     adversaryCount.innerText = `${totalAdversaries}~${totalAdversaries}`;
   } else {
+    adversaryCount.setAttribute('data-tooltip', 'top');
+    adversaryCount.setAttribute(
+      'title',
+      `Showing ${filteredCount} of ${totalAdversaries}<br/>Adversaries`
+    );
     adversaryCount.innerText = `${filteredCount}~${totalAdversaries}`;
   }
 
@@ -511,7 +514,10 @@ function renderAdversaryList(searchQuery = '') {
     // Create the Add button
     const addButton = document.createElement('button');
     addButton.className = 'btn btn-primary btn-sm';
+    addButton.setAttribute('data-tooltip', 'top');
+    addButton.setAttribute('title', 'Add To Encounter');
     addButton.innerHTML = '<i class="bi bi-plus"></i>';
+
     addButton.onclick = () => addAdversary(adversary);
 
     // Append Add button to wrapper
@@ -521,8 +527,7 @@ function renderAdversaryList(searchQuery = '') {
     if (adversary.associations && adversary.associations.length > 0) {
       const assocButton = document.createElement('button');
       assocButton.className = 'btn btn-primary btn-sm assoc-btn';
-      assocButton.setAttribute('data-bs-toggle', 'tooltip');
-      assocButton.setAttribute('data-bs-placement', 'top');
+      assocButton.setAttribute('data-tooltip', 'top');
       assocButton.innerHTML = '<i class="bi bi-link"></i>';
 
       const formattedAssociations = adversary.associations
@@ -537,26 +542,12 @@ function renderAdversaryList(searchQuery = '') {
     // Append the button wrapper to the table cell
     buttonCell.appendChild(buttonWrapper);
     row.appendChild(buttonCell);
-
-    tbody.appendChild(row);
   });
 
   table.appendChild(tbody);
   adversaryList.appendChild(table);
 
-  document
-    .querySelectorAll('[data-bs-toggle="tooltip"]')
-    .forEach((tooltipTriggerEl) => {
-      let tooltip = new bootstrap.Tooltip(tooltipTriggerEl, {
-        trigger: 'hover',
-        html: true,
-      });
-
-      // Ensure tooltip disappears if the button is clicked
-      tooltipTriggerEl.addEventListener('click', function () {
-        tooltip.hide();
-      });
-    });
+  initializeTooltip();
 }
 
 // Keep Text Formatting Helper
