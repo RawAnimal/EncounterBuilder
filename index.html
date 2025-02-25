@@ -31,6 +31,9 @@
         max-height: 400px;
         overflow-y: auto;
       }
+      .party-panel-label-width {
+        width: 80px;
+      }
     </style>
   </head>
   <body>
@@ -87,7 +90,9 @@
               </div>
               <div class="mb-3">
                 <div class="input-group mb-3">
-                  <span class="input-group-text">Name:</span>
+                  <span class="input-group-text party-panel-label-width"
+                    >Name:</span
+                  >
                   <input
                     type="text"
                     id="character-name"
@@ -107,13 +112,25 @@
               </div>
               <div class="mb-3">
                 <div class="input-group mb-3">
-                  <span class="input-group-text">Class:</span>
+                  <span class="input-group-text party-panel-label-width"
+                    >Species:</span
+                  >
+                  <select id="species-select" class="form-select"></select>
+                </div>
+              </div>
+              <div class="mb-3">
+                <div class="input-group mb-3">
+                  <span class="input-group-text party-panel-label-width"
+                    >Class:</span
+                  >
                   <select id="character-class" class="form-select"></select>
                 </div>
               </div>
               <div class="mb-3">
                 <div class="input-group mb-3">
-                  <span class="input-group-text">Level:</span>
+                  <span class="input-group-text party-panel-label-width"
+                    >Level:</span
+                  >
                   <select id="character-level" class="form-select"></select>
                 </div>
               </div>
