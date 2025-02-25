@@ -55,15 +55,20 @@ window.addEventListener('load', async () => {
   function populateSpeciesDropdown() {
     const speciesDropdown = document.getElementById('species-select');
     if (!speciesDropdown) {
-      console.error('❌ Species dropdown element not found!');
+      console.error('Species dropdown element not found!');
       return;
     }
+
+    speciesDropdown.addEventListener('change', () => {
+      console.log('Species selection changed:', speciesDropdown.value);
+      window.setDefaultCharacterName();
+    });
 
     speciesDropdown.innerHTML = ''; // Clear existing options
 
     // Check if species data exists
     if (!window.speciesData || !window.speciesData.species) {
-      console.error('❌ Species data is missing or incorrect format.');
+      console.error('Species data is missing or incorrect format.');
       return;
     }
 
@@ -187,6 +192,19 @@ window.addEventListener('load', async () => {
   toggleMaleButton.addEventListener('click', () => toggleGender('male'));
   toggleFemaleButton.addEventListener('click', () => toggleGender('female'));
 
+  document
+    .getElementById('limit-to-species')
+    .addEventListener('click', function () {
+      this.classList.toggle('btn-primary');
+      this.classList.toggle('btn-secondary');
+      this.classList.toggle('active');
+      console.log(
+        'Limit to species toggled:',
+        this.classList.contains('active')
+      );
+      window.setDefaultCharacterName();
+    });
+
   // Modify addCharacter function to include name regeneration
   function addCharacterAndGenerateNewName() {
     window.addCharacter(); // Add character first
@@ -207,7 +225,9 @@ window.addEventListener('load', async () => {
   }
 
   // Load data and initialize dropdowns
+  //generateRandomName();
   populateSpeciesDropdown();
   populateClassSelect();
   populateLevelDropdown();
+  setDefaultCharacterName();
 });

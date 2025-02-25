@@ -88,7 +88,7 @@
                   class="d-block w-100 mb-3 silhouette_color"
                 />
               </div>
-              <div class="mb-3">
+              <div class="mb-3" style="height: 76px; max-height: 76px">
                 <div class="input-group mb-3">
                   <span class="input-group-text party-panel-label-width"
                     >Name</span
@@ -107,6 +107,15 @@
                   </button>
                   <button id="toggle-female" class="btn btn-secondary">
                     <i class="bi bi-gender-female"></i>
+                  </button>
+                  <button id="limit-to-species" class="btn btn-primary active">
+                    <img
+                      src="images/icons/icon_orc.svg"
+                      alt="Limit Names"
+                      width="18"
+                      height="18"
+                      style="margin-bottom: 3px"
+                    />
                   </button>
                 </div>
               </div>
@@ -161,7 +170,7 @@
               </div>
               <!-- Filter Buttons & Clear Filters -->
               <div class="d-flex align-items-center justify-content-between">
-                <div class="btn-group mb-2" role="group">
+                <div class="btn-group mb-2" role="group" style="height: 38px">
                   <button
                     id="toggle-cr"
                     class="btn btn-secondary filter-btn"
@@ -200,19 +209,22 @@
                 </div>
 
                 <!-- Clear Filters Icon Button with Tooltip -->
-                <button
-                  id="clear-filters"
-                  class="btn btn-primary ms-2"
-                  data-bs-toggle="tooltip"
-                  title="Clear all filters"
-                >
-                  <img
-                    src="images/icons/icon_sweep.svg"
-                    alt="Clear"
-                    width="16"
-                    height="16"
-                  />
-                </button>
+                <div class="btn-group mb-2" role="group">
+                  <button
+                    id="clear-filters"
+                    class="btn btn-primary"
+                    data-bs-toggle="tooltip"
+                    title="Clear all filters"
+                    style="height: 38px; width: 38px"
+                  >
+                    <img
+                      src="images/icons/icon_sweep.svg"
+                      alt="Clear"
+                      width="16"
+                      height="16"
+                    />
+                  </button>
+                </div>
               </div>
 
               <!-- Filter Dropdowns (Initially Hidden) -->
