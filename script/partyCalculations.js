@@ -29,9 +29,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function fetchXpBudget() {
     try {
-      const response = await fetch('data/xp_budget.json');
-      if (!response.ok) throw new Error('Failed to load XP budget data');
-      return await response.json();
+      // Fetch master data first
+      const masterResponse = await fetch('data/dnd_2024_master.json');
+      if (!masterResponse.ok) throw new Error('Failed to load master data');
+
+      const masterData = await masterResponse.json();
+      const xpBudgetPath = masterData.data?.xp_budget;
+
+      if (!xpBudgetPath) throw new Error('XP Budget dataset path not found');
+
+      // Fetch XP budget from the correct path
+      const xpResponse = await fetch(xpBudgetPath);
+      if (!xpResponse.ok) throw new Error('Failed to load XP budget data');
+
+      return await xpResponse.json();
     } catch (error) {
       console.error('Error loading XP budget data:', error);
       return null;
