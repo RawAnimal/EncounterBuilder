@@ -591,12 +591,6 @@ function applyFilters() {
   renderAdversaryList(filteredAdversaries);
 }
 
-function capitalizeWords(str) {
-  return str
-    .replace(/_/g, ' ') // Replace underscores with spaces
-    .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitalize each word
-}
-
 function resetFilterUI() {
   // Find all filter buttons and unselect them
   document.querySelectorAll('.filter-btn').forEach((button) => {

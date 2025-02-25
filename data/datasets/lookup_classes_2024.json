@@ -1,11 +1,12 @@
 {
   "meta": {
-    "record_count": 10,
+    "record_count": 12,
     "last_updated": "2025-02-22T18:00:07.753Z",
     "version": "1.0"
   },
-  "classes": {
-    "barbarian": {
+  "classes": [
+    {
+      "id": "barbarian",
       "name": "barbarian",
       "image": "images/classes/barbarian.svg",
       "source": [
@@ -21,7 +22,8 @@
         }
       ]
     },
-    "bard": {
+    {
+      "id": "bard",
       "name": "bard",
       "image": "images/classes/bard.svg",
       "source": [
@@ -37,7 +39,8 @@
         }
       ]
     },
-    "cleric": {
+    {
+      "id": "cleric",
       "name": "cleric",
       "image": "images/classes/cleric.svg",
       "source": [
@@ -53,7 +56,8 @@
         }
       ]
     },
-    "druid": {
+    {
+      "id": "druid",
       "name": "druid",
       "image": "images/classes/druid.svg",
       "source": [
@@ -69,14 +73,15 @@
         }
       ]
     },
-    "fighter": {
+    {
+      "id": "fighter",
       "name": "fighter",
       "image": "images/classes/fighter.svg",
       "source": [
         {
           "book": "Player's Handbook 2024",
           "acronym": "PHB",
-          "page": 70
+          "page": 72
         },
         {
           "web": "D&D Beyond",
@@ -85,14 +90,15 @@
         }
       ]
     },
-    "monk": {
+    {
+      "id": "monk",
       "name": "monk",
       "image": "images/classes/monk.svg",
       "source": [
         {
           "book": "Player's Handbook 2024",
           "acronym": "PHB",
-          "page": 78
+          "page": 80
         },
         {
           "web": "D&D Beyond",
@@ -101,101 +107,107 @@
         }
       ]
     },
-    "paladin": {
+    {
+      "id": "paladin",
       "name": "paladin",
       "image": "images/classes/paladin.svg",
       "source": [
         {
           "book": "Player's Handbook 2024",
           "acronym": "PHB",
-          "page": 86
+          "page": 88
         },
         {
           "web": "D&D Beyond",
           "acronym": "DDB",
-          "link": "https://www.dndbeyond.com/sources/dnd/phb-2024/character-classes-continued#Paladin"
+          "link": "https://www.dndbeyond.com/sources/dnd/phb-2024/character-classes#Paladin"
         }
       ]
     },
-    "ranger": {
+    {
+      "id": "ranger",
       "name": "ranger",
       "image": "images/classes/ranger.svg",
       "source": [
         {
           "book": "Player's Handbook 2024",
           "acronym": "PHB",
-          "page": 93
+          "page": 96
         },
         {
           "web": "D&D Beyond",
           "acronym": "DDB",
-          "link": "https://www.dndbeyond.com/sources/dnd/phb-2024/character-classes-continued#Ranger"
+          "link": "https://www.dndbeyond.com/sources/dnd/phb-2024/character-classes#Ranger"
         }
       ]
     },
-    "rogue": {
+    {
+      "id": "rogue",
       "name": "rogue",
       "image": "images/classes/rogue.svg",
       "source": [
         {
           "book": "Player's Handbook 2024",
           "acronym": "PHB",
-          "page": 100
+          "page": 104
         },
         {
           "web": "D&D Beyond",
           "acronym": "DDB",
-          "link": "https://www.dndbeyond.com/sources/dnd/phb-2024/character-classes-continued#Rogue"
+          "link": "https://www.dndbeyond.com/sources/dnd/phb-2024/character-classes#Rogue"
         }
       ]
     },
-    "sorcerer": {
+    {
+      "id": "sorcerer",
       "name": "sorcerer",
       "image": "images/classes/sorcerer.svg",
       "source": [
         {
           "book": "Player's Handbook 2024",
           "acronym": "PHB",
-          "page": 107
+          "page": 112
         },
         {
           "web": "D&D Beyond",
           "acronym": "DDB",
-          "link": "https://www.dndbeyond.com/sources/dnd/phb-2024/character-classes-continued#Sorcerer"
+          "link": "https://www.dndbeyond.com/sources/dnd/phb-2024/character-classes#Sorcerer"
         }
       ]
     },
-    "warlock": {
+    {
+      "id": "warlock",
       "name": "warlock",
       "image": "images/classes/warlock.svg",
       "source": [
         {
           "book": "Player's Handbook 2024",
           "acronym": "PHB",
-          "page": 114
+          "page": 120
         },
         {
           "web": "D&D Beyond",
           "acronym": "DDB",
-          "link": "https://www.dndbeyond.com/sources/dnd/phb-2024/character-classes-continued#Warlock"
+          "link": "https://www.dndbeyond.com/sources/dnd/phb-2024/character-classes#Warlock"
         }
       ]
     },
-    "wizard": {
+    {
+      "id": "wizard",
       "name": "wizard",
       "image": "images/classes/wizard.svg",
       "source": [
         {
           "book": "Player's Handbook 2024",
           "acronym": "PHB",
-          "page": 121
+          "page": 128
         },
         {
           "web": "D&D Beyond",
           "acronym": "DDB",
-          "link": "https://www.dndbeyond.com/sources/dnd/phb-2024/character-classes-continued#Wizard"
+          "link": "https://www.dndbeyond.com/sources/dnd/phb-2024/character-classes#Wizard"
         }
       ]
     }
-  }
+  ]
 }

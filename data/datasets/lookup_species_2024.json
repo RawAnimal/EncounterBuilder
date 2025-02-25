@@ -4,9 +4,10 @@
     "last_updated": "2025-02-22T18:00:07.753Z",
     "version": "1.0"
   },
-  "species": {
-    "aasimar": {
-      "name": "Aasimar",
+  "species": [
+    {
+      "id": "aasimar",
+      "name": "aasimar",
       "image": "",
       "source": [
         {
@@ -21,8 +22,9 @@
         }
       ]
     },
-    "dragonborn": {
-      "name": "Dragonborn",
+    {
+      "id": "dragonborn",
+      "name": "dragonborn",
       "image": "",
       "source": [
         {
@@ -37,8 +39,9 @@
         }
       ]
     },
-    "dwarf": {
-      "name": "Dwarf",
+    {
+      "id": "dwarf",
+      "name": "dwarf",
       "image": "",
       "source": [
         {
@@ -53,8 +56,9 @@
         }
       ]
     },
-    "elf": {
-      "name": "Elf",
+    {
+      "id": "elf",
+      "name": "elf",
       "image": "",
       "source": [
         {
@@ -69,8 +73,9 @@
         }
       ]
     },
-    "gnome": {
-      "name": "Gnome",
+    {
+      "id": "gnome",
+      "name": "gnome",
       "image": "",
       "source": [
         {
@@ -85,8 +90,9 @@
         }
       ]
     },
-    "goliath": {
-      "name": "Goliath",
+    {
+      "id": "goliath",
+      "name": "goliath",
       "image": "",
       "source": [
         {
@@ -101,8 +107,9 @@
         }
       ]
     },
-    "halfling": {
-      "name": "Halfling",
+    {
+      "id": "halfling",
+      "name": "halfling",
       "image": "",
       "source": [
         {
@@ -117,8 +124,9 @@
         }
       ]
     },
-    "human": {
-      "name": "Human",
+    {
+      "id": "human",
+      "name": "human",
       "image": "",
       "source": [
         {
@@ -133,8 +141,9 @@
         }
       ]
     },
-    "orc": {
-      "name": "Orc",
+    {
+      "id": "orc",
+      "name": "orc",
       "image": "",
       "source": [
         {
@@ -149,8 +158,9 @@
         }
       ]
     },
-    "tiefling": {
-      "name": "Tiefling",
+    {
+      "id": "tiefling",
+      "name": "tiefling",
       "image": "",
       "source": [
         {
@@ -165,5 +175,5 @@
         }
       ]
     }
-  }
+  ]
 }
