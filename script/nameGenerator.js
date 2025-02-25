@@ -203,9 +203,6 @@ document.addEventListener('DOMContentLoaded', () => {
       a.localeCompare(b)
     );
 
-    // console.log('Filtered First Names:', firstNameList);
-    // console.log('Filtered Last Names:', lastNameList);
-    console.log(`Filtering: Male=${maleActive}, Female=${femaleActive}`);
     return { firstNames: firstNameList, lastNames: lastNameList };
   }
 

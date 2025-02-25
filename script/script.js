@@ -60,7 +60,6 @@ window.addEventListener('load', async () => {
     }
 
     speciesDropdown.addEventListener('change', () => {
-      console.log('Species selection changed:', speciesDropdown.value);
       window.setDefaultCharacterName();
     });
 
@@ -198,10 +197,7 @@ window.addEventListener('load', async () => {
       this.classList.toggle('btn-primary');
       this.classList.toggle('btn-secondary');
       this.classList.toggle('active');
-      console.log(
-        'Limit to species toggled:',
-        this.classList.contains('active')
-      );
+
       window.setDefaultCharacterName();
     });
 
