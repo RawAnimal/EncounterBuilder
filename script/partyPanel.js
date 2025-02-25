@@ -1,7 +1,7 @@
 import { showToast } from './toastManager.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-  const characterClassInput = document.getElementById('character-class');
+  const characterClassInput = document.getElementById('class-select');
   const characterLevelInput = document.getElementById('character-level');
   const characterTableBody = document.getElementById('character-table-body');
 

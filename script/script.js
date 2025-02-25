@@ -1,4 +1,27 @@
-window.addEventListener('load', () => {
+window.addEventListener('load', async () => {
+  try {
+    const response = await fetch('data/dnd_2024_master.json');
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const masterData = await response.json();
+
+    // Fetch species data
+    const speciesResponse = await fetch(masterData.data.species);
+    const speciesData = await speciesResponse.json();
+
+    // Fetch class data
+    const classesResponse = await fetch(masterData.data.classes);
+    const classData = await classesResponse.json();
+
+    // Store in global variables for later use
+    window.speciesData = speciesData; // Store the full object
+    window.classData = classData; // Store the full object
+  } catch (error) {
+    console.error('❌ Error loading data:', error);
+  }
+
   // Ensure functions from other scripts are available before proceeding
   if (typeof window.setDefaultCharacterName !== 'function') {
     console.error(
@@ -15,9 +38,8 @@ window.addEventListener('load', () => {
 
   // Get references
   const addCharacterButton = document.getElementById('add-character');
-  const characterClassInput = document.getElementById('character-class');
-  const characterLevelInput = document.getElementById('character-level'); // Level dropdown
-  const classImageElement = document.getElementById('class-image'); // Class image
+  const characterClassInput = document.getElementById('class-select');
+  const characterLevelInput = document.getElementById('character-level');
   const toggleMaleButton = document.getElementById('toggle-male');
   const toggleFemaleButton = document.getElementById('toggle-female');
 
@@ -25,32 +47,86 @@ window.addEventListener('load', () => {
   let useMaleNames = false;
   let useFemaleNames = false;
 
-  // Load class data from JSON file
-  async function loadClassData() {
-    try {
-      const response = await fetch('data/classes.json');
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      const data = await response.json();
-      classData = {};
+  // ✅ Global function to title-case names
+  function toTitleCase(str) {
+    return str.replace(/\b\w/g, (char) => char.toUpperCase());
+  }
 
-      // Clear existing dropdown options
-      characterClassInput.innerHTML = '';
-
-      data.classes.forEach((cls) => {
-        classData[cls.name] = cls.image; // Store image path
-        const option = document.createElement('option');
-        option.value = cls.name;
-        option.textContent = cls.name;
-        characterClassInput.appendChild(option);
-      });
-
-      // Set initial image
-      updateClassImage(characterClassInput.value);
-    } catch (error) {
-      console.error('Error loading class data:', error);
+  function populateSpeciesDropdown() {
+    const speciesDropdown = document.getElementById('species-select');
+    if (!speciesDropdown) {
+      console.error('❌ Species dropdown element not found!');
+      return;
     }
+
+    speciesDropdown.innerHTML = ''; // Clear existing options
+
+    // Check if species data exists
+    if (!window.speciesData || !window.speciesData.species) {
+      console.error('❌ Species data is missing or incorrect format.');
+      return;
+    }
+
+    let humanOptionFound = false; // Track if Human is found
+
+    // Format and populate species options
+    window.speciesData.species.forEach((species) => {
+      const option = document.createElement('option');
+      const sourceAcronym =
+        species.source?.[0]?.acronym?.toUpperCase() || 'UNKNOWN';
+      option.value = species.id;
+      option.textContent = `${toTitleCase(species.name)} (${sourceAcronym})`;
+
+      if (species.id.toLowerCase() === 'human') {
+        option.selected = true; // Set Human as the default selection
+        humanOptionFound = true;
+      }
+
+      speciesDropdown.appendChild(option);
+    });
+
+    // Log a warning if Human was not found
+    if (!humanOptionFound) {
+      console.warn('⚠️ Warning: Human species not found in data.');
+    }
+  }
+
+  function populateClassSelect() {
+    const classSelect = document.getElementById('class-select');
+    if (!classSelect) {
+      console.error('❌ Class select element not found!');
+      return;
+    }
+
+    // Clear existing options
+    classSelect.innerHTML = '';
+
+    // Check if classData is properly loaded
+    if (!window.classData || !window.classData.classes) {
+      console.error('❌ Class data is missing or incorrectly formatted.');
+      return;
+    }
+
+    // Populate dropdown with formatted class options
+    window.classData.classes.forEach((cls) => {
+      const option = document.createElement('option');
+      option.value = cls.id;
+      option.textContent = `${toTitleCase(cls.name)} (${
+        cls.source.find((src) => src.book)?.acronym ||
+        cls.source.find((src) => src.web)?.acronym ||
+        '??'
+      })`;
+      classSelect.appendChild(option);
+    });
+
+    // Set default class selection to "Fighter" if available
+    const defaultClass = classSelect.querySelector('option[value="fighter"]');
+    if (defaultClass) {
+      defaultClass.selected = true;
+    }
+
+    // Trigger image update for the default selection
+    updateClassImage(classSelect.value);
   }
 
   // Function to populate level dropdown
@@ -68,12 +144,18 @@ window.addEventListener('load', () => {
 
   // Function to update class image based on selected class
   function updateClassImage(selectedClass) {
-    if (classData[selectedClass]) {
-      classImageElement.src = classData[selectedClass];
-      classImageElement.style.display = 'block'; // Ensure it's visible
-    } else {
-      classImageElement.style.display = 'none';
+    const classImageElement = document.getElementById('class-image');
+    if (!classImageElement) {
+      console.error('❌ Class image element not found!');
+      return;
     }
+
+    // Construct the correct path based on the selected class
+    const imagePath = `images/classes/${selectedClass}.svg`;
+
+    // Update the image source
+    classImageElement.src = imagePath;
+    classImageElement.style.display = 'block'; // Ensure visibility
   }
 
   // Ensure class image updates when selecting a class
@@ -124,7 +206,8 @@ window.addEventListener('load', () => {
     console.error('Could not find "Add to Party" button.');
   }
 
-  // Load class data and initialize dropdowns
-  loadClassData();
-  populateLevelDropdown(); // Ensure level dropdown is populated
+  // Load data and initialize dropdowns
+  populateSpeciesDropdown();
+  populateClassSelect();
+  populateLevelDropdown();
 });
