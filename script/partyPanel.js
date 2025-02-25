@@ -1,4 +1,5 @@
 import { showToast } from './toastManager.js';
+import { initializeTooltip } from './tooltipManager.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   const characterClassInput = document.getElementById('class-select');
@@ -7,18 +8,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let characters = [];
 
+  // ✅ Function to Capitalize First Letter of Words
+  function capitalizeFirstLetter(str) {
+    return str.replace(/\b\w/g, (char) => char.toUpperCase());
+  }
+
   // Function to add a character to the party list
   function addCharacter() {
     const name = document.getElementById('character-name').value.trim();
     const characterClass = characterClassInput.value;
     const level = characterLevelInput.value;
+    const species = document.getElementById('species-select').value;
 
     if (!name) {
       alert('Please enter a character name.');
       return;
     }
 
-    const character = { name, characterClass, level };
+    const character = { name, characterClass, level, species };
     characters.push(character);
     updatePartyTable();
 
@@ -39,12 +46,18 @@ document.addEventListener('DOMContentLoaded', () => {
       row.innerHTML = `
                 <td class="align-middle fw-bold">${character.name}</td>
                 <td class="align-middle">${character.level}</td>
-                <td class="align-middle">${character.characterClass}</td>
-                <td class="align-middle text-end"><button class="btn btn-danger btn-sm remove-character" data-index="${index}">
+                <td class="align-middle">${capitalizeFirstLetter(
+                  character.species
+                )}</td>
+                <td class="align-middle">${capitalizeFirstLetter(
+                  character.characterClass
+                )}</td>
+                <td class="align-middle text-end"><button class="btn btn-danger btn-sm remove-character" data-index="${index}" data-tooltip="top" title="Remove from Encounter">
                     <i class="bi bi-dash"></i>
                 </button></td>
             `;
       characterTableBody.appendChild(row);
+      initializeTooltip();
     });
 
     // Add event listeners to remove buttons

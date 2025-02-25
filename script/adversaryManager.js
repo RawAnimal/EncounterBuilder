@@ -1,6 +1,7 @@
 // adversaryManager.js - Handles adding/removing adversaries to Bad Guys table
 import { showToast } from './toastManager.js';
 import { formatCR } from './adversaryData.js';
+import { initializeTooltip } from './tooltipManager.js';
 
 let addedAdversaries = {}; // Tracks added adversaries
 
@@ -47,7 +48,7 @@ function addAdversary(adversary) {
         <td class="align-middle">${adversary.xp.toLocaleString()}</td>
         <td class="align-middle  text-end"><button class="btn btn-danger btn-sm remove-adversary" data-name="${
           adversary.name
-        }"><i class="bi bi-dash"></i></button></td>
+        }" data-tooltip="top" title="Remove from Encounter"><i class="bi bi-dash"></i></button></td>
     `;
 
   tableBody.appendChild(row);
@@ -69,6 +70,7 @@ function addAdversary(adversary) {
   );
 
   updateTotalAdversaryXP();
+  initializeTooltip();
 }
 
 function removeAdversary(name) {
