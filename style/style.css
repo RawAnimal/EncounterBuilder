@@ -11,8 +11,60 @@
   font-display: swap;
 }
 
+/* Ensure equal panel height */
+.equal-height {
+  display: flex;
+  flex-direction: column;
+  height: 770px !important;
+  max-height: 770px !important;
+}
+
+/* Scrollable Adversary List */
+.scrollable-list {
+  max-height: 395px;
+  overflow-y: auto;
+  background-color: yellow;
+}
+
 #adversary-list {
-  max-height: 450px;
+  height: 415px;
+  max-height: 435px;
+}
+
+/* .adversary-table,
+.adversary-table td,
+.adversary-table th {
+  border-left: 0px !important;
+  border-right: 0px !important;
+} */
+
+/* ✅ Make the table header sticky */
+.sticky-header thead {
+  position: sticky;
+  top: 0;
+  background: #fff; /* Ensure background is not transparent */
+  z-index: 2;
+}
+
+/* ✅ Ensure the table wrapper scrolls instead of the whole page */
+.adversary-table-wrapper {
+  max-height: 395px; /* Adjust based on your layout */
+  overflow-y: auto;
+  border: 0; /* Optional: Adds a border around the scrollable area */
+  background-color: red;
+}
+
+/* .add-list-th-name {
+
+}*/
+.add-list-th-cr {
+  width: 90px;
+}
+.add-list-th-xp {
+  width: 90px;
+}
+.add-list-th-actions {
+  width: 78px;
 }
 
 #clear-filters {
@@ -25,7 +77,7 @@
 }
 
 .assoc-btn {
-  width: 32px; /* Match the size of the Add button */
+  width: 32px;
   height: 32px;
   display: flex;
   align-items: center;
@@ -64,11 +116,6 @@
   border-radius: 0 10px 10px 0; /* Matches btn-group corners */
 }
 
-/* Ensures this component matches the Bootstrap button group height */
-.btn-group-height {
-  height: 38px; /* Default btn-group height */
-}
-
 .silhouette_color {
   filter: brightness(0) saturate(100%) invert(49%) sepia(9%) saturate(334%)
     hue-rotate(169deg) brightness(92%) contrast(97%);
@@ -78,17 +125,7 @@
 #toggle-female {
   border-color: #6c757d !important;
 }
-/* Ensure equal panel height */
-.equal-height {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-/* Scrollable Adversary List */
-.scrollable-list {
-  max-height: 400px;
-  overflow-y: auto;
-}
+
 .party-panel-label-width {
   width: 80px;
 }

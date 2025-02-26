@@ -58,7 +58,7 @@
       <!-- First Row: Party & Adversaries Panels -->
       <div class="row">
         <div class="col-md-6">
-          <div class="card p-4 mb-4 equal-height">
+          <div class="card p-4 equal-height">
             <section id="party-settings">
               <div class="w-100">
                 <img
@@ -134,7 +134,7 @@
                   <select id="class-select" class="form-select"></select>
                 </div>
               </div>
-              <div class="mb-3">
+              <div class="mb-2">
                 <div class="input-group mb-3">
                   <span class="input-group-text party-panel-label-width"
                     >Level:</span
@@ -142,19 +142,21 @@
                   <select id="character-level" class="form-select"></select>
                 </div>
               </div>
-              <button id="add-character" class="btn btn-primary w-100">
-                Add to Party
-              </button>
+              <div>
+                <button id="add-character" class="btn btn-primary w-100">
+                  Add to Party
+                </button>
+              </div>
+              <div class="class-preview">
+                <img
+                  id="class-image"
+                  src=""
+                  alt="Class Image"
+                  class="d-block mx-auto silhouette_color"
+                  style="width: 60%"
+                />
+              </div>
             </section>
-            <div class="class-preview">
-              <img
-                id="class-image"
-                src=""
-                alt="Class Image"
-                class="d-block mx-auto silhouette_color"
-                style="width: 60%"
-              />
-            </div>
           </div>
         </div>
         <div class="col-md-6">
@@ -466,6 +468,89 @@
         </div>
       </div>
 
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card mt-4">
+            <section
+              id="encounter-admin"
+              class="d-flex flex-wrap align-items-center justify-content-between px-2 pb-2"
+            >
+              <div class="container-fluid">
+                <h5 class="mb-3">Manage Saved Data</h5>
+
+                <div class="row">
+                  <!-- Save and Load Parties -->
+                  <div class="col-md-4">
+                    <h6>Party Management</h6>
+                    <button
+                      id="save-party-btn"
+                      class="btn btn-success btn-sm w-100 mb-2"
+                    >
+                      💾 Save Current Party
+                    </button>
+                    <select id="load-party-dropdown" class="form-select mb-2">
+                      <option value="">⬇️ Load Saved Party</option>
+                    </select>
+                    <button
+                      id="delete-party-btn"
+                      class="btn btn-danger btn-sm w-100"
+                    >
+                      🗑️ Delete Selected Party
+                    </button>
+                  </div>
+
+                  <!-- Save and Load Adversary Groups -->
+                  <div class="col-md-4">
+                    <h6>Adversary Management</h6>
+                    <button
+                      id="save-adversary-btn"
+                      class="btn btn-success btn-sm w-100 mb-2"
+                    >
+                      💾 Save Current Adversary Group
+                    </button>
+                    <select
+                      id="load-adversary-dropdown"
+                      class="form-select mb-2"
+                    >
+                      <option value="">⬇️ Load Saved Adversary Group</option>
+                    </select>
+                    <button
+                      id="delete-adversary-btn"
+                      class="btn btn-danger btn-sm w-100"
+                    >
+                      🗑️ Delete Selected Group
+                    </button>
+                  </div>
+
+                  <!-- Save and Load Encounters -->
+                  <div class="col-md-4">
+                    <h6>Encounter Management</h6>
+                    <button
+                      id="save-encounter-btn"
+                      class="btn btn-success btn-sm w-100 mb-2"
+                    >
+                      💾 Save Current Encounter
+                    </button>
+                    <select
+                      id="load-encounter-dropdown"
+                      class="form-select mb-2"
+                    >
+                      <option value="">⬇️ Load Saved Encounter</option>
+                    </select>
+                    <button
+                      id="delete-encounter-btn"
+                      class="btn btn-danger btn-sm w-100"
+                    >
+                      🗑️ Delete Selected Encounter
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+
       <!-- Third Row: Good Guys & Bad Guys Panels -->
       <div class="row mt-4 mb-4">
         <div class="col-md-6">
@@ -596,6 +681,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="script/database.js"></script>
     <script type="module" src="script/tooltipManager.js"></script>
     <script type="module" src="script/toastManager.js"></script>
     <script type="module" src="script/adversaryData.js"></script>
@@ -605,6 +691,6 @@
     <script src="script/nameGenerator.js"></script>
     <script type="module" src="script/partyPanel.js"></script>
     <script src="script/partyCalculations.js"></script>
-    <script src="script/script.js"></script>
+    <script type="module" src="script/script.js"></script>
   </body>
 </html>

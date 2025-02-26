@@ -398,7 +398,7 @@ function renderAdversaryList(searchQuery = '') {
   const adversaryList = document.getElementById('adversary-list');
   adversaryList.innerHTML = '';
 
-  let adversaries = getAdversaries(); // Fetch the adversary list
+  let adversaries = getAdversaries(); // Fetch the full adversary list
 
   let filteredAdversaries = adversaries.filter((adv) => {
     const matchesSearch =
@@ -428,48 +428,74 @@ function renderAdversaryList(searchQuery = '') {
       matchesXP
     );
   });
-  // Update the adversary count display
-  const adversaryCount = document.getElementById('adversary-count');
+
+  // ✅ Restore the original adversary count display logic
+  const adversaryCountElement = document.getElementById('adversary-count');
   const totalAdversaries = adversaries.length;
   const filteredCount = filteredAdversaries.length;
 
-  // Show total records when no filters are applied
   if (
     filteredCount === totalAdversaries &&
     Object.values(filterObject).every(
       (value) => value === null || value === ''
     )
   ) {
-    adversaryCount.setAttribute('data-tooltip', 'top');
-    adversaryCount.setAttribute(
+    adversaryCountElement.setAttribute('data-tooltip', 'top');
+    adversaryCountElement.setAttribute(
       'title',
       `Showing ${totalAdversaries} Adversaries`
     );
-    adversaryCount.innerText = `${totalAdversaries}~${totalAdversaries}`;
+    adversaryCountElement.innerText = `${totalAdversaries}~${totalAdversaries}`;
   } else {
-    adversaryCount.setAttribute('data-tooltip', 'top');
-    adversaryCount.setAttribute(
+    adversaryCountElement.setAttribute('data-tooltip', 'top');
+    adversaryCountElement.setAttribute(
       'title',
       `Showing ${filteredCount} of ${totalAdversaries}<br/>Adversaries`
     );
-    adversaryCount.innerText = `${filteredCount}~${totalAdversaries}`;
+    adversaryCountElement.innerText = `${filteredCount}~${totalAdversaries}`;
   }
 
+  // ✅ If no adversaries match, display a message
   if (filteredAdversaries.length === 0) {
     adversaryList.innerHTML = 'No bad guys matching your criteria.';
     return;
   }
 
+  // ✅ Create the table
   const table = document.createElement('table');
-  table.className = 'table table-striped';
+  table.className =
+    'table table-striped table-hover table-bordered table-sm sticky-header adversary-table';
+
+  // ✅ Create the table head (thead)
+  const thead = document.createElement('thead');
+  const headerRow = document.createElement('tr');
+
+  const headers = [
+    { text: 'Name', className: 'add-list-th-name' },
+    { text: 'CR', className: 'add-list-th-cr' },
+    { text: 'XP', className: 'add-list-th-xp' },
+    { text: '', className: 'add-list-th-actions' }, // Last one for buttons
+  ];
+
+  headers.forEach(({ text, className }) => {
+    const th = document.createElement('th');
+    th.textContent = text;
+    th.className = className; // Apply class for styling
+    headerRow.appendChild(th);
+  });
+
+  thead.appendChild(headerRow);
+  table.appendChild(thead); // Add thead to the table
+
+  // ✅ Create the table body (tbody)
   const tbody = document.createElement('tbody');
 
   filteredAdversaries.forEach((adversary) => {
     const row = document.createElement('tr');
 
+    // ✅ Name Cell
     const nameCell = document.createElement('td');
     nameCell.className = 'align-middle';
-
     const sourceLink = adversary.source ? extractWebSource(adversary) : null;
 
     if (sourceLink) {
@@ -479,7 +505,6 @@ function renderAdversaryList(searchQuery = '') {
       nameLink.rel = 'noopener noreferrer'; // Security best practice
       nameLink.className = 'fw-bold text-primary text-decoration-none';
       nameLink.textContent = formatText(adversary.name);
-
       nameCell.appendChild(nameLink);
     } else {
       nameCell.innerHTML = `<strong>${formatText(adversary.name)}</strong>`;
@@ -495,19 +520,10 @@ function renderAdversaryList(searchQuery = '') {
     xpCell.className = 'align-middle';
     xpCell.textContent = adversary.xp; // Ensure XP is displayed
 
-    // ✅ Append Cells to Row
-    row.appendChild(nameCell);
-    row.appendChild(crCell);
-    row.appendChild(xpCell);
-
-    // ✅ Append Row to Table Body
-    tbody.appendChild(row);
-
-    // Create a table cell for buttons (same column for Associations + Add)
+    // ✅ Button Cell (Add to Encounter)
     const buttonCell = document.createElement('td');
     buttonCell.className = 'text-end align-middle';
 
-    // Create a div to wrap both buttons (ensures correct spacing)
     const buttonWrapper = document.createElement('div');
     buttonWrapper.className = 'd-flex gap-1 justify-content-end';
 
@@ -517,10 +533,8 @@ function renderAdversaryList(searchQuery = '') {
     addButton.setAttribute('data-tooltip', 'top');
     addButton.setAttribute('title', 'Add To Encounter');
     addButton.innerHTML = '<i class="bi bi-plus"></i>';
-
     addButton.onclick = () => addAdversary(adversary);
 
-    // Append Add button to wrapper
     buttonWrapper.appendChild(addButton);
 
     // Only create the Associations button if associations exist
@@ -535,18 +549,35 @@ function renderAdversaryList(searchQuery = '') {
         .join('<br>');
 
       assocButton.setAttribute('title', formattedAssociations);
-
       buttonWrapper.prepend(assocButton);
     }
 
-    // Append the button wrapper to the table cell
     buttonCell.appendChild(buttonWrapper);
+
+    // ✅ Append all cells to the row
+    row.appendChild(nameCell);
+    row.appendChild(crCell);
+    row.appendChild(xpCell);
     row.appendChild(buttonCell);
+
+    // ✅ Append row to tbody
+    tbody.appendChild(row);
   });
 
+  // ✅ Append tbody to table
   table.appendChild(tbody);
-  adversaryList.appendChild(table);
 
+  // ✅ Create the table wrapper div
+  const tableWrapper = document.createElement('div');
+  tableWrapper.className = 'adversary-table-wrapper';
+
+  // ✅ Append the table inside the wrapper
+  tableWrapper.appendChild(table);
+
+  // ✅ Append the wrapper to the adversary list container
+  adversaryList.appendChild(tableWrapper);
+
+  // ✅ Reinitialize tooltips
   initializeTooltip();
 }
 
