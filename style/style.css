@@ -1,3 +1,16 @@
+@font-face {
+  font-family: 'ModestoPosterW05';
+  src: url('/fonts/ModestoPosterW05-Regular.eot');
+  src: url('/fonts/ModestoPosterW05-Regular.eot?#iefix')
+      format('embedded-opentype'),
+    url('/fonts/ModestoPosterW05-Regular.woff2') format('woff2'),
+    url('/fonts/ModestoPosterW05-Regular.woff') format('woff'),
+    url('/fonts/ModestoPosterW05-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 #adversary-list {
   max-height: 450px;
 }
@@ -59,4 +72,78 @@
 .silhouette_color {
   filter: brightness(0) saturate(100%) invert(49%) sepia(9%) saturate(334%)
     hue-rotate(169deg) brightness(92%) contrast(97%);
+}
+/* Keep Male & Female buttons consistent */
+#toggle-male,
+#toggle-female {
+  border-color: #6c757d !important;
+}
+/* Ensure equal panel height */
+.equal-height {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+/* Scrollable Adversary List */
+.scrollable-list {
+  max-height: 400px;
+  overflow-y: auto;
+}
+.party-panel-label-width {
+  width: 80px;
+}
+
+@media print {
+  /* Force browser to use the correct font */
+  * {
+    font-family: 'Modesto', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+  }
+
+  /* Hide everything except #print-summary */
+  body > *:not(#print-summary) {
+    display: none !important;
+  }
+
+  /* Ensure the print summary is visible */
+  #print-summary {
+    display: block !important;
+  }
+
+  /* Header Image Class */
+  .print-header img {
+    max-width: 100%;
+    display: block;
+    margin: 0 auto 20px;
+  }
+
+  /* Set Encounter Summary title font */
+  .print-title {
+    font-family: ModestoPosterW05, Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+    color: #6c757d !important;
+    font-size: 28px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 10px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th,
+  td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: left;
+  }
+
+  h2,
+  h3 {
+    font-family: ModestoPosterW05, Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+    color: #6c757d !important;
+    font-weight: bold;
+    text-align: center;
+    font-size: 20px;
+  }
 }
