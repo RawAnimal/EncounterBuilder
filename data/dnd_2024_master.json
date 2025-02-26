@@ -9,6 +9,7 @@
     "classes": "data/datasets/lookup_classes_2024.json",
     "species": "data/datasets/lookup_species_2024.json",
     "names": "data/datasets/lookup_random_names.json",
-    "xp_budget": "data/datasets/xp_budget_2024.json"
+    "xp_budget": "data/datasets/xp_budget_2024.json",
+    "encounter_messages": "data/datasets/encounter_messages.json"
   }
 }

@@ -1,0 +1,241 @@
+{
+  "encounter_messages": {
+    "classic": {
+      "0": [
+        "Enemies will fall before they even lift a blade.",
+        "A trivial encounter. The party will dominate easily.",
+        "The enemies are outmatched in every way.",
+        "This is more of a formality than a fight.",
+        "A single swing will end this battle."
+      ],
+      "1": [
+        "The party will barely break a sweat in this fight.",
+        "This is more of a training exercise than a battle.",
+        "A clean and simple victory awaits.",
+        "A challenge only in name.",
+        "This is a warm-up for real combat."
+      ],
+      "2": [
+        "A routine battle. No serious danger.",
+        "Foes present mild resistance but are no real threat.",
+        "A brief struggle before inevitable victory.",
+        "The party’s confidence will not be shaken.",
+        "A chance to refine skills, not test them."
+      ],
+      "3": [
+        "A comfortable fight. The party holds the advantage.",
+        "The party will win, barring overconfidence.",
+        "An enemy worth fighting, but no real cause for concern.",
+        "The enemies may land a few hits, but nothing major.",
+        "A good warm-up before something more serious."
+      ],
+      "4": [
+        "A winnable fight, but careless mistakes may cost them.",
+        "Victory is likely, but the party must not be reckless.",
+        "A battle requiring some tactical awareness.",
+        "A lesson in caution, but not a real threat.",
+        "The party must think, but not fear."
+      ],
+      "5": [
+        "A strong challenge. The party must stay alert.",
+        "This fight will push the party’s skills but should be winnable.",
+        "A fair fight, where skill will determine the victor.",
+        "Mistakes could be costly, but victory is within reach.",
+        "This is what an adventurer calls ‘a real fight’."
+      ],
+      "6": [
+        "A well-balanced fight. Victory is within reach, but not assured.",
+        "A challenging battle, where every move counts.",
+        "This encounter could go either way.",
+        "The party will need strategy, not just brute force.",
+        "A moment of hesitation could be the difference between life and death."
+      ],
+      "7": [
+        "A brutal struggle. Clever tactics will be the key to survival.",
+        "A real test of strength and endurance.",
+        "A dangerous enemy. The party must play smart.",
+        "Retreat is a possibility if the battle goes wrong.",
+        "This is a battle worthy of the history books."
+      ],
+      "8": [
+        "A deadly battle. The party will need every resource they have.",
+        "Falling here is a real possibility.",
+        "A fight that only the strong and prepared will survive.",
+        "This enemy is not to be underestimated.",
+        "The party’s decisions will determine their fate."
+      ],
+      "9": [
+        "This fight is overwhelming. Someone may not walk away from this.",
+        "The party faces an enemy beyond their means.",
+        "Retreat or an extraordinary strategy may be necessary.",
+        "Survival is not guaranteed.",
+        "Even legends would hesitate to take on this battle."
+      ],
+      "10": [
+        "Total catastrophe. The party is outmatched in every way.",
+        "A death sentence. There may be no escape.",
+        "The gods themselves would hesitate to fight this battle.",
+        "Only a miracle can save them now.",
+        "This is where adventurers become myths—or martyrs."
+      ]
+    },
+    "casual": {
+      "0": [
+        "The enemy might as well surrender now.",
+        "This fight isn’t even fair.",
+        "More of a warm-up than a battle.",
+        "The real challenge is staying awake.",
+        "Even a commoner could win this fight."
+      ],
+      "1": [
+        "A walk in the park for the party.",
+        "This is barely worth a roll.",
+        "Even the bard is relaxed.",
+        "No effort required here.",
+        "The real challenge is keeping it interesting."
+      ],
+      "2": [
+        "A bit of movement required, but still no sweat.",
+        "At least they’ll get to stretch their legs.",
+        "A quick and easy fight.",
+        "The dice rolls won’t even be exciting.",
+        "The party will win unless they throw on purpose."
+      ],
+      "3": [
+        "A light workout, but still no stress.",
+        "The enemies are trying their best… it’s just not enough.",
+        "No need for strategy, just roll and win.",
+        "The rogue may take a hit, but only just barely.",
+        "This will end quickly."
+      ],
+      "4": [
+        "A little bit of resistance, but nothing serious.",
+        "They might make you sweat, but barely.",
+        "Keep an eye out, but expect an easy win.",
+        "The healer probably won’t need to heal.",
+        "A victory without risk."
+      ],
+      "5": [
+        "Alright, now it’s an actual fight.",
+        "This is starting to get interesting.",
+        "Maybe don’t hold back this time.",
+        "The dice rolls actually matter here.",
+        "This is what the players came for."
+      ],
+      "6": [
+        "This fight could go either way.",
+        "Hope your dice are rolling well today.",
+        "It’s time to focus—this one’s a real battle.",
+        "One mistake, and things could spiral.",
+        "This is no time for distractions."
+      ],
+      "7": [
+        "This one’s going to leave a few bruises.",
+        "The healer better be ready.",
+        "Expect to take some serious damage.",
+        "This is the kind of fight stories are made of.",
+        "Better start thinking about an exit plan, just in case."
+      ],
+      "8": [
+        "Someone is going down in this fight.",
+        "No shame in running—just saying.",
+        "Hope you stocked up on healing potions.",
+        "You’ll feel this fight for weeks.",
+        "Make peace with your gods before rolling initiative."
+      ],
+      "9": [
+        "Yikes… this is bad.",
+        "Are you sure about this?",
+        "There are easier ways to meet your maker.",
+        "This battle is a last stand, not a fair fight.",
+        "Someone’s getting written out of the campaign tonight."
+      ],
+      "10": [
+        "Just roll new characters now. This is a disaster.",
+        "This is nightmare fuel. Hope you like rolling death saves.",
+        "Your party’s obituary is already written.",
+        "This fight makes dragons look friendly.",
+        "The enemy isn’t just strong, they are inevitable."
+      ]
+    },
+    "grimdark": {
+      "0": [
+        "The enemy is weak, but mercy is for fools.",
+        "This will be a massacre, not a battle.",
+        "Only fools challenge death itself.",
+        "They will fall screaming, just as all do.",
+        "One-sided carnage in its purest form."
+      ],
+      "1": [
+        "Their blood will stain the ground before the sun sets.",
+        "A moment of resistance, followed by total slaughter.",
+        "The screams will be brief, the silence eternal.",
+        "None will live to tell the tale.",
+        "This fight is already over. They just don't know it yet."
+      ],
+      "2": [
+        "The enemy will fight, but death is certain.",
+        "The party’s blades will feast today.",
+        "Only the cruel will take pleasure in this slaughter.",
+        "A brief but brutal display of superiority.",
+        "Their last words will be drowned in their own blood."
+      ],
+      "3": [
+        "The battlefield will be littered with broken bodies.",
+        "This is no battle—it’s an execution.",
+        "Victory is assured, but blood will flow regardless.",
+        "They will beg for mercy. None will be given.",
+        "A futile resistance, ending in despair."
+      ],
+      "4": [
+        "Victory is likely, but the cost may be high.",
+        "The strong will stand, the weak will be buried.",
+        "They may draw blood, but it will not save them.",
+        "A grim lesson in survival.",
+        "One misstep could mean death, but survival is within reach."
+      ],
+      "5": [
+        "Pain will be dealt on both sides.",
+        "The victors will leave, but not unscarred.",
+        "Each strike will matter. Each choice will wound.",
+        "The difference between life and death is a single mistake.",
+        "This fight demands everything."
+      ],
+      "6": [
+        "A battle where hope and despair dance hand in hand.",
+        "A fight measured in blood and agony.",
+        "Only the ruthless will emerge victorious.",
+        "They must push through the suffering to survive.",
+        "The weak will not last long."
+      ],
+      "7": [
+        "Survival is possible, but not guaranteed.",
+        "A brutal test of endurance and will.",
+        "The dead will be left where they fall.",
+        "The survivors will envy the fallen.",
+        "This fight will be remembered in nightmares."
+      ],
+      "8": [
+        "A battle that will break the weak and scar the strong.",
+        "No heroics, only survival or death.",
+        "The enemy will not hesitate. Neither should you.",
+        "Victory is not a promise—it is a sacrifice.",
+        "This battlefield will be soaked in suffering."
+      ],
+      "9": [
+        "Retreat may be the only chance at survival.",
+        "The air reeks of blood and desperation.",
+        "Every step forward is paid for in suffering.",
+        "Hope is an illusion. Only endurance matters.",
+        "The only certainty is pain."
+      ],
+      "10": [
+        "The gods weep for the foolish mortals who dared to fight this battle.",
+        "A grave awaits all who enter this fight.",
+        "No one will leave this battlefield alive.",
+        "The air reeks of inevitable death.",
+        "A battle not meant to be won, but to be suffered."
+      ]
+    }
+  }
+}

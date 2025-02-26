@@ -10,7 +10,7 @@ export function showToast(
   const toastHeader = document.getElementById('toast-header-text');
 
   if (!toastElement || !toastBody || !toastHeader) {
-    console.error('❌ ERROR: Toast elements not found!');
+    console.error('ERROR: Toast elements not found!');
     return;
   }
 

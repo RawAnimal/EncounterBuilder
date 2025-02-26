@@ -146,4 +146,12 @@
     text-align: center;
     font-size: 20px;
   }
+  .encounter-feedback {
+    border: 2px solid black;
+    padding: 10px;
+    margin-top: 20px;
+    background-color: #f8f9fa;
+    text-align: center;
+    font-style: italic;
+  }
 }

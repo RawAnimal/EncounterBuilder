@@ -1,3 +1,67 @@
+function getEncounterDescription(index) {
+  if (!encounterMessagesEnabled) {
+    return ''; // Feature is disabled, return empty string
+  }
+
+  let tone = selectedTone;
+
+  // ✅ If "random" is selected, pick a random tone from available keys
+  if (tone === 'random') {
+    const availableTones = Object.keys(encounterMessages);
+    if (availableTones.length > 0) {
+      tone = availableTones[Math.floor(Math.random() * availableTones.length)];
+    } else {
+      tone = 'classic'; // Fallback if no tones are loaded
+    }
+  }
+
+  // Ensure the correct structure
+  if (!encounterMessages || !encounterMessages[tone]) {
+    console.warn(
+      `Encounter tone "${tone}" not found. Defaulting to "classic".`
+    );
+    tone = 'classic';
+  }
+
+  // Convert difficulty index to an integer to match JSON keys
+  const difficultyKey = Math.round(index).toString();
+
+  // ✅ Select a random message from the array if multiple exist
+  const messages = encounterMessages[tone][difficultyKey];
+  if (Array.isArray(messages) && messages.length > 0) {
+    return messages[Math.floor(Math.random() * messages.length)];
+  }
+
+  return '⚠️ No description available.';
+}
+
+// Feature toggle: Set to false to disable encounter messages
+const encounterMessagesEnabled = true;
+
+// Tone selection: Choose "classic", "casual", "grimdark", or "random"
+let selectedTone = 'random';
+
+// Variable to store loaded encounter messages
+let encounterMessages = {};
+
+// Function to load messages through dnd_2024_master.json
+async function loadEncounterMessages() {
+  try {
+    const response = await fetch('data/datasets/encounter_messages.json');
+    const data = await response.json();
+
+    if (data.encounter_messages) {
+      encounterMessages = data.encounter_messages; // ✅ Now correctly accesses messages
+    } else {
+      console.warn(
+        '⚠️ No encounter messages found in encounter_messages.json.'
+      );
+    }
+  } catch (error) {
+    console.error('Error loading encounter messages:', error);
+  }
+}
+
 window.addEventListener('load', async () => {
   try {
     const response = await fetch('data/dnd_2024_master.json');
@@ -18,8 +82,10 @@ window.addEventListener('load', async () => {
     // Store in global variables for later use
     window.speciesData = speciesData; // Store the full object
     window.classData = classData; // Store the full object
+
+    await loadEncounterMessages();
   } catch (error) {
-    console.error('❌ Error loading data:', error);
+    console.error('Error loading data:', error);
   }
 
   // Ensure functions from other scripts are available before proceeding
@@ -91,14 +157,14 @@ window.addEventListener('load', async () => {
 
     // Log a warning if Human was not found
     if (!humanOptionFound) {
-      console.warn('⚠️ Warning: Human species not found in data.');
+      console.warn('Warning: Human species not found in data.');
     }
   }
 
   function populateClassSelect() {
     const classSelect = document.getElementById('class-select');
     if (!classSelect) {
-      console.error('❌ Class select element not found!');
+      console.error('Class select element not found!');
       return;
     }
 
@@ -107,7 +173,7 @@ window.addEventListener('load', async () => {
 
     // Check if classData is properly loaded
     if (!window.classData || !window.classData.classes) {
-      console.error('❌ Class data is missing or incorrectly formatted.');
+      console.error('Class data is missing or incorrectly formatted.');
       return;
     }
 
@@ -150,7 +216,7 @@ window.addEventListener('load', async () => {
   function updateClassImage(selectedClass) {
     const classImageElement = document.getElementById('class-image');
     if (!classImageElement) {
-      console.error('❌ Class image element not found!');
+      console.error('Class image element not found!');
       return;
     }
 
@@ -221,98 +287,193 @@ window.addEventListener('load', async () => {
   }
 
   const printButton = document.getElementById('print-encounter');
+  const printSection = document.getElementById('print-summary');
+
+  function getAveragePartyLevel() {
+    const partyLevels = [
+      ...document.querySelectorAll('#character-table-body tr td:nth-child(2)'),
+    ].map((cell) => parseInt(cell.textContent.trim(), 10) || 1);
+
+    if (partyLevels.length === 0) return 1; // Default to level 1 if no data
+
+    const totalLevels = partyLevels.reduce((sum, lvl) => sum + lvl, 0);
+    return Math.floor(totalLevels / partyLevels.length);
+  }
 
   if (printButton) {
     printButton.addEventListener('click', async () => {
-      console.log('🖨️ Print button clicked!');
+      // Ensure fonts and JSON data are fully loaded before printing
+      await document.fonts.ready;
 
-      // Reference the print summary
-      const printSection = document.getElementById('print-summary');
-      if (!printSection) {
-        console.error('❌ Print summary section not found!');
+      // Select print sections
+      const printSection = document.getElementById('print-summary'); // Main print layout
+      const printEvaluation = document.getElementById('print-evaluation'); // Encounter evaluation
+
+      if (!printSection || !printEvaluation) {
+        console.error('Error: Missing one or more print sections in HTML.');
         return;
       }
 
-      // Retrieve values and ensure correct number formatting
-      const difficultyText = document.querySelector(
-        '#encounter-difficulty .active'
-      ).textContent;
-
-      const xpBudget =
-        parseFloat(
-          document.getElementById('xp-budget').textContent.replace(/,/g, '')
-        ) || 0;
-      const encounterXp =
-        parseFloat(
-          document.getElementById('bad-guys-xp').textContent.replace(/,/g, '')
-        ) || 0;
-      const balance = xpBudget - encounterXp;
-
-      // Format numbers with commas
-      const formattedXpBudget = xpBudget.toLocaleString();
-      const formattedEncounterXp = encounterXp.toLocaleString();
-      const formattedBalance = balance.toLocaleString();
-
-      // Populate the summary table
-      document.getElementById('print-difficulty').textContent = difficultyText;
-      document.getElementById('print-xp-budget').textContent =
-        formattedXpBudget;
-      document.getElementById('print-encounter-xp').textContent =
-        formattedEncounterXp;
-
-      // Set balance value and format color
-      const balanceCell = document.getElementById('print-balance');
-      balanceCell.textContent =
-        balance > 0 ? `+${formattedBalance}` : formattedBalance;
-      balanceCell.style.fontWeight = 'bold';
-
-      if (balance > 0) {
-        balanceCell.style.color = 'green';
-      } else if (balance < 0) {
-        balanceCell.style.color = 'red';
+      // ✅ Check if messages are disabled and hide the evaluation section if so
+      if (!encounterMessagesEnabled) {
+        printEvaluation.style.display = 'none'; // Hide encounter evaluation
+        console.warn(
+          '⚠️ Encounter messages are disabled. Hiding Encounter Evaluation.'
+        );
       } else {
-        balanceCell.style.color = 'black';
+        printEvaluation.style.display = 'block'; // Show if enabled
       }
 
-      // Populate party table
-      const partyTableBody = document.querySelector('#print-party tbody');
-      partyTableBody.innerHTML = ''; // Clear existing content
+      // ✅ Function to get the selected encounter difficulty from the UI
+      function getSelectedDifficulty() {
+        const activeButton = document.querySelector(
+          '#encounter-difficulty .active'
+        );
+        return activeButton ? activeButton.textContent.trim() : 'Unknown';
+      }
 
-      document.querySelectorAll('#character-table-body tr').forEach((row) => {
-        const newRow = partyTableBody.insertRow();
-        const cells = row.children;
+      // Get elements safely
+      const partyLevelElement = document.getElementById('average-party-level');
+      const encounterXpElement = document.getElementById('bad-guys-xp');
+      const xpBudgetElement = document.getElementById('xp-budget');
+      const encounterBalanceElement =
+        document.getElementById('encounter-balance');
 
-        // Copy data: Name, Level, Species, Class
-        newRow.insertCell(0).textContent = cells[0].textContent;
-        newRow.insertCell(1).textContent = cells[1].textContent;
-        newRow.insertCell(2).textContent = cells[2].textContent;
-        newRow.insertCell(3).textContent = cells[3].textContent;
+      if (
+        !partyLevelElement ||
+        !encounterXpElement ||
+        !xpBudgetElement ||
+        !encounterBalanceElement
+      ) {
+        console.error(
+          '❌ Missing one or more required elements for encounter calculation.'
+        );
+        return;
+      }
+
+      // Extract values safely
+      const averagePartyLevel =
+        parseInt(partyLevelElement.textContent.trim(), 10) || 1;
+      const encounterXp =
+        parseInt(
+          encounterXpElement.textContent.replace(/,/g, '').trim(),
+          10
+        ) || 0;
+      const xpBudget =
+        parseInt(xpBudgetElement.textContent.replace(/,/g, '').trim(), 10) ||
+        0;
+      const encounterBalance =
+        parseInt(
+          encounterBalanceElement.textContent.replace(/,/g, '').trim(),
+          10
+        ) || 0;
+
+      // If all values are zero, prevent message from displaying
+      if (encounterXp === 0 && xpBudget === 0) {
+        console.warn(
+          '⚠️ Encounter not valid (no party or adversaries). Suppressing output.'
+        );
+        alert(
+          '⚠️ Please add party members and adversaries before printing an encounter summary.'
+        );
+        return;
+      }
+
+      // Calculate difficulty rating (for message generation)
+      const scalingFactor = 2 + (10 - Math.min(10, averagePartyLevel)) / 2;
+      const difficultyIndex =
+        xpBudget > 0
+          ? Math.max(
+              0,
+              Math.min(
+                10,
+                6 + ((encounterXp - xpBudget) / xpBudget) * scalingFactor
+              )
+            )
+          : 0;
+
+      // Ensure function exists before calling
+      if (typeof getEncounterDescription !== 'function') {
+        console.error(
+          'Function getEncounterDescription() is missing or not loaded!'
+        );
+        return;
+      }
+
+      // Get the encounter feedback text (unchanged calculation)
+      const encounterFeedback = getEncounterDescription(difficultyIndex);
+
+      // ✅ Get the selected difficulty from UI instead of using calculated difficulty
+      const difficultyText = getSelectedDifficulty();
+
+      // ✅ Populate print summary values
+      document.getElementById('print-difficulty').textContent = difficultyText;
+      document.getElementById('print-xp-budget').textContent =
+        xpBudget.toLocaleString();
+      document.getElementById('print-encounter-xp').textContent =
+        encounterXp.toLocaleString();
+      document.getElementById('print-balance').textContent =
+        encounterBalance.toLocaleString();
+
+      // ✅ Apply color coding to balance
+      const printBalanceElement = document.getElementById('print-balance');
+      if (encounterBalance > 0) {
+        printBalanceElement.style.color = 'green';
+      } else if (encounterBalance < 0) {
+        printBalanceElement.style.color = 'red';
+      } else {
+        printBalanceElement.style.color = 'black';
+      }
+
+      // ✅ Copy party members to print summary (removes button columns)
+      const partyTable = document.getElementById('character-table-body');
+      const printPartyTable = document
+        .getElementById('print-party')
+        .querySelector('tbody');
+      printPartyTable.innerHTML = ''; // Clear before inserting
+
+      partyTable.querySelectorAll('tr').forEach((row) => {
+        const clonedRow = row.cloneNode(true);
+        clonedRow
+          .querySelectorAll('td:last-child')
+          .forEach((td) => td.remove()); // Remove last column (buttons)
+        printPartyTable.appendChild(clonedRow);
       });
 
-      // Populate adversary table
-      const adversaryTableBody = document.querySelector(
-        '#print-adversaries tbody'
-      );
-      adversaryTableBody.innerHTML = ''; // Clear previous data
+      // ✅ Copy adversaries to print summary (removes buttons and swaps columns)
+      const adversaryTable = document.getElementById('adversary-table-body');
+      const printAdversaryTable = document
+        .getElementById('print-adversaries')
+        .querySelector('tbody');
+      printAdversaryTable.innerHTML = ''; // Clear before inserting
 
-      document.querySelectorAll('#adversary-table-body tr').forEach((row) => {
-        const newRow = adversaryTableBody.insertRow();
-        const cells = row.children;
+      adversaryTable.querySelectorAll('tr').forEach((row) => {
+        const clonedRow = row.cloneNode(true);
+        const cells = clonedRow.querySelectorAll('td');
 
-        // New order: Name, Quantity, CR, XP
-        newRow.insertCell(0).textContent = cells[1].textContent; // Name
-        newRow.insertCell(1).textContent = cells[0].textContent; // Quantity
-        newRow.insertCell(2).textContent = cells[2].textContent; // CR
-        newRow.insertCell(3).textContent = cells[3].textContent; // XP
+        if (cells.length >= 4) {
+          // Swap Quantity (originally first) and Name (originally second)
+          const quantityCell = cells[0].cloneNode(true);
+          const nameCell = cells[1].cloneNode(true);
+
+          cells[0].replaceWith(nameCell);
+          cells[1].replaceWith(quantityCell);
+        }
+
+        // Remove last column (buttons)
+        clonedRow
+          .querySelectorAll('td:last-child')
+          .forEach((td) => td.remove());
+        printAdversaryTable.appendChild(clonedRow);
       });
 
-      // Ensure fonts are fully loaded before printing
-      await document.fonts.ready;
+      // ✅ Populate the encounter feedback box
+      document.getElementById('print-encounter-feedback').textContent =
+        encounterFeedback;
 
       // Show print summary before printing
       printSection.style.display = 'block';
 
-      // Trigger print
       // Wait 200ms to ensure styles apply before printing
       setTimeout(() => {
         window.print();
@@ -323,8 +484,6 @@ window.addEventListener('load', async () => {
         printSection.style.display = 'none';
       }, 700);
     });
-  } else {
-    console.error('❌ Print button not found!');
   }
 
   // Load data and initialize dropdowns

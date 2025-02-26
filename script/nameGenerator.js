@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
       window.randomNamesData = await namesResponse.json(); // Store globally
       //window.randomNamesData = randomNamesData;
     } catch (error) {
-      console.error('❌ Error loading random names:', error);
+      console.error('Error loading random names:', error);
     }
   }
 
@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const { firstNames, lastNames } = filterNameList();
 
     if (!firstNames || firstNames.length === 0) {
-      console.warn('⚠️ No first names available to select from.');
+      console.warn('No first names available to select from.');
       return null;
     }
 
@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (nameInput) {
       nameInput.value = fullName;
     } else {
-      console.error('❌ Name input field not found!');
+      console.error('Name input field not found!');
     }
 
     return fullName;
@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function setDefaultCharacterName() {
     const nameField = document.getElementById('character-name');
     if (!nameField) {
-      console.error('❌ Error: Name input field not found.');
+      console.error('Error: Name input field not found.');
       return;
     }
 
@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (randomFullName) {
       nameField.value = randomFullName;
     } else {
-      console.warn('⚠️ No valid name generated.');
+      console.warn('No valid name generated.');
     }
   }
 
