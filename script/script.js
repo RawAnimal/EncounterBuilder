@@ -220,8 +220,114 @@ window.addEventListener('load', async () => {
     console.error('Could not find "Add to Party" button.');
   }
 
+  const printButton = document.getElementById('print-encounter');
+
+  if (printButton) {
+    printButton.addEventListener('click', async () => {
+      console.log('🖨️ Print button clicked!');
+
+      // Reference the print summary
+      const printSection = document.getElementById('print-summary');
+      if (!printSection) {
+        console.error('❌ Print summary section not found!');
+        return;
+      }
+
+      // Retrieve values and ensure correct number formatting
+      const difficultyText = document.querySelector(
+        '#encounter-difficulty .active'
+      ).textContent;
+
+      const xpBudget =
+        parseFloat(
+          document.getElementById('xp-budget').textContent.replace(/,/g, '')
+        ) || 0;
+      const encounterXp =
+        parseFloat(
+          document.getElementById('bad-guys-xp').textContent.replace(/,/g, '')
+        ) || 0;
+      const balance = xpBudget - encounterXp;
+
+      // Format numbers with commas
+      const formattedXpBudget = xpBudget.toLocaleString();
+      const formattedEncounterXp = encounterXp.toLocaleString();
+      const formattedBalance = balance.toLocaleString();
+
+      // Populate the summary table
+      document.getElementById('print-difficulty').textContent = difficultyText;
+      document.getElementById('print-xp-budget').textContent =
+        formattedXpBudget;
+      document.getElementById('print-encounter-xp').textContent =
+        formattedEncounterXp;
+
+      // Set balance value and format color
+      const balanceCell = document.getElementById('print-balance');
+      balanceCell.textContent =
+        balance > 0 ? `+${formattedBalance}` : formattedBalance;
+      balanceCell.style.fontWeight = 'bold';
+
+      if (balance > 0) {
+        balanceCell.style.color = 'green';
+      } else if (balance < 0) {
+        balanceCell.style.color = 'red';
+      } else {
+        balanceCell.style.color = 'black';
+      }
+
+      // Populate party table
+      const partyTableBody = document.querySelector('#print-party tbody');
+      partyTableBody.innerHTML = ''; // Clear existing content
+
+      document.querySelectorAll('#character-table-body tr').forEach((row) => {
+        const newRow = partyTableBody.insertRow();
+        const cells = row.children;
+
+        // Copy data: Name, Level, Species, Class
+        newRow.insertCell(0).textContent = cells[0].textContent;
+        newRow.insertCell(1).textContent = cells[1].textContent;
+        newRow.insertCell(2).textContent = cells[2].textContent;
+        newRow.insertCell(3).textContent = cells[3].textContent;
+      });
+
+      // Populate adversary table
+      const adversaryTableBody = document.querySelector(
+        '#print-adversaries tbody'
+      );
+      adversaryTableBody.innerHTML = ''; // Clear previous data
+
+      document.querySelectorAll('#adversary-table-body tr').forEach((row) => {
+        const newRow = adversaryTableBody.insertRow();
+        const cells = row.children;
+
+        // New order: Name, Quantity, CR, XP
+        newRow.insertCell(0).textContent = cells[1].textContent; // Name
+        newRow.insertCell(1).textContent = cells[0].textContent; // Quantity
+        newRow.insertCell(2).textContent = cells[2].textContent; // CR
+        newRow.insertCell(3).textContent = cells[3].textContent; // XP
+      });
+
+      // Ensure fonts are fully loaded before printing
+      await document.fonts.ready;
+
+      // Show print summary before printing
+      printSection.style.display = 'block';
+
+      // Trigger print
+      // Wait 200ms to ensure styles apply before printing
+      setTimeout(() => {
+        window.print();
+      }, 200);
+
+      // Hide the print summary after printing
+      setTimeout(() => {
+        printSection.style.display = 'none';
+      }, 700);
+    });
+  } else {
+    console.error('❌ Print button not found!');
+  }
+
   // Load data and initialize dropdowns
-  //generateRandomName();
   populateSpeciesDropdown();
   populateClassSelect();
   populateLevelDropdown();
