@@ -1,28 +1,23 @@
 function initializeDatabase() {
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open('EncounterArchitectDB', 2); // Increment version to force upgrade
+    const request = indexedDB.open('EncounterArchitectDB', 4); // Increment version to force upgrade
 
     request.onupgradeneeded = function (event) {
       const db = event.target.result;
-      console.log('🔄 Database upgrade triggered...');
 
       if (!db.objectStoreNames.contains('parties')) {
-        db.createObjectStore('parties', {
-          keyPath: 'id',
-          autoIncrement: true,
-        });
+        const store = db.createObjectStore('parties', { keyPath: 'id' });
+        store.createIndex('name', 'name', { unique: true });
       }
+
       if (!db.objectStoreNames.contains('adversaries')) {
-        db.createObjectStore('adversaries', {
-          keyPath: 'id',
-          autoIncrement: true,
-        });
+        const store = db.createObjectStore('adversaries', { keyPath: 'id' });
+        store.createIndex('name', 'name', { unique: true });
       }
+
       if (!db.objectStoreNames.contains('encounters')) {
-        db.createObjectStore('encounters', {
-          keyPath: 'id',
-          autoIncrement: true,
-        });
+        const store = db.createObjectStore('encounters', { keyPath: 'id' });
+        store.createIndex('name', 'name', { unique: true });
       }
     };
 
@@ -40,45 +35,74 @@ function initializeDatabase() {
 
 function saveData(storeName, data) {
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open('EncounterArchitectDB', 2);
+    const request = indexedDB.open('EncounterArchitectDB', 4); // Incremented version to force upgrade
+
     request.onsuccess = function (event) {
       const db = event.target.result;
+
+      // Log available object stores to debug missing store issues
+      console.log(
+        '✅ IndexedDB Opened. Available Object Stores:',
+        db.objectStoreNames
+      );
+
+      if (!db.objectStoreNames.contains(storeName)) {
+        console.error(`❌ Object store '${storeName}' not found!`);
+        return reject(`Object store '${storeName}' does not exist.`);
+      }
+
       const transaction = db.transaction([storeName], 'readwrite');
       const store = transaction.objectStore(storeName);
 
+      if (!data.id) {
+        data.id = crypto.randomUUID(); // Generate a unique ID if not provided
+      }
       const addRequest = store.add(data);
-      addRequest.onsuccess = () => resolve('Data saved successfully.');
+
+      addRequest.onsuccess = () => resolve('✅ Data saved successfully.');
       addRequest.onerror = (event) =>
-        reject('Save failed: ' + event.target.error);
+        reject('❌ Save failed: ' + event.target.error);
     };
+
     request.onerror = function (event) {
-      reject('Database open failed: ' + event.target.error);
+      reject('❌ Database open failed: ' + event.target.error);
     };
   });
 }
 
-function loadData(storeName, id) {
+function loadData(storeName, key = null) {
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open('EncounterArchitectDB', 2);
+    const request = indexedDB.open('EncounterArchitectDB', 4);
+
     request.onsuccess = function (event) {
       const db = event.target.result;
       const transaction = db.transaction([storeName], 'readonly');
       const store = transaction.objectStore(storeName);
 
-      const getRequest = store.get(id);
-      getRequest.onsuccess = () => resolve(getRequest.result);
-      getRequest.onerror = (event) =>
-        reject('Load failed: ' + event.target.error);
+      if (key) {
+        // Load a specific entry
+        const getRequest = store.get(key);
+        getRequest.onsuccess = () => resolve(getRequest.result);
+        getRequest.onerror = () =>
+          reject(`Error loading ${storeName}: ${getRequest.error}`);
+      } else {
+        // Load all entries (for dropdown population)
+        const getAllRequest = store.getAll();
+        getAllRequest.onsuccess = () => resolve(getAllRequest.result);
+        getAllRequest.onerror = () =>
+          reject(`Error loading ${storeName}: ${getAllRequest.error}`);
+      }
     };
+
     request.onerror = function (event) {
-      reject('Database open failed: ' + event.target.error);
+      reject(`Database open failed: ${event.target.error}`);
     };
   });
 }
 
 function deleteData(storeName, id) {
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open('EncounterArchitectDB', 2);
+    const request = indexedDB.open('EncounterArchitectDB', 4);
     request.onsuccess = function (event) {
       const db = event.target.result;
       const transaction = db.transaction([storeName], 'readwrite');
@@ -97,7 +121,7 @@ function deleteData(storeName, id) {
 
 async function loadAllData() {
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open('EncounterArchitectDB', 2);
+    const request = indexedDB.open('EncounterArchitectDB', 4);
     request.onsuccess = function (event) {
       const db = event.target.result;
       const transaction = db.transaction(

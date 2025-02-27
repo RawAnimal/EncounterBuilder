@@ -39,11 +39,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Function to update the party table
   function updatePartyTable() {
-    characterTableBody.innerHTML = '';
+    // ✅ Preserve existing members instead of clearing the table
+    const existingRows = [...characterTableBody.querySelectorAll('tr')];
+    const existingNames = existingRows.map((row) =>
+      row.children[0].textContent.trim()
+    );
 
     characters.forEach((character, index) => {
-      const row = document.createElement('tr');
-      row.innerHTML = `
+      if (!existingNames.includes(character.name)) {
+        // ✅ Prevent duplicate overwriting
+        const row = document.createElement('tr');
+        row.innerHTML = `
                 <td class="align-middle fw-bold">${character.name}</td>
                 <td class="align-middle">${character.level}</td>
                 <td class="align-middle">${capitalizeFirstLetter(
@@ -56,29 +62,38 @@ document.addEventListener('DOMContentLoaded', () => {
                     <i class="bi bi-dash"></i>
                 </button></td>
             `;
-      characterTableBody.appendChild(row);
-      initializeTooltip();
+        characterTableBody.appendChild(row);
+        initializeTooltip();
+      }
     });
 
     // Add event listeners to remove buttons
-    // Add event listeners to remove buttons
     document.querySelectorAll('.remove-character').forEach((button) => {
       button.addEventListener('click', (event) => {
-        const index = event.target.closest('button').dataset.index;
-        const removedCharacter = characters[index];
+        const row = event.target.closest('tr');
+        const name = row.children[0]?.textContent.trim();
+        const level = row.children[1]?.textContent.trim();
+        const characterClass = row.children[3]?.textContent.trim();
 
-        characters.splice(index, 1);
-        updatePartyTable();
+        // Check if the character is in the characters array
+        const index = characters.findIndex((c) => c.name === name);
+        if (index !== -1) {
+          characters.splice(index, 1); // Remove from the array
+        }
 
-        let removalMessage = `<strong>${removedCharacter.name}</strong> the <strong>Level ${removedCharacter.level} ${removedCharacter.characterClass}</strong> has left the party of adventurers.`;
+        row.remove(); // ✅ Remove row without resetting the table
 
-        // Append extra message if the party is now empty
+        let removalMessage = `<strong>${name}</strong> the <strong>Level ${level} ${characterClass}</strong> has left the party of adventurers.`;
         if (characters.length === 0) {
           removalMessage += ` <strong>The party is now empty.</strong>`;
         }
 
-        // Show toast notification
         showToast(removalMessage, 'danger', 'Party Member Removed', 2500);
+        if (typeof window.updatePartyCalculations === 'function') {
+          window.updatePartyCalculations();
+        } else {
+          console.error('❌ updatePartyCalculations() is not available.');
+        }
       });
     });
   }

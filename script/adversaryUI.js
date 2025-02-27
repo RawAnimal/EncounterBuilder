@@ -582,7 +582,7 @@ function renderAdversaryList(searchQuery = '') {
 }
 
 // Keep Text Formatting Helper
-function formatText(str) {
+export function formatText(str) {
   return str.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase());
 }
 

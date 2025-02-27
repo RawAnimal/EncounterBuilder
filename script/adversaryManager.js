@@ -35,7 +35,11 @@ function addAdversary(adversary) {
   }
 
   // Otherwise, create a new row for the adversary
-  addedAdversaries[adversary.name] = { adversary, quantity: 1 };
+  if (!addedAdversaries[adversary.name]) {
+    addedAdversaries[adversary.name] = { adversary, quantity: 1 };
+  } else {
+    addedAdversaries[adversary.name].quantity += 1;
+  }
 
   const row = document.createElement('tr');
   row.dataset.adversaryId = adversary.name;
@@ -74,7 +78,23 @@ function addAdversary(adversary) {
 }
 
 function removeAdversary(name) {
-  if (!addedAdversaries[name]) return;
+  if (!addedAdversaries[name]) {
+    console.warn(
+      `⚠️ ${name} not found in addedAdversaries. Removing from table only.`
+    );
+    const row = document.querySelector(`[data-adversary-id="${name}"]`);
+    if (row) {
+      row.remove();
+      updateTotalAdversaryXP();
+      showToast(
+        `<strong>${name}</strong> has been removed from the encounter.`,
+        'danger',
+        'Adversary Removed',
+        2500
+      );
+    }
+    return;
+  }
 
   const adversaryData = addedAdversaries[name];
   if (adversaryData.quantity > 1) {
@@ -119,18 +139,21 @@ function removeAdversary(name) {
 function updateTotalAdversaryXP() {
   let totalXP = 0;
 
-  for (const adversaryName in addedAdversaries) {
-    const adversaryData = addedAdversaries[adversaryName]; // Get the stored adversary data
-    totalXP += adversaryData.adversary.xp * adversaryData.quantity; // Access XP correctly
-  }
+  // ✅ Include all adversaries in the table, even those not in addedAdversaries
+  document.querySelectorAll('#adversary-table-body tr').forEach((row) => {
+    const quantity = parseInt(row.children[0]?.textContent.trim(), 10) || 1;
+    const xp =
+      parseInt(row.children[3]?.textContent.trim().replace(/,/g, ''), 10) || 0;
+    totalXP += quantity * xp;
+  });
 
-  // Update the encounter summary panel
+  // ✅ Update the encounter summary panel
   const xpElement = document.getElementById('bad-guys-xp');
   if (xpElement) {
     xpElement.textContent = totalXP.toLocaleString();
   }
 
-  // Ensure encounter balance updates properly
+  // ✅ Ensure encounter balance updates properly
   updateEncounterBalance();
 }
 

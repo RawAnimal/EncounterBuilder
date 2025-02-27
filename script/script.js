@@ -1,4 +1,12 @@
-import { initializeDatabase, loadAllData } from './database.js';
+import {
+  initializeDatabase,
+  loadAllData,
+  saveData,
+  loadData,
+  deleteData,
+} from './database.js';
+import { showToast } from './toastManager.js';
+import { formatText } from './adversaryUI.js';
 
 // Global variables and settings
 let encounterMessages = {};
@@ -15,24 +23,99 @@ initializeDatabase()
   })
   .catch(console.error);
 
-// Populate dropdowns for loading saved data
+// Populate dropdowns for General data population
 async function populateDropdowns() {
   console.log('📌 Populating dropdowns...');
   try {
     const data = await loadAllData();
-    updateDropdown('party-list', data.parties);
-    updateDropdown('adversary-list', data.adversaries);
-    updateDropdown('encounter-list', data.encounters);
+
+    updateDropdown('load-party-select', data.parties);
+    updateDropdown('load-adversary-select', data.adversaries);
+    updateDropdown('load-encounter-select', data.encounters);
+
+    console.log('📌 Adversary Data:', data.adversaries);
     console.log('✅ Dropdowns populated successfully.');
+
+    // ✅ Call these functions without `await` since they are not async
+    populatePartyDropdown();
+    populateAdversaryDropdown();
+    populateEncounterDropdown();
   } catch (error) {
     console.error('❌ Error populating dropdowns:', error);
   }
 }
 
+window.updatePartyCalculations = function () {
+  const partyLevels = [
+    ...document.querySelectorAll('#character-table-body tr td:nth-child(2)'),
+  ].map((cell) => parseInt(cell.textContent.trim(), 10) || 1);
+
+  if (partyLevels.length === 0) {
+    document.getElementById('average-party-level').textContent = '-';
+    document.getElementById('xp-budget').textContent = '-';
+    return;
+  }
+
+  const totalLevels = partyLevels.reduce((sum, lvl) => sum + lvl, 0);
+  const avgLevel = Math.floor(totalLevels / partyLevels.length);
+
+  document.getElementById('average-party-level').textContent = avgLevel;
+  document.getElementById('xp-budget').textContent = (
+    avgLevel * 100
+  ).toLocaleString(); // Example XP calculation
+};
+
+function addCharacterToTable(character) {
+  const partyList = document.getElementById('character-table-body');
+  if (!partyList) {
+    console.error('❌ Party table body not found.');
+    return;
+  }
+
+  const row = document.createElement('tr');
+  row.innerHTML = `
+        <td>${character.name}</td>
+        <td>${character.level}</td>
+        <td>${character.species}</td>
+        <td>${character.class}</td>
+        <td><button class="btn btn-danger btn-sm remove-member">Remove</button></td>
+    `;
+
+  partyList.appendChild(row);
+  updatePartyCalculations();
+}
+
+document
+  .getElementById('character-table-body')
+  .addEventListener('click', function (event) {
+    if (event.target.classList.contains('remove-member')) {
+      const row = event.target.closest('tr');
+      const name = row.children[0]?.textContent.trim() || 'Unknown';
+      const level = row.children[1]?.textContent.trim() || 'Unknown Level';
+      const characterClass =
+        row.children[3]?.textContent.trim() || 'Unknown Class';
+
+      row.remove();
+      updatePartyCalculations();
+
+      // ✅ Ensure removalMessage is always defined
+      let removalMessage = `<strong>${name}</strong> has left the party.`;
+      if (level !== 'Unknown Level' && characterClass !== 'Unknown Class') {
+        removalMessage = `<strong>${name}</strong> the <strong>Level ${level} ${characterClass}</strong> has left the party of adventurers.`;
+      }
+
+      showToast(removalMessage, 'danger', 'Party Member Removed', 2500);
+    }
+  });
+
+// Re-usable function to update a specific dropdown
 function updateDropdown(dropdownId, items) {
   const dropdown = document.getElementById(dropdownId);
   if (!dropdown) return;
-  dropdown.innerHTML = '';
+
+  // ✅ Add a default "Select..." option
+  dropdown.innerHTML = '<option value="">Select an option...</option>';
+
   items.forEach((item) => {
     const option = document.createElement('option');
     option.value = item.id;
@@ -40,6 +123,113 @@ function updateDropdown(dropdownId, items) {
     dropdown.appendChild(option);
   });
 }
+
+// ***** Specific function to populate party dropdown
+function populatePartyDropdown() {
+  const partySelect = document.getElementById('load-party-select');
+  if (!partySelect) {
+    console.error('❌ Party dropdown not found!');
+    return;
+  }
+
+  // Clear existing options
+  partySelect.innerHTML = '<option value="">Select a party...</option>';
+
+  // Load party data from IndexedDB
+  loadData('parties')
+    .then((parties) => {
+      if (!parties || parties.length === 0) {
+        console.warn('⚠️ No saved parties found.');
+        return;
+      }
+
+      // Populate dropdown with saved parties
+      parties.forEach((party) => {
+        const option = document.createElement('option');
+        option.value = party.id; // Use party ID as value
+        option.textContent = party.name; // Display the party name
+        partySelect.appendChild(option);
+      });
+
+      console.log('✅ Party dropdown populated successfully.');
+    })
+    .catch((error) => {
+      console.error('❌ Error loading parties:', error);
+    });
+}
+
+// ***** Specific function to populate adversary dropdown
+function populateAdversaryDropdown() {
+  const adversarySelect = document.getElementById('load-adversary-select');
+  if (!adversarySelect) {
+    console.error('❌ Adversary dropdown not found!');
+    return;
+  }
+
+  // Clear existing options
+  adversarySelect.innerHTML =
+    '<option value="">Select an adversary group...</option>';
+
+  // Load adversary data from IndexedDB
+  loadData('adversaries')
+    .then((adversaries) => {
+      if (!adversaries || adversaries.length === 0) {
+        console.warn('⚠️ No saved adversary groups found.');
+        return;
+      }
+
+      // Populate dropdown with saved adversaries
+      adversaries.forEach((group) => {
+        const option = document.createElement('option');
+        option.value = group.id;
+        option.textContent = group.name;
+        adversarySelect.appendChild(option);
+      });
+
+      console.log('✅ Adversary dropdown populated successfully.');
+    })
+    .catch((error) => {
+      console.error('❌ Error loading adversary groups:', error);
+    });
+}
+
+// ***** Specific function to populate encounter dropdown
+function populateEncounterDropdown() {
+  const encounterSelect = document.getElementById('load-encounter-select');
+  if (!encounterSelect) {
+    console.error('❌ Encounter dropdown not found!');
+    return;
+  }
+
+  // Clear existing options
+  encounterSelect.innerHTML =
+    '<option value="">Select an encounter...</option>';
+
+  // Load encounter data from IndexedDB
+  loadData('encounters')
+    .then((encounters) => {
+      if (!encounters || encounters.length === 0) {
+        console.warn('⚠️ No saved encounters found.');
+        return;
+      }
+
+      // Populate dropdown with saved encounters
+      encounters.forEach((encounter) => {
+        const option = document.createElement('option');
+        option.value = encounter.id;
+        option.textContent = encounter.name;
+        encounterSelect.appendChild(option);
+      });
+
+      console.log('✅ Encounter dropdown populated successfully.');
+    })
+    .catch((error) => {
+      console.error('❌ Error loading encounters:', error);
+    });
+}
+
+// Call this function after the page loads to populate the dropdown
+document.addEventListener('DOMContentLoaded', populatePartyDropdown);
 
 // Get encounter description based on difficulty
 function getEncounterDescription(index) {
@@ -100,6 +290,21 @@ async function loadEncounterMessages() {
 // Title case utility function
 function toTitleCase(str) {
   return str.replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
+function updateEncounterXP() {
+  const adversaryRows = document.querySelectorAll('#adversary-table-body tr');
+  let totalXP = 0;
+
+  adversaryRows.forEach((row) => {
+    const quantity = parseInt(row.children[0].textContent.trim(), 10) || 1;
+    const xp =
+      parseInt(row.children[3].textContent.trim().replace(/,/g, ''), 10) || 0;
+    totalXP += quantity * xp;
+  });
+
+  document.getElementById('bad-guys-xp').textContent =
+    totalXP.toLocaleString();
 }
 
 // Main initialization function
@@ -450,10 +655,10 @@ async function handlePrintButtonClick() {
   // If all values are zero, prevent message from displaying
   if (encounterXp === 0 && xpBudget === 0) {
     console.warn(
-      '⚠️ Encounter not valid (no party or adversaries). Suppressing output.'
+      'Encounter not valid (no party or adversaries). Suppressing output.'
     );
     alert(
-      '⚠️ Please add party members and adversaries before printing an encounter summary.'
+      'Please add party members and adversaries before printing an encounter summary.'
     );
     return;
   }
@@ -648,4 +853,412 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
   });
+
+  // ********** Handle Database "Save" actions **********
+  document
+    .querySelectorAll('.admin-action-details button.btn-success')
+    .forEach((saveBtn) => {
+      saveBtn.addEventListener('click', async function () {
+        const action = this.closest('.admin-action-details').id.replace(
+          '-details',
+          ''
+        );
+        console.log(`💾 Attempting to save: ${action}`);
+
+        let inputField, inputValue;
+        if (action === 'save-party') {
+          inputField = document.getElementById('save-party-input');
+          inputValue = inputField ? inputField.value.trim() : '';
+          if (!inputValue)
+            return showToast('Please enter a party name.', 'warning');
+
+          const partyMembers = [
+            ...document.querySelectorAll('#character-table-body tr'),
+          ].map((row) => {
+            const cells = row.querySelectorAll('td');
+            return {
+              name: cells[0]?.textContent.trim() || 'Unknown',
+              level: parseInt(cells[1]?.textContent.trim(), 10) || 1,
+              species: cells[2]?.textContent.trim() || 'Unknown',
+              class: cells[3]?.textContent.trim() || 'Unknown',
+            };
+          });
+
+          await saveData('parties', {
+            id: crypto.randomUUID(),
+            name: inputValue,
+            members: partyMembers,
+          });
+          showToast(`✅ Party '${inputValue}' saved successfully.`, 'success');
+        } else if (action === 'save-adversary') {
+          inputField = document.getElementById('save-adversary-input');
+          inputValue = inputField ? inputField.value.trim() : '';
+          if (!inputValue)
+            return showToast(
+              '⚠️ Please enter an adversary group name.',
+              'warning'
+            );
+
+          const adversaryList = [
+            ...document.querySelectorAll('#adversary-table-body tr'),
+          ].map((row) => {
+            const cells = row.querySelectorAll('td');
+            return {
+              name: cells[1]?.textContent.trim() || 'Unknown',
+              cr: cells[2]?.textContent.trim() || 'Unknown',
+              xp: cells[3]?.textContent.trim() || 'Unknown',
+              quantity: parseInt(cells[0]?.textContent.trim(), 10) || 1,
+            };
+          });
+
+          await saveData('adversaries', {
+            id: crypto.randomUUID(),
+            name: inputValue,
+            adversaries: adversaryList, // Save the list of adversaries
+          });
+
+          showToast(
+            `✅ Adversary group '${inputValue}' saved successfully.`,
+            'success'
+          );
+        } else if (action === 'save-encounter') {
+          inputField = document.getElementById('save-encounter-input');
+          inputValue = inputField ? inputField.value.trim() : '';
+          if (!inputValue)
+            return showToast('⚠️ Please enter an encounter name.', 'warning');
+
+          const partyMembers = [
+            ...document.querySelectorAll('#character-table-body tr'),
+          ].map((row) => {
+            const cells = row.querySelectorAll('td');
+            return {
+              name: cells[0]?.textContent.trim() || 'Unknown',
+              level: parseInt(cells[1]?.textContent.trim(), 10) || 1,
+              species: cells[2]?.textContent.trim() || 'Unknown',
+              class: cells[3]?.textContent.trim() || 'Unknown',
+            };
+          });
+
+          const adversaryList = [
+            ...document.querySelectorAll('#adversary-table-body tr'),
+          ].map((row) => {
+            const cells = row.querySelectorAll('td');
+            return {
+              name: cells[1]?.textContent.trim() || 'Unknown',
+              cr: cells[2]?.textContent.trim() || 'Unknown',
+              xp: cells[3]?.textContent.trim() || 'Unknown',
+              quantity: parseInt(cells[0]?.textContent.trim(), 10) || 1,
+            };
+          });
+
+          await saveData('encounters', {
+            id: crypto.randomUUID(),
+            name: inputValue,
+            party: partyMembers,
+            adversaries: adversaryList, // Save adversaries too!
+          });
+
+          showToast(
+            `✅ Encounter '${inputValue}' saved successfully.`,
+            'success'
+          );
+        }
+
+        // Clear the input field after saving
+        if (inputField) inputField.value = '';
+
+        // Close the panel after saving
+        document
+          .querySelectorAll('.admin-action-details')
+          .forEach((panel) => panel.classList.add('d-none'));
+
+        // Reset active buttons
+        document
+          .querySelectorAll('#admin-btn-group .dropdown-toggle')
+          .forEach((btn) => {
+            btn.classList.remove('btn-primary', 'active');
+            btn.classList.add('btn-secondary');
+          });
+      });
+    });
+  // ********** End Handle Database "Save" actions **********
+
+  // ********** Handle Document "Load" Party Actions **********
+  document
+    .getElementById('load-party-details')
+    .addEventListener('click', async function (event) {
+      if (
+        event.target.tagName === 'BUTTON' &&
+        event.target.textContent === 'Load'
+      ) {
+        const partySelect = document.getElementById('load-party-select');
+        const partyId = partySelect.value;
+
+        if (!partyId) {
+          showToast('⚠️ Please select a party to load.', 'warning');
+          return;
+        }
+
+        console.log(`📌 Loading party with ID: ${partyId}`);
+
+        try {
+          const partyData = await loadData('parties', partyId);
+          if (!partyData) {
+            showToast('❌ Failed to load party. Data not found.', 'error');
+            return;
+          }
+
+          // Confirmation if a party is already loaded
+          if (
+            document.querySelectorAll('#character-table-body tr').length > 0
+          ) {
+            if (
+              !confirm(
+                '⚠️ Loading this party will replace the current list. Continue?'
+              )
+            ) {
+              return;
+            }
+          }
+
+          // Clear current party
+          document.getElementById('character-table-body').innerHTML = '';
+
+          // Add loaded characters to the table
+          partyData.members.forEach((member) => addCharacterToTable(member));
+
+          // Update calculations
+          updatePartyCalculations();
+
+          showToast(
+            `✅ Party '${partyData.name}' loaded successfully.`,
+            'success'
+          );
+
+          console.log('✅ Party loaded:', partyData);
+        } catch (error) {
+          console.error('❌ Error loading party:', error);
+          showToast(
+            '❌ Error loading party. See console for details.',
+            'error'
+          );
+        }
+      }
+    });
+
+  // Remove Adversary (Event Delegation)
+  document
+    .getElementById('adversary-table-body')
+    .addEventListener('click', function (event) {
+      if (event.target.classList.contains('remove-adversary')) {
+        const row = event.target.closest('tr');
+        const name = row.children[1]?.textContent.trim();
+        const quantityCell = row.children[0];
+        let quantity = parseInt(quantityCell.textContent.trim(), 10) || 1;
+        const xp =
+          parseInt(
+            row.children[3]?.textContent.trim().replace(/,/g, ''),
+            10
+          ) || 0;
+
+        if (quantity > 1) {
+          // ✅ Reduce the quantity instead of removing the row
+          quantity -= 1;
+          quantityCell.textContent = quantity;
+
+          showToast(
+            `<strong>${formatText(
+              name
+            )}</strong> count on the Adversary List has decreased to 
+		      <strong>${quantity}</strong>, removing 
+		      <strong>${xp.toLocaleString()} XP</strong> from the Encounter for an easier challenge.`,
+            'danger',
+            'Adversary Decrease',
+            2500
+          );
+        } else {
+          // ✅ If only one remains, remove the row completely
+          row.remove();
+
+          showToast(
+            `The last <strong>${formatText(
+              name
+            )}</strong> has been removed from the Encounter decreasing the challenge by ${xp.toLocaleString()} XP.`,
+            'danger',
+            'Adversary Removed',
+            2500
+          );
+        }
+
+        updateEncounterXP(); // ✅ Update XP after removal
+      }
+    });
+
+  // ********** Handle Document "Adversary" Party Actions **********
+  document
+    .getElementById('load-adversary-details')
+    .addEventListener('click', async function (event) {
+      if (
+        event.target.tagName === 'BUTTON' &&
+        event.target.textContent === 'Load'
+      ) {
+        const adversarySelect = document.getElementById(
+          'load-adversary-select'
+        );
+        const adversaryId = adversarySelect.value;
+
+        if (!adversaryId) {
+          showToast('⚠️ Please select an adversary group to load.', 'warning');
+          return;
+        }
+
+        console.log(`📌 Loading adversary group with ID: ${adversaryId}`);
+
+        try {
+          const adversaryData = await loadData('adversaries', adversaryId);
+          if (!adversaryData) {
+            showToast(
+              '❌ Failed to load adversary group. Data not found.',
+              'error'
+            );
+            return;
+          }
+
+          // Confirm if replacing existing adversary group
+          if (
+            document.querySelectorAll('#adversary-table-body tr').length > 0
+          ) {
+            if (
+              !confirm(
+                '⚠️ Loading this adversary group will replace the current list. Continue?'
+              )
+            ) {
+              return;
+            }
+          }
+
+          // Clear existing adversaries
+          document.getElementById('adversary-table-body').innerHTML = '';
+
+          // Populate adversary table
+          adversaryData.adversaries.forEach((adv) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${adv.quantity}</td>
+              <td>${adv.name}</td>
+              <td>${adv.cr}</td>
+              <td>${adv.xp}</td>
+              <td><button class="btn btn-danger btn-sm remove-adversary">Remove</button></td>
+            `;
+
+            document.getElementById('adversary-table-body').appendChild(row);
+          });
+
+          updateEncounterXP();
+
+          showToast(
+            `✅ Adversary Group '${adversaryData.name}' loaded successfully.`,
+            'success'
+          );
+          console.log('✅ Adversary group loaded:', adversaryData);
+        } catch (error) {
+          console.error('❌ Error loading adversary group:', error);
+          showToast(
+            '❌ Error loading adversary group. See console for details.',
+            'error'
+          );
+        }
+      }
+    });
+
+  // ********** Handle Document "Load" Encounter Actions **********
+
+  // ✅ Load Encounter (Loads both Party & Adversaries)
+  document
+    .getElementById('load-encounter-details')
+    .addEventListener('click', async function (event) {
+      if (
+        event.target.tagName === 'BUTTON' &&
+        event.target.textContent === 'Load'
+      ) {
+        const encounterSelect = document.getElementById(
+          'load-encounter-select'
+        );
+        const encounterId = encounterSelect.value;
+
+        if (!encounterId) {
+          showToast('⚠️ Please select an encounter to load.', 'warning');
+          return;
+        }
+
+        console.log(`📌 Loading encounter with ID: ${encounterId}`);
+
+        try {
+          const encounterData = await loadData('encounters', encounterId);
+          if (!encounterData) {
+            showToast('❌ Failed to load encounter. Data not found.', 'error');
+            return;
+          }
+
+          // Confirm if replacing existing party and adversaries
+          if (
+            document.querySelectorAll('#character-table-body tr').length > 0 ||
+            document.querySelectorAll('#adversary-table-body tr').length > 0
+          ) {
+            if (
+              !confirm(
+                '⚠️ Loading this encounter will replace the current lists. Continue?'
+              )
+            ) {
+              return;
+            }
+          }
+
+          // Clear existing party and adversaries
+          document.getElementById('character-table-body').innerHTML = '';
+          document.getElementById('adversary-table-body').innerHTML = '';
+
+          // ✅ Load Party Members
+          if (encounterData.party && encounterData.party.length > 0) {
+            encounterData.party.forEach((member) =>
+              addCharacterToTable(member)
+            );
+          }
+
+          // ✅ Load Adversaries
+          if (
+            encounterData.adversaries &&
+            encounterData.adversaries.length > 0
+          ) {
+            encounterData.adversaries.forEach((adv) => {
+              const row = document.createElement('tr');
+              row.innerHTML = `
+              <td>${adv.quantity}</td>
+              <td>${adv.name}</td>
+              <td>${adv.cr}</td>
+              <td>${adv.xp}</td>
+              <td><button class="btn btn-danger btn-sm remove-adversary">Remove</button></td>
+            `;
+              document.getElementById('adversary-table-body').appendChild(row);
+            });
+          }
+
+          // ✅ Update XP and Party Budget
+          updateEncounterXP();
+          updatePartyCalculations();
+
+          showToast(
+            `✅ Encounter '${encounterData.name}' loaded successfully.`,
+            'success'
+          );
+          console.log('✅ Encounter loaded:', encounterData);
+        } catch (error) {
+          console.error('❌ Error loading encounter:', error);
+          showToast(
+            '❌ Error loading encounter. See console for details.',
+            'error'
+          );
+        }
+      }
+    });
 });
