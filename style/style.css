@@ -19,6 +19,12 @@
   max-height: 770px !important;
 }
 
+.equal-height-last {
+  display: flex;
+  flex-direction: column;
+  min-height: 300px !important;
+}
+
 /* Scrollable Adversary List */
 .scrollable-list {
   max-height: 395px;
