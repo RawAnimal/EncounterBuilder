@@ -45,6 +45,22 @@ async function populateDropdowns() {
   }
 }
 
+// ✅ Populate delete dropdowns when the admin panel opens
+async function populateDeleteDropdowns() {
+  console.log('📌 Populating delete dropdowns...');
+  try {
+    const data = await loadAllData();
+
+    updateDropdown('delete-party-select', data.parties);
+    updateDropdown('delete-adversary-select', data.adversaries);
+    updateDropdown('delete-encounter-select', data.encounters);
+
+    console.log('✅ Delete dropdowns populated successfully.');
+  } catch (error) {
+    console.error('❌ Error populating delete dropdowns:', error);
+  }
+}
+
 window.updatePartyCalculations = function () {
   const partyLevels = [
     ...document.querySelectorAll('#character-table-body tr td:nth-child(2)'),
@@ -764,6 +780,39 @@ async function handlePrintButtonClick() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  // ✅ Attach event listeners to delete buttons in the admin panel
+  document.querySelectorAll('.delete-button').forEach((button) => {
+    button.addEventListener('click', function () {
+      console.log('🗑️ Delete button clicked.');
+
+      const recordType = this.dataset.recordType;
+      const recordId = this.dataset.recordId;
+      const recordName = this.dataset.recordName;
+
+      if (!recordType || !recordId) {
+        console.error('❌ Missing record data attributes.');
+        return;
+      }
+
+      // Set delete confirmation button data
+      document.getElementById('confirm-delete-btn').dataset.recordType =
+        recordType;
+      document.getElementById('confirm-delete-btn').dataset.recordId =
+        recordId;
+
+      // Update modal message
+      document.getElementById(
+        'delete-modal-label'
+      ).innerHTML = `Are you sure you want to delete <strong>${recordName}</strong>?`;
+
+      // Open delete modal
+      const deleteModal = new bootstrap.Modal(
+        document.getElementById('deleteModal')
+      );
+      deleteModal.show();
+    });
+  });
+
   const adminButton = document.getElementById('admin-view');
   const adminPanel = document.getElementById('encounter-admin');
 
@@ -785,6 +834,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const action = this.getAttribute('data-action');
       console.log(`📌 Admin action triggered: ${action}`);
+
+      // ✅ Populate delete dropdowns when opening the delete section
+      if (action.startsWith('delete-')) {
+        console.log('📌 Populating delete dropdowns...');
+        populateDeleteDropdowns();
+      }
 
       // Get the button associated with the clicked option
       const button =
