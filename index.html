@@ -16,6 +16,7 @@
     />
   </head>
   <body>
+    <!-- Header -->
     <div class="row mt-4">
       <div class="col-md-12 px-5">
         <div class="w-100 px-4">
@@ -27,9 +28,8 @@
         </div>
       </div>
     </div>
-
+    <!-- Toast Notification Container -->
     <div class="container mt-4">
-      <!-- Toast Notification Container -->
       <div
         class="toast-container position-fixed top-0 start-50 translate-middle-x p-3"
       >
@@ -321,8 +321,8 @@
                 <div class="btn-group" role="group" id="admin">
                   <button id="print-encounter" class="btn btn-secondary">
                     <i class="bi bi-printer"></i></button
-                  ><button id="save-encounter" class="btn btn-secondary">
-                    <i class="bi bi-save"></i>
+                  ><button id="admin-view" class="btn btn-secondary">
+                    <i class="bi bi-gear"></i>
                   </button>
                 </div>
 
@@ -467,81 +467,345 @@
           </div>
         </div>
       </div>
+      <!-- Third Row: Admin Panel -->
 
-      <div class="row">
+      <div class="row d-none" id="encounter-admin">
         <div class="col-md-12">
           <div class="card mt-4">
             <section
-              id="encounter-admin"
-              class="d-flex flex-wrap align-items-center justify-content-between px-2 pb-2"
+              id="encounter-summary"
+              class="d-flex flex-wrap align-items-center justify-content-between px-2 py-2"
             >
-              <div class="container-fluid">
-                <h5 class="mb-3">Manage Saved Data</h5>
-
-                <div class="row">
-                  <!-- Save and Load Parties -->
-                  <div class="col-md-4">
-                    <h6>Party Management</h6>
+              <!-- Admin Button Group -->
+              <div class="col-md-12">
+                <div class="btn-group w-100" role="group" id="admin-btn-group">
+                  <!-- insert here -->
+                  <!-- Party Dropdown -->
+                  <div class="btn-group">
                     <button
-                      id="save-party-btn"
-                      class="btn btn-success btn-sm w-100 mb-2"
+                      id="party-btn"
+                      class="btn btn-secondary dropdown-toggle"
+                      data-bs-toggle="dropdown"
                     >
-                      💾 Save Current Party
+                      Party
                     </button>
-                    <select id="load-party-dropdown" class="form-select mb-2">
-                      <option value="">⬇️ Load Saved Party</option>
-                    </select>
+                    <ul class="dropdown-menu">
+                      <li>
+                        <a
+                          class="dropdown-item admin-action"
+                          data-action="save-party"
+                          href="#"
+                          >Save Party</a
+                        >
+                      </li>
+                      <li>
+                        <a
+                          class="dropdown-item admin-action"
+                          data-action="load-party"
+                          href="#"
+                          >Load Party</a
+                        >
+                      </li>
+                      <li>
+                        <a
+                          class="dropdown-item admin-action"
+                          data-action="delete-party"
+                          href="#"
+                          >Delete Party</a
+                        >
+                      </li>
+                      <li>
+                        <a
+                          class="dropdown-item admin-action"
+                          data-action="clear-party"
+                          href="#"
+                          >Clear Party</a
+                        >
+                      </li>
+                    </ul>
+                  </div>
+                  <!-- Adversary Dropdown -->
+                  <div class="btn-group">
                     <button
-                      id="delete-party-btn"
-                      class="btn btn-danger btn-sm w-100"
+                      id="adversary-btn"
+                      class="btn btn-secondary dropdown-toggle"
+                      data-bs-toggle="dropdown"
                     >
-                      🗑️ Delete Selected Party
+                      Adversary
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li>
+                        <a
+                          class="dropdown-item admin-action"
+                          data-action="save-adversary"
+                          href="#"
+                          >Save Group</a
+                        >
+                      </li>
+                      <li>
+                        <a
+                          class="dropdown-item admin-action"
+                          data-action="load-adversary"
+                          href="#"
+                          >Load Group</a
+                        >
+                      </li>
+                      <li>
+                        <a
+                          class="dropdown-item admin-action"
+                          data-action="delete-adversary"
+                          href="#"
+                          >Delete Group</a
+                        >
+                      </li>
+                      <li>
+                        <a
+                          class="dropdown-item admin-action"
+                          data-action="clear-adversary"
+                          href="#"
+                          >Clear Adversaries</a
+                        >
+                      </li>
+                    </ul>
+                  </div>
+                  <!-- Encounter Dropdown -->
+                  <div class="btn-group">
+                    <button
+                      id="encounter-btn"
+                      class="btn btn-secondary dropdown-toggle"
+                      data-bs-toggle="dropdown"
+                    >
+                      Encounter
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li>
+                        <a
+                          class="dropdown-item admin-action"
+                          data-action="save-encounter"
+                          href="#"
+                          >Save Encounter</a
+                        >
+                      </li>
+                      <li>
+                        <a
+                          class="dropdown-item admin-action"
+                          data-action="load-encounter"
+                          href="#"
+                          >Load Encounter</a
+                        >
+                      </li>
+                      <li>
+                        <a
+                          class="dropdown-item admin-action"
+                          data-action="delete-encounter"
+                          href="#"
+                          >Delete Encounter</a
+                        >
+                      </li>
+                      <li>
+                        <a
+                          class="dropdown-item admin-action"
+                          data-action="clear-encounter"
+                          href="#"
+                          >Clear Encounter</a
+                        >
+                      </li>
+                    </ul>
+                  </div>
+                  <!-- **** Party Admin Panels **** -->
+                  <!-- save-party-details -->
+                  <div
+                    class="input-group admin-action-details d-none"
+                    id="save-party-details"
+                  >
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">Save Party</div>
+                    </div>
+                    <input
+                      type="text"
+                      id="save-party-input"
+                      class="form-control"
+                      placeholder="Enter party name"
+                    />
+                    <button class="btn btn-sm btn-success">Save</button>
+                    <button
+                      class="btn btn-sm btn-secondary cancel-admin-action"
+                    >
+                      Cancel
                     </button>
                   </div>
-
-                  <!-- Save and Load Adversary Groups -->
-                  <div class="col-md-4">
-                    <h6>Adversary Management</h6>
-                    <button
-                      id="save-adversary-btn"
-                      class="btn btn-success btn-sm w-100 mb-2"
-                    >
-                      💾 Save Current Adversary Group
-                    </button>
+                  <!-- load-party-details -->
+                  <div
+                    class="input-group admin-action-details d-none"
+                    id="load-party-details"
+                  >
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">Load Party</div>
+                    </div>
                     <select
-                      id="load-adversary-dropdown"
-                      class="form-select mb-2"
+                      id="load-party-select"
+                      class="form-control form-select"
                     >
-                      <option value="">⬇️ Load Saved Adversary Group</option>
+                      <option value="">Select a party...</option>
                     </select>
+                    <button class="btn btn-sm btn-primary">Load</button>
                     <button
-                      id="delete-adversary-btn"
-                      class="btn btn-danger btn-sm w-100"
+                      class="btn btn-sm btn-secondary cancel-admin-action"
                     >
-                      🗑️ Delete Selected Group
+                      Cancel
                     </button>
                   </div>
-
-                  <!-- Save and Load Encounters -->
-                  <div class="col-md-4">
-                    <h6>Encounter Management</h6>
-                    <button
-                      id="save-encounter-btn"
-                      class="btn btn-success btn-sm w-100 mb-2"
-                    >
-                      💾 Save Current Encounter
-                    </button>
+                  <!-- delete-party-list -->
+                  <div
+                    class="input-group admin-action-details d-none"
+                    id="delete-party-details"
+                  >
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">Delete Party</div>
+                    </div>
                     <select
-                      id="load-encounter-dropdown"
-                      class="form-select mb-2"
+                      id="delete-party-select"
+                      class="form-control form-select"
                     >
-                      <option value="">⬇️ Load Saved Encounter</option>
+                      <option value="">Select a party to delete...</option>
                     </select>
+                    <button class="btn btn-sm btn-danger">Delete</button>
                     <button
-                      id="delete-encounter-btn"
-                      class="btn btn-danger btn-sm w-100"
+                      class="btn btn-sm btn-secondary cancel-admin-action"
                     >
-                      🗑️ Delete Selected Encounter
+                      Cancel
+                    </button>
+                  </div>
+                  <!-- **** Adversary Group Admin Panels **** -->
+                  <!-- save-adversary-details -->
+                  <div
+                    class="input-group admin-action-details d-none"
+                    id="save-adversary-details"
+                  >
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">Save Adversary Group</div>
+                    </div>
+                    <input
+                      type="text"
+                      id="save-adversary-input"
+                      class="form-control"
+                      placeholder="Enter group name"
+                    />
+                    <button class="btn btn-sm btn-success">Save</button>
+                    <button
+                      class="btn btn-sm btn-secondary cancel-admin-action"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                  <!-- load-adversary-details -->
+                  <div
+                    class="input-group admin-action-details d-none"
+                    id="load-adversary-details"
+                  >
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">Load Adversary Group</div>
+                    </div>
+                    <select
+                      id="load-adversary-select"
+                      class="form-control form-select"
+                    >
+                      <option value="">Select an adversary group...</option>
+                    </select>
+                    <button class="btn btn-sm btn-primary">Load</button>
+                    <button
+                      class="btn btn-sm btn-secondary cancel-admin-action"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                  <!-- delete-adversary-list -->
+                  <div
+                    class="input-group admin-action-details d-none"
+                    id="delete-adversary-details"
+                  >
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">
+                        Delete Adversary Group
+                      </div>
+                    </div>
+                    <select
+                      id="delete-adversary-select"
+                      class="form-control form-select"
+                    >
+                      <option value="">Select a group to delete...</option>
+                    </select>
+                    <button class="btn btn-sm btn-danger">Delete</button>
+                    <button
+                      class="btn btn-sm btn-secondary cancel-admin-action"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                  <!-- **** Encounter Admin Panels **** -->
+                  <!-- save-encounter-details -->
+                  <div
+                    class="input-group admin-action-details d-none"
+                    id="save-encounter-details"
+                  >
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">Save Encounter</div>
+                    </div>
+                    <input
+                      type="text"
+                      id="save-encounter-input"
+                      class="form-control"
+                      placeholder="Enter encounter name"
+                    />
+                    <button class="btn btn-sm btn-success">Save</button>
+                    <button
+                      class="btn btn-sm btn-secondary cancel-admin-action"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                  <!-- load-encounter-details -->
+                  <div
+                    class="input-group admin-action-details d-none"
+                    id="load-encounter-details"
+                  >
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">Load Encounter</div>
+                    </div>
+                    <select
+                      id="load-encounter-select"
+                      class="form-control form-select"
+                    >
+                      <option value="">Select an encounter...</option>
+                    </select>
+                    <button class="btn btn-sm btn-primary">Load</button>
+                    <button
+                      class="btn btn-sm btn-secondary cancel-admin-action"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                  <!-- delete-encounter-details -->
+                  <div
+                    class="input-group admin-action-details d-none"
+                    id="delete-encounter-details"
+                  >
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">Delete Encounter</div>
+                    </div>
+                    <select
+                      id="delete-encounter-select"
+                      class="form-control form-select"
+                    >
+                      <option value="">
+                        Select an encounter to delete...
+                      </option>
+                    </select>
+                    <button class="btn btn-sm btn-danger">Delete</button>
+                    <button
+                      class="btn btn-sm btn-secondary cancel-admin-action"
+                    >
+                      Cancel
                     </button>
                   </div>
                 </div>
@@ -551,7 +815,7 @@
         </div>
       </div>
 
-      <!-- Third Row: Good Guys & Bad Guys Panels -->
+      <!-- Fourth Row: Good Guys & Bad Guys Panels -->
       <div class="row mt-4 mb-4">
         <div class="col-md-6">
           <div class="card p-4 mb-4 equal-height">
@@ -605,6 +869,7 @@
         </div>
       </div>
     </div>
+    <!-- Footer -->
     <div class="row mb-4">
       <div class="col-md-12 px-5">
         <div class="w-100 px-4">
@@ -679,7 +944,7 @@
         ></p>
       </div>
     </div>
-
+    <!-- Sctipts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script type="module" src="script/database.js"></script>
     <script type="module" src="script/tooltipManager.js"></script>
