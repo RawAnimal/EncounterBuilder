@@ -1346,3 +1346,31 @@ export function resetAdminPanel() {
   populateLoadDropdowns();
   populateDeleteDropdowns();
 }
+
+// ✅ Handles Clear Actions (Party, Adversary, Encounter)
+export function handleClearAction(action) {
+  console.log(`🧹 Clearing data for action: ${action}`);
+
+  if (action === 'clear-party') {
+    document.getElementById('character-table-body').innerHTML = '';
+    updatePartyCalculations();
+    showToast('✅ Party list cleared successfully.', 'success');
+  }
+
+  if (action === 'clear-adversary') {
+    document.getElementById('adversary-table-body').innerHTML = '';
+    updateEncounterXP();
+    showToast('✅ Adversary list cleared successfully.', 'success');
+  }
+
+  if (action === 'clear-encounter') {
+    document.getElementById('character-table-body').innerHTML = '';
+    document.getElementById('adversary-table-body').innerHTML = '';
+    updatePartyCalculations();
+    updateEncounterXP();
+    showToast('✅ Encounter cleared successfully.', 'success');
+  }
+
+  // ✅ Reset the admin panel after clearing
+  resetAdminPanel();
+}
