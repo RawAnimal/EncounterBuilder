@@ -122,18 +122,59 @@
   border-radius: 0 10px 10px 0; /* Matches btn-group corners */
 }
 
+/* to change color of svg panel headers */
 .silhouette_color {
   filter: brightness(0) saturate(100%) invert(49%) sepia(9%) saturate(334%)
     hue-rotate(169deg) brightness(92%) contrast(97%);
 }
+
 /* Keep Male & Female buttons consistent */
 #toggle-male,
 #toggle-female {
   border-color: #6c757d !important;
 }
-
+/* consistent label width on party panel form */
 .party-panel-label-width {
   width: 80px;
+}
+/* class to change bootstrap icon color in admin menu */
+.admin-menu-icon {
+  color: #585e63;
+  margin-right: 6px;
+}
+
+/* class to change svg icon color in admin menu */
+.admin-menu-icon-color-filter {
+  filter: brightness(0) saturate(100%) invert(38%) sepia(13%) saturate(243%)
+    hue-rotate(165deg) brightness(90%) contrast(90%);
+}
+
+/* class to change bootstrap icon color in admin panels */
+.admin-menu-icon-label {
+  color: #2757c3;
+}
+
+/* class to change svg icon color in admin panels - same color as admin-menu-icon-label */
+.admin-menu-icon-label-filter {
+  filter: brightness(0) saturate(100%) invert(29%) sepia(39%) saturate(3633%)
+    hue-rotate(211deg) brightness(83%) contrast(90%);
+}
+
+/* consistent admin panel button widths */
+.admin-action-details button {
+  width: 75px;
+}
+
+/* admin action button color */
+[id$='-details'] .btn-success {
+  background-color: #0d6efd;
+}
+
+/* admin action button state color */
+[id$='-details'] .btn-success:hover,
+[id$='-details'] .btn-success:active,
+[id$='-details'] .btn-success:focus {
+  background-color: #295dcf !important;
 }
 
 @media print {

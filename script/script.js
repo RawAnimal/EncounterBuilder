@@ -106,11 +106,24 @@ document
 
 // Re-usable function to update a specific dropdown
 function updateDropdown(dropdownId, items) {
+  console.log(dropdownId);
   const dropdown = document.getElementById(dropdownId);
   if (!dropdown) return;
 
+  let ddDefault = '';
+
+  if (dropdownId === 'delete-party-select') {
+    ddDefault = 'Adventurers...';
+  } else if (dropdownId === 'delete-adversary-select') {
+    ddDefault = 'Adversaries...';
+  } else if (dropdownId === 'delete-encounter-select') {
+    ddDefault = 'Encounter...';
+  } else {
+    ddDefault = 'Select an option...';
+  }
+
   // ✅ Add a default "Select..." option
-  dropdown.innerHTML = '<option value="">Select an option...</option>';
+  dropdown.innerHTML = `<option value="">${ddDefault}</option>`;
 
   items.forEach((item) => {
     const option = document.createElement('option');
@@ -1236,7 +1249,7 @@ async function populateLoadDropdowns() {
     // Populate Party Load Dropdown
     const partySelect = document.getElementById('load-party-select');
     if (partySelect) {
-      partySelect.innerHTML = `<option value="">Select a party to load...</option>`;
+      partySelect.innerHTML = `<option value="">Adventurers...</option>`;
       parties.forEach((party) => {
         const option = document.createElement('option');
         option.value = party.id;
@@ -1248,7 +1261,7 @@ async function populateLoadDropdowns() {
     // Populate Adversary Load Dropdown
     const adversarySelect = document.getElementById('load-adversary-select');
     if (adversarySelect) {
-      adversarySelect.innerHTML = `<option value="">Select an adversary group to load...</option>`;
+      adversarySelect.innerHTML = `<option value="">Adversaries...</option>`;
       adversaries.forEach((adversary) => {
         const option = document.createElement('option');
         option.value = adversary.id;
@@ -1260,7 +1273,7 @@ async function populateLoadDropdowns() {
     // Populate Encounter Load Dropdown
     const encounterSelect = document.getElementById('load-encounter-select');
     if (encounterSelect) {
-      encounterSelect.innerHTML = `<option value="">Select an encounter to load...</option>`;
+      encounterSelect.innerHTML = `<option value="">Encounter...</option>`;
       encounters.forEach((encounter) => {
         const option = document.createElement('option');
         option.value = encounter.id;

@@ -12,7 +12,7 @@
     />
     <link
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
     />
   </head>
   <body>
@@ -527,7 +527,7 @@
                       class="btn btn-secondary dropdown-toggle"
                       data-bs-toggle="dropdown"
                     >
-                      Party
+                      Adventurers
                     </button>
                     <ul class="dropdown-menu">
                       <li>
@@ -535,7 +535,9 @@
                           class="dropdown-item admin-action"
                           data-action="save-party"
                           href="#"
-                          >Save Party</a
+                        >
+                          <i class="bi bi-floppy-fill admin-menu-icon"></i>Save
+                          Adventurers</a
                         >
                       </li>
                       <li>
@@ -543,7 +545,13 @@
                           class="dropdown-item admin-action"
                           data-action="load-party"
                           href="#"
-                          >Load Party</a
+                          ><img
+                            src="images/icons/icon_load.svg"
+                            alt="Load Adventurers"
+                            width="16"
+                            height="16"
+                            class="admin-menu-icon admin-menu-icon-color-filter"
+                          />Load Adventurers</a
                         >
                       </li>
                       <li>
@@ -551,15 +559,25 @@
                           class="dropdown-item admin-action"
                           data-action="delete-party"
                           href="#"
-                          >Delete Party</a
+                          ><i class="bi bi-trash-fill admin-menu-icon"></i
+                          >Delete Adventurers</a
                         >
                       </li>
+                      <div class="dropdown-divider"></div>
                       <li>
                         <a
                           class="dropdown-item admin-action"
                           data-action="clear-party"
                           href="#"
-                          >Clear Party</a
+                        >
+                          <img
+                            src="images/icons/icon_sweep.svg"
+                            alt="Clear Party"
+                            width="16"
+                            height="16"
+                            class="admin-menu-icon admin-menu-icon-color-filter"
+                          />
+                          Clear Party</a
                         >
                       </li>
                     </ul>
@@ -571,7 +589,7 @@
                       class="btn btn-secondary dropdown-toggle"
                       data-bs-toggle="dropdown"
                     >
-                      Adversary
+                      Adversaries
                     </button>
                     <ul class="dropdown-menu">
                       <li>
@@ -579,7 +597,8 @@
                           class="dropdown-item admin-action"
                           data-action="save-adversary"
                           href="#"
-                          >Save Group</a
+                          ><i class="bi bi-floppy-fill admin-menu-icon"></i
+                          >Save Adversaries</a
                         >
                       </li>
                       <li>
@@ -587,7 +606,13 @@
                           class="dropdown-item admin-action"
                           data-action="load-adversary"
                           href="#"
-                          >Load Group</a
+                          ><img
+                            src="images/icons/icon_load.svg"
+                            alt="Load Adversaries"
+                            width="16"
+                            height="16"
+                            class="admin-menu-icon admin-menu-icon-color-filter"
+                          />Load Adversaries</a
                         >
                       </li>
                       <li>
@@ -595,15 +620,23 @@
                           class="dropdown-item admin-action"
                           data-action="delete-adversary"
                           href="#"
-                          >Delete Group</a
+                          ><i class="bi bi-trash-fill admin-menu-icon"></i
+                          >Delete Adversaries</a
                         >
                       </li>
+                      <div class="dropdown-divider"></div>
                       <li>
                         <a
                           class="dropdown-item admin-action"
                           data-action="clear-adversary"
                           href="#"
-                          >Clear Adversaries</a
+                          ><img
+                            src="images/icons/icon_sweep.svg"
+                            alt="Clear Adversaries"
+                            width="16"
+                            height="16"
+                            class="admin-menu-icon admin-menu-icon-color-filter"
+                          />Clear Adversaries</a
                         >
                       </li>
                     </ul>
@@ -623,6 +656,7 @@
                           class="dropdown-item admin-action"
                           data-action="save-encounter"
                           href="#"
+                          ><i class="bi bi-floppy-fill admin-menu-icon"></i
                           >Save Encounter</a
                         >
                       </li>
@@ -631,7 +665,13 @@
                           class="dropdown-item admin-action"
                           data-action="load-encounter"
                           href="#"
-                          >Load Encounter</a
+                          ><img
+                            src="images/icons/icon_load.svg"
+                            alt="Load Encounter"
+                            width="16"
+                            height="16"
+                            class="admin-menu-icon admin-menu-icon-color-filter"
+                          />Load Encounter</a
                         >
                       </li>
                       <li>
@@ -639,15 +679,23 @@
                           class="dropdown-item admin-action"
                           data-action="delete-encounter"
                           href="#"
+                          ><i class="bi bi-trash-fill admin-menu-icon"></i
                           >Delete Encounter</a
                         >
                       </li>
+                      <div class="dropdown-divider"></div>
                       <li>
                         <a
                           class="dropdown-item admin-action"
                           data-action="clear-encounter"
                           href="#"
-                          >Clear Encounter</a
+                          ><img
+                            src="images/icons/icon_sweep.svg"
+                            alt="Clear Encounter"
+                            width="16"
+                            height="16"
+                            class="admin-menu-icon admin-menu-icon-color-filter"
+                          />Clear Encounter</a
                         >
                       </li>
                     </ul>
@@ -659,13 +707,15 @@
                     id="save-party-details"
                   >
                     <div class="input-group-prepend">
-                      <div class="input-group-text">Save Party</div>
+                      <div class="input-group-text">
+                        <i class="bi bi-floppy-fill admin-menu-icon-label"></i>
+                      </div>
                     </div>
                     <input
                       type="text"
                       id="save-party-input"
                       class="form-control"
-                      placeholder="Enter party name"
+                      placeholder="Party Name..."
                     />
                     <button class="btn btn-sm btn-success">Save</button>
                     <button
@@ -680,13 +730,22 @@
                     id="load-party-details"
                   >
                     <div class="input-group-prepend">
-                      <div class="input-group-text">Load Party</div>
+                      <div class="input-group-text">
+                        <img
+                          src="images/icons/icon_load.svg"
+                          alt="Load Adventurers"
+                          width="16"
+                          height="16"
+                          class="admin-menu-icon admin-menu-icon-label-filter"
+                          style="margin: 4px 0 4px 0"
+                        />
+                      </div>
                     </div>
                     <select
                       id="load-party-select"
                       class="form-control form-select"
                     >
-                      <option value="">Select a party...</option>
+                      <option value="">Party...</option>
                     </select>
                     <button class="btn btn-sm btn-primary">Load</button>
                     <button
@@ -701,14 +760,16 @@
                     id="delete-party-details"
                   >
                     <div class="input-group-prepend">
-                      <div class="input-group-text">Delete Party</div>
+                      <div class="input-group-text">
+                        <i class="bi bi-trash-fill admin-menu-icon-label"></i>
+                      </div>
                     </div>
                     <!-- Party Delete Button -->
                     <select
                       id="delete-party-select"
                       class="form-control form-select"
                     >
-                      <option value="">Select a party to delete...</option>
+                      <option value="">Adventurers...</option>
                     </select>
                     <button
                       id="delete-party-btn"
@@ -729,13 +790,15 @@
                     id="save-adversary-details"
                   >
                     <div class="input-group-prepend">
-                      <div class="input-group-text">Save Adversary Group</div>
+                      <div class="input-group-text">
+                        <i class="bi bi-floppy-fill admin-menu-icon-label"></i>
+                      </div>
                     </div>
                     <input
                       type="text"
                       id="save-adversary-input"
                       class="form-control"
-                      placeholder="Enter group name"
+                      placeholder="Group Name..."
                     />
                     <button class="btn btn-sm btn-success">Save</button>
                     <button
@@ -750,13 +813,22 @@
                     id="load-adversary-details"
                   >
                     <div class="input-group-prepend">
-                      <div class="input-group-text">Load Adversary Group</div>
+                      <div class="input-group-text">
+                        <img
+                          src="images/icons/icon_load.svg"
+                          alt="Load Adversaries"
+                          width="16"
+                          height="16"
+                          class="admin-menu-icon admin-menu-icon-label-filter"
+                          style="margin: 4px 0 4px 0"
+                        />
+                      </div>
                     </div>
                     <select
                       id="load-adversary-select"
                       class="form-control form-select"
                     >
-                      <option value="">Select an adversary group...</option>
+                      <option value="">Adversaries...</option>
                     </select>
                     <button class="btn btn-sm btn-primary">Load</button>
                     <button
@@ -772,14 +844,14 @@
                   >
                     <div class="input-group-prepend">
                       <div class="input-group-text">
-                        Delete Adversary Group
+                        <i class="bi bi-trash-fill admin-menu-icon-label"></i>
                       </div>
                     </div>
                     <select
                       id="delete-adversary-select"
                       class="form-control form-select"
                     >
-                      <option value="">Select a group to delete...</option>
+                      <option value="">Adversaries...</option>
                     </select>
                     <!-- Adversary Delete Button -->
                     <button
@@ -801,13 +873,15 @@
                     id="save-encounter-details"
                   >
                     <div class="input-group-prepend">
-                      <div class="input-group-text">Save Encounter</div>
+                      <div class="input-group-text">
+                        <i class="bi bi-floppy-fill admin-menu-icon-label"></i>
+                      </div>
                     </div>
                     <input
                       type="text"
                       id="save-encounter-input"
                       class="form-control"
-                      placeholder="Enter encounter name"
+                      placeholder="Encounter Name..."
                     />
                     <button class="btn btn-sm btn-success">Save</button>
                     <button
@@ -822,13 +896,22 @@
                     id="load-encounter-details"
                   >
                     <div class="input-group-prepend">
-                      <div class="input-group-text">Load Encounter</div>
+                      <div class="input-group-text">
+                        <img
+                          src="images/icons/icon_load.svg"
+                          alt="Load Encounter"
+                          width="16"
+                          height="16"
+                          class="admin-menu-icon admin-menu-icon-label-filter"
+                          style="margin: 4px 0 4px 0"
+                        />
+                      </div>
                     </div>
                     <select
                       id="load-encounter-select"
                       class="form-control form-select"
                     >
-                      <option value="">Select an encounter...</option>
+                      <option value="">Encounter...</option>
                     </select>
                     <button class="btn btn-sm btn-primary">Load</button>
                     <button
@@ -843,15 +926,15 @@
                     id="delete-encounter-details"
                   >
                     <div class="input-group-prepend">
-                      <div class="input-group-text">Delete Encounter</div>
+                      <div class="input-group-text">
+                        <i class="bi bi-trash-fill admin-menu-icon-label"></i>
+                      </div>
                     </div>
                     <select
                       id="delete-encounter-select"
                       class="form-control form-select"
                     >
-                      <option value="">
-                        Select an encounter to delete...
-                      </option>
+                      <option value="">Encounter...</option>
                     </select>
                     <!-- Encounter Delete Button -->
                     <button
