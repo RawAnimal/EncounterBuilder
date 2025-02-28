@@ -3,11 +3,11 @@ import {
   loadAllData,
   saveData,
   loadData,
-  deleteData,
 } from './database.js';
 import { showToast } from './toastManager.js';
 import { formatText } from './adversaryUI.js';
 import { confirmDelete } from './deleteManager.js';
+import { initializeTooltip } from './tooltipManager.js';
 
 // Global variables and settings
 let encounterMessages = {};
@@ -70,15 +70,16 @@ function addCharacterToTable(character) {
 
   const row = document.createElement('tr');
   row.innerHTML = `
-        <td>${character.name}</td>
-        <td>${character.level}</td>
-        <td>${character.species}</td>
-        <td>${character.class}</td>
-        <td><button class="btn btn-danger btn-sm remove-member">Remove</button></td>
+        <td class="align-middle"><strong>${character.name}</strong></td>
+        <td class="align-middle">${character.level}</td>
+        <td class="align-middle">${character.species}</td>
+        <td class="align-middle">${character.class}</td>
+        <td class="align-middle text-end"><button class="btn btn-danger btn-sm remove-member" title="Remove from Encounter" data-tooltip="top"><i class="bi bi-dash"></i></button></td>
     `;
 
   partyList.appendChild(row);
   updatePartyCalculations();
+  initializeTooltip();
 }
 
 document
@@ -1115,11 +1116,11 @@ document.addEventListener('DOMContentLoaded', () => {
           adversaryData.adversaries.forEach((adv) => {
             const row = document.createElement('tr');
             row.innerHTML = `
-              <td>${adv.quantity}</td>
-              <td>${adv.name}</td>
-              <td>${adv.cr}</td>
-              <td>${adv.xp}</td>
-              <td><button class="btn btn-danger btn-sm remove-adversary">Remove</button></td>
+              <td class="align-middle">${adv.quantity} <strong>x</strong></td>
+              <td class="align-middle"><strong>${adv.name}</strong></td>
+              <td class="align-middle">${adv.cr}</td>
+              <td class="align-middle">${adv.xp}</td>
+              <td class="align-middle text-end"><button class="btn btn-danger btn-sm remove-adversary" title="Remove from Encounter" data-tooltip="top"><i class="bi bi-dash"></i></button></td>
             `;
 
             document.getElementById('adversary-table-body').appendChild(row);
@@ -1135,6 +1136,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
           // ✅ Reset admin panel after loading
           resetAdminPanel();
+          initializeTooltip();
         } catch (error) {
           console.error('❌ Error loading adversary group:', error);
           showToast(
@@ -1207,11 +1209,11 @@ document.addEventListener('DOMContentLoaded', () => {
             encounterData.adversaries.forEach((adv) => {
               const row = document.createElement('tr');
               row.innerHTML = `
-              <td>${adv.quantity}</td>
-              <td>${adv.name}</td>
-              <td>${adv.cr}</td>
-              <td>${adv.xp}</td>
-              <td><button class="btn btn-danger btn-sm remove-adversary">Remove</button></td>
+              <td class="align-middle">${adv.quantity} <strong>x</strong></td>
+              <td class="align-middle">${adv.name}</td>
+              <td class="align-middle">${adv.cr}</td>
+              <td class="align-middle">${adv.xp}</td>
+              <td class="align-middle text-end"><button class="btn btn-danger btn-sm remove-adversary" title="Remove from Encounter" data-tooltip="top"><i class="bi bi-dash"></i></button></td>
             `;
               document.getElementById('adversary-table-body').appendChild(row);
             });
@@ -1229,6 +1231,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
           // ✅ Reset admin panel after loading
           resetAdminPanel();
+          initializeTooltip();
         } catch (error) {
           console.error('❌ Error loading encounter:', error);
           showToast(

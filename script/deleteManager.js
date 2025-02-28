@@ -1,7 +1,7 @@
 // Function to open delete confirmation modal
 import { deleteData } from './database.js';
 import { showToast } from './toastManager.js';
-import { setupGeneralModal, resetAdminPanel } from './script.js';
+import { resetAdminPanel } from './script.js';
 
 // Function to open delete confirmation modal
 export async function confirmDelete(action, storeName, recordId, recordName) {

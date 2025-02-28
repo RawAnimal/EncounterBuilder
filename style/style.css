@@ -177,6 +177,10 @@
   background-color: #295dcf !important;
 }
 
+[class*='remove-'] i {
+  pointer-events: none;
+}
+
 @media print {
   /* Force browser to use the correct font */
   * {
