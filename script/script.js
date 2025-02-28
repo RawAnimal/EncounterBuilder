@@ -7,6 +7,7 @@ import {
 } from './database.js';
 import { showToast } from './toastManager.js';
 import { formatText } from './adversaryUI.js';
+import { confirmDelete } from './deleteManager.js';
 
 // Global variables and settings
 let encounterMessages = {};
@@ -19,31 +20,10 @@ let useFemaleNames = false;
 initializeDatabase()
   .then(() => {
     console.log('✅ IndexedDB initialized successfully.');
-    populateDropdowns();
+    populateLoadDropdowns();
+    populateDeleteDropdowns();
   })
   .catch(console.error);
-
-// Populate dropdowns for General data population
-async function populateDropdowns() {
-  console.log('📌 Populating dropdowns...');
-  try {
-    const data = await loadAllData();
-
-    updateDropdown('load-party-select', data.parties);
-    updateDropdown('load-adversary-select', data.adversaries);
-    updateDropdown('load-encounter-select', data.encounters);
-
-    console.log('📌 Adversary Data:', data.adversaries);
-    console.log('✅ Dropdowns populated successfully.');
-
-    // ✅ Call these functions without `await` since they are not async
-    populatePartyDropdown();
-    populateAdversaryDropdown();
-    populateEncounterDropdown();
-  } catch (error) {
-    console.error('❌ Error populating dropdowns:', error);
-  }
-}
 
 // ✅ Populate delete dropdowns when the admin panel opens
 async function populateDeleteDropdowns() {
@@ -139,113 +119,6 @@ function updateDropdown(dropdownId, items) {
     dropdown.appendChild(option);
   });
 }
-
-// ***** Specific function to populate party dropdown
-function populatePartyDropdown() {
-  const partySelect = document.getElementById('load-party-select');
-  if (!partySelect) {
-    console.error('❌ Party dropdown not found!');
-    return;
-  }
-
-  // Clear existing options
-  partySelect.innerHTML = '<option value="">Select a party...</option>';
-
-  // Load party data from IndexedDB
-  loadData('parties')
-    .then((parties) => {
-      if (!parties || parties.length === 0) {
-        console.warn('⚠️ No saved parties found.');
-        return;
-      }
-
-      // Populate dropdown with saved parties
-      parties.forEach((party) => {
-        const option = document.createElement('option');
-        option.value = party.id; // Use party ID as value
-        option.textContent = party.name; // Display the party name
-        partySelect.appendChild(option);
-      });
-
-      console.log('✅ Party dropdown populated successfully.');
-    })
-    .catch((error) => {
-      console.error('❌ Error loading parties:', error);
-    });
-}
-
-// ***** Specific function to populate adversary dropdown
-function populateAdversaryDropdown() {
-  const adversarySelect = document.getElementById('load-adversary-select');
-  if (!adversarySelect) {
-    console.error('❌ Adversary dropdown not found!');
-    return;
-  }
-
-  // Clear existing options
-  adversarySelect.innerHTML =
-    '<option value="">Select an adversary group...</option>';
-
-  // Load adversary data from IndexedDB
-  loadData('adversaries')
-    .then((adversaries) => {
-      if (!adversaries || adversaries.length === 0) {
-        console.warn('⚠️ No saved adversary groups found.');
-        return;
-      }
-
-      // Populate dropdown with saved adversaries
-      adversaries.forEach((group) => {
-        const option = document.createElement('option');
-        option.value = group.id;
-        option.textContent = group.name;
-        adversarySelect.appendChild(option);
-      });
-
-      console.log('✅ Adversary dropdown populated successfully.');
-    })
-    .catch((error) => {
-      console.error('❌ Error loading adversary groups:', error);
-    });
-}
-
-// ***** Specific function to populate encounter dropdown
-function populateEncounterDropdown() {
-  const encounterSelect = document.getElementById('load-encounter-select');
-  if (!encounterSelect) {
-    console.error('❌ Encounter dropdown not found!');
-    return;
-  }
-
-  // Clear existing options
-  encounterSelect.innerHTML =
-    '<option value="">Select an encounter...</option>';
-
-  // Load encounter data from IndexedDB
-  loadData('encounters')
-    .then((encounters) => {
-      if (!encounters || encounters.length === 0) {
-        console.warn('⚠️ No saved encounters found.');
-        return;
-      }
-
-      // Populate dropdown with saved encounters
-      encounters.forEach((encounter) => {
-        const option = document.createElement('option');
-        option.value = encounter.id;
-        option.textContent = encounter.name;
-        encounterSelect.appendChild(option);
-      });
-
-      console.log('✅ Encounter dropdown populated successfully.');
-    })
-    .catch((error) => {
-      console.error('❌ Error loading encounters:', error);
-    });
-}
-
-// Call this function after the page loads to populate the dropdown
-document.addEventListener('DOMContentLoaded', populatePartyDropdown);
 
 // Get encounter description based on difficulty
 function getEncounterDescription(index) {
@@ -780,37 +653,65 @@ async function handlePrintButtonClick() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  // ✅ Attach event listeners to delete buttons in the admin panel
-  document.querySelectorAll('.delete-button').forEach((button) => {
-    button.addEventListener('click', function () {
-      console.log('🗑️ Delete button clicked.');
+  // ✅ Function to handle Delete button clicks
+  function handleDeleteClick(action) {
+    console.log(`🗑️ Panel delete button clicked for action: ${action}`);
 
-      const recordType = this.dataset.recordType;
-      const recordId = this.dataset.recordId;
-      const recordName = this.dataset.recordName;
+    if (!action.startsWith('delete-')) {
+      console.warn('⚠️ No valid delete action found.');
+      showToast('⚠️ Please select a valid record to delete.', 'warning');
+      return;
+    }
 
-      if (!recordType || !recordId) {
-        console.error('❌ Missing record data attributes.');
-        return;
-      }
+    console.log(`🗑️ Setting up general modal for delete action: ${action}`);
 
-      // Set delete confirmation button data
-      document.getElementById('confirm-delete-btn').dataset.recordType =
-        recordType;
-      document.getElementById('confirm-delete-btn').dataset.recordId =
-        recordId;
+    let selectId, recordType;
+    if (action === 'delete-party') {
+      selectId = 'delete-party-select';
+      recordType = 'parties';
+    } else if (action === 'delete-adversary') {
+      selectId = 'delete-adversary-select';
+      recordType = 'adversaries';
+    } else if (action === 'delete-encounter') {
+      selectId = 'delete-encounter-select';
+      recordType = 'encounters';
+    }
 
-      // Update modal message
-      document.getElementById(
-        'delete-modal-label'
-      ).innerHTML = `Are you sure you want to delete <strong>${recordName}</strong>?`;
+    const selectElement = document.getElementById(selectId);
+    const selectedOption = selectElement.options[selectElement.selectedIndex];
 
-      // Open delete modal
-      const deleteModal = new bootstrap.Modal(
-        document.getElementById('deleteModal')
-      );
-      deleteModal.show();
-    });
+    if (!selectedOption || !selectedOption.value) {
+      showToast('⚠️ Please select a record to delete.', 'warning');
+      return;
+    }
+
+    const recordId = selectedOption.value;
+    const recordName = selectedOption.textContent;
+
+    // ✅ Use the general modal for delete confirmation
+    setupGeneralModal(
+      'Delete Confirmation',
+      `Are you sure you want to delete <strong>${recordName}</strong>?`,
+      () => confirmDelete(action, recordType, recordId, recordName), // ✅ Pass recordName
+      'Delete',
+      'btn-danger'
+    );
+  }
+
+  // ✅ Attach event listeners to all delete buttons
+  const deleteButtons = [
+    { id: 'delete-party-btn', action: 'delete-party' },
+    { id: 'delete-adversary-btn', action: 'delete-adversary' },
+    { id: 'delete-encounter-btn', action: 'delete-encounter' },
+  ];
+
+  deleteButtons.forEach(({ id, action }) => {
+    const button = document.getElementById(id);
+    if (button) {
+      button.addEventListener('click', () => handleDeleteClick(action));
+    } else {
+      console.warn(`❌ Delete button not found: ${id}`);
+    }
   });
 
   const adminButton = document.getElementById('admin-view');
@@ -832,8 +733,13 @@ document.addEventListener('DOMContentLoaded', () => {
     item.addEventListener('click', function (event) {
       event.preventDefault(); // Prevent page jump
 
-      const action = this.getAttribute('data-action');
-      console.log(`📌 Admin action triggered: ${action}`);
+      const action = this.getAttribute('data-action'); // ✅ Corrected: Retrieve action from clicked element
+      if (!action) {
+        console.error(
+          '❌ Error: No action attribute found on clicked element.'
+        );
+        return;
+      }
 
       // ✅ Populate dropdowns when opening a section
       if (
@@ -1369,22 +1275,66 @@ async function populateLoadDropdowns() {
   }
 }
 
-// ✅ Resets the admin panel after any admin action (Save, Load, Delete)
-function resetAdminPanel() {
-  console.log('🔄 Resetting admin panel...');
+// ✅ Generic modal function for any confirmation prompts
+export function setupGeneralModal(
+  title,
+  body,
+  confirmCallback,
+  confirmText = 'OK',
+  confirmClass = 'btn-primary'
+) {
+  console.log('📌 Preparing general modal...');
 
-  // Hide all admin panels
-  document.querySelectorAll('.admin-action-details').forEach((panel) => {
-    panel.classList.add('d-none');
+  // Update modal title and body
+  document.getElementById('generalModalLabel').innerHTML = title;
+  document.getElementById('generalModalBody').innerHTML = body;
+
+  // Get confirm button and update its properties dynamically
+  const confirmBtn = document.getElementById('confirm-modal-btn');
+  confirmBtn.innerHTML = confirmText;
+  confirmBtn.className = `btn ${confirmClass}`;
+
+  // ✅ Properly remove previous event listeners before adding a new one
+  confirmBtn.replaceWith(confirmBtn.cloneNode(true));
+  const newConfirmBtn = document.getElementById('confirm-modal-btn');
+
+  // ✅ Attach event listener properly
+  newConfirmBtn.addEventListener('click', async () => {
+    console.log('✅ Confirm button clicked - executing callback...');
+    if (typeof confirmCallback === 'function') {
+      await confirmCallback();
+    }
+    const modalElement = document.getElementById('generalModal');
+    const modalInstance = bootstrap.Modal.getInstance(modalElement);
+    if (modalInstance) {
+      document.activeElement.blur(); // ✅ Move focus away from any active button inside the modal
+      setTimeout(() => modalInstance.hide(), 50); // ✅ Delay hiding slightly to ensure focus shift
+    }
   });
 
-  // Deactivate all admin buttons
-  document
-    .querySelectorAll('#admin-btn-group .dropdown-toggle')
-    .forEach((btn) => {
-      btn.classList.remove('btn-primary', 'active');
-      btn.classList.add('btn-secondary');
-    });
+  // ✅ Show the modal
+  const modalElement = new bootstrap.Modal(
+    document.getElementById('generalModal')
+  );
+  modalElement.show();
+}
 
-  console.log('✅ Admin panel reset.');
+// ✅ Resets the admin panel after any admin action (Save, Load, Delete)
+export function resetAdminPanel() {
+  console.log('🔄 Resetting admin panel after action...');
+
+  // ✅ Close all admin panels
+  document.querySelectorAll('.admin-panel').forEach((panel) => {
+    panel.style.display = 'none';
+  });
+
+  // ✅ Remove active button states
+  document.querySelectorAll('.admin-menu .btn').forEach((btn) => {
+    btn.classList.remove('active', 'btn-primary');
+  });
+
+  // ✅ Ensure dropdowns repopulate when menu is clicked again
+  console.log('📌 Populating dropdowns after reset...');
+  populateLoadDropdowns();
+  populateDeleteDropdowns();
 }

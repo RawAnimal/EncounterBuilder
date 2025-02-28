@@ -54,19 +54,19 @@
           <div class="toast-body" id="toast-message"></div>
         </div>
       </div>
-      <!-- Delete Confirmation Modal -->
+      <!-- General Modal -->
       <div
         class="modal fade"
-        id="deleteModal"
+        id="generalModal"
         tabindex="-1"
-        aria-labelledby="deleteModalLabel"
+        aria-labelledby="generalModalLabel"
         aria-hidden="true"
       >
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="deleteModalLabel">
-                Confirm Deletion
+              <h5 class="modal-title" id="generalModalLabel">
+                <!-- Dynamic content will be inserted here -->
               </h5>
               <button
                 type="button"
@@ -75,23 +75,20 @@
                 aria-label="Close"
               ></button>
             </div>
-            <div class="modal-body" id="delete-modal-body">
+            <div class="modal-body" id="generalModalBody">
               <!-- Dynamic content will be inserted here -->
             </div>
             <div class="modal-footer">
               <button
                 type="button"
                 class="btn btn-secondary"
+                id="cancel-modal-btn"
                 data-bs-dismiss="modal"
               >
                 Cancel
               </button>
-              <button
-                type="button"
-                id="confirm-delete-btn"
-                class="btn btn-danger"
-              >
-                Delete
+              <button type="button" id="confirm-modal-btn" class="btn">
+                OK
               </button>
             </div>
           </div>
@@ -706,13 +703,19 @@
                     <div class="input-group-prepend">
                       <div class="input-group-text">Delete Party</div>
                     </div>
+                    <!-- Party Delete Button -->
                     <select
                       id="delete-party-select"
                       class="form-control form-select"
                     >
                       <option value="">Select a party to delete...</option>
                     </select>
-                    <button class="btn btn-sm btn-danger">Delete</button>
+                    <button
+                      id="delete-party-btn"
+                      class="btn btn-sm btn-danger"
+                    >
+                      Delete
+                    </button>
                     <button
                       class="btn btn-sm btn-secondary cancel-admin-action"
                     >
@@ -778,7 +781,13 @@
                     >
                       <option value="">Select a group to delete...</option>
                     </select>
-                    <button class="btn btn-sm btn-danger">Delete</button>
+                    <!-- Adversary Delete Button -->
+                    <button
+                      id="delete-adversary-btn"
+                      class="btn btn-sm btn-danger"
+                    >
+                      Delete
+                    </button>
                     <button
                       class="btn btn-sm btn-secondary cancel-admin-action"
                     >
@@ -844,7 +853,13 @@
                         Select an encounter to delete...
                       </option>
                     </select>
-                    <button class="btn btn-sm btn-danger">Delete</button>
+                    <!-- Encounter Delete Button -->
+                    <button
+                      id="delete-encounter-btn"
+                      class="btn btn-sm btn-danger"
+                    >
+                      Delete
+                    </button>
                     <button
                       class="btn btn-sm btn-secondary cancel-admin-action"
                     >
