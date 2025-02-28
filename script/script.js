@@ -835,10 +835,15 @@ document.addEventListener('DOMContentLoaded', () => {
       const action = this.getAttribute('data-action');
       console.log(`📌 Admin action triggered: ${action}`);
 
-      // ✅ Populate delete dropdowns when opening the delete section
-      if (action.startsWith('delete-')) {
-        console.log('📌 Populating delete dropdowns...');
+      // ✅ Populate dropdowns when opening a section
+      if (
+        action.startsWith('save-') ||
+        action.startsWith('load-') ||
+        action.startsWith('delete-')
+      ) {
+        console.log('📌 Populating dropdowns after menu reopens...');
         populateDeleteDropdowns();
+        populateLoadDropdowns();
       }
 
       // Get the button associated with the clicked option
@@ -1022,23 +1027,12 @@ document.addEventListener('DOMContentLoaded', () => {
         // Clear the input field after saving
         if (inputField) inputField.value = '';
 
-        // Close the panel after saving
-        document
-          .querySelectorAll('.admin-action-details')
-          .forEach((panel) => panel.classList.add('d-none'));
-
-        // Reset active buttons
-        document
-          .querySelectorAll('#admin-btn-group .dropdown-toggle')
-          .forEach((btn) => {
-            btn.classList.remove('btn-primary', 'active');
-            btn.classList.add('btn-secondary');
-          });
+        // ✅ Reset admin panel after saving
+        resetAdminPanel();
       });
     });
-  // ********** End Handle Database "Save" actions **********
 
-  // ********** Handle Document "Load" Party Actions **********
+  // ********** Handle Load Party Actions **********
   document
     .getElementById('load-party-details')
     .addEventListener('click', async function (event) {
@@ -1091,6 +1085,9 @@ document.addEventListener('DOMContentLoaded', () => {
           );
 
           console.log('✅ Party loaded:', partyData);
+
+          // ✅ Reset admin panel after loading
+          resetAdminPanel();
         } catch (error) {
           console.error('❌ Error loading party:', error);
           showToast(
@@ -1216,6 +1213,9 @@ document.addEventListener('DOMContentLoaded', () => {
             'success'
           );
           console.log('✅ Adversary group loaded:', adversaryData);
+
+          // ✅ Reset admin panel after loading
+          resetAdminPanel();
         } catch (error) {
           console.error('❌ Error loading adversary group:', error);
           showToast(
@@ -1307,6 +1307,9 @@ document.addEventListener('DOMContentLoaded', () => {
             'success'
           );
           console.log('✅ Encounter loaded:', encounterData);
+
+          // ✅ Reset admin panel after loading
+          resetAdminPanel();
         } catch (error) {
           console.error('❌ Error loading encounter:', error);
           showToast(
@@ -1317,3 +1320,71 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 });
+
+// ✅ Repopulates Load dropdowns when the menu is reopened
+async function populateLoadDropdowns() {
+  console.log('🔄 Repopulating load dropdowns...');
+  try {
+    const { parties, adversaries, encounters } = await loadAllData();
+
+    // Populate Party Load Dropdown
+    const partySelect = document.getElementById('load-party-select');
+    if (partySelect) {
+      partySelect.innerHTML = `<option value="">Select a party to load...</option>`;
+      parties.forEach((party) => {
+        const option = document.createElement('option');
+        option.value = party.id;
+        option.textContent = party.name;
+        partySelect.appendChild(option);
+      });
+    }
+
+    // Populate Adversary Load Dropdown
+    const adversarySelect = document.getElementById('load-adversary-select');
+    if (adversarySelect) {
+      adversarySelect.innerHTML = `<option value="">Select an adversary group to load...</option>`;
+      adversaries.forEach((adversary) => {
+        const option = document.createElement('option');
+        option.value = adversary.id;
+        option.textContent = adversary.name;
+        adversarySelect.appendChild(option);
+      });
+    }
+
+    // Populate Encounter Load Dropdown
+    const encounterSelect = document.getElementById('load-encounter-select');
+    if (encounterSelect) {
+      encounterSelect.innerHTML = `<option value="">Select an encounter to load...</option>`;
+      encounters.forEach((encounter) => {
+        const option = document.createElement('option');
+        option.value = encounter.id;
+        option.textContent = encounter.name;
+        encounterSelect.appendChild(option);
+      });
+    }
+
+    console.log('✅ Load dropdowns repopulated successfully.');
+  } catch (error) {
+    console.error('❌ Error populating load dropdowns:', error);
+  }
+}
+
+// ✅ Resets the admin panel after any admin action (Save, Load, Delete)
+function resetAdminPanel() {
+  console.log('🔄 Resetting admin panel...');
+
+  // Hide all admin panels
+  document.querySelectorAll('.admin-action-details').forEach((panel) => {
+    panel.classList.add('d-none');
+  });
+
+  // Deactivate all admin buttons
+  document
+    .querySelectorAll('#admin-btn-group .dropdown-toggle')
+    .forEach((btn) => {
+      btn.classList.remove('btn-primary', 'active');
+      btn.classList.add('btn-secondary');
+    });
+
+  console.log('✅ Admin panel reset.');
+}
