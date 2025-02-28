@@ -10,13 +10,6 @@ export async function confirmDelete(action, storeName, recordId, recordName) {
   try {
     await deleteData(storeName, recordId);
 
-    // ✅ Check if recordName is undefined and log it
-    if (!recordName) {
-      console.error(
-        "⚠️ recordName is undefined. Check how it's being passed."
-      );
-    }
-
     // ✅ Ensure recordName is properly formatted before passing to toast
     const formattedName = recordName
       ? `<strong>${recordName}</strong>`
@@ -24,35 +17,35 @@ export async function confirmDelete(action, storeName, recordId, recordName) {
 
     showToast(`✅ ${formattedName} deleted successfully.`, 'success');
 
-    // Dynamically select the correct delete panel based on action
-    const deletePanel = document.getElementById(`${action}-details`);
+    // ✅ Map action names to correct delete panel IDs
+    const panelMap = {
+      'delete-encounter': 'delete-encounter-details',
+      'delete-adversary': 'delete-adversary-details',
+      'delete-party': 'delete-party-details',
+    };
 
-    if (deletePanel) {
-      console.log(`✅ Hiding delete panel for action: ${action}`);
-      deletePanel.classList.add('d-none');
+    const deletePanelId = panelMap[action];
+    if (deletePanelId) {
+      const deletePanel = document.getElementById(deletePanelId);
+      if (deletePanel) {
+        console.log(`✅ Hiding delete panel: ${deletePanelId}`);
+        deletePanel.classList.add('d-none');
+      }
     } else {
-      console.warn(`Delete panel not found for action: ${action}`);
+      console.warn(`⚠️ No matching panel found for action: ${action}`);
     }
 
-    // ✅ Remove 'active' and 'btn-primary' from the menu button
-    const activeButton = document.querySelector(
-      '#encounter-admin .btn-primary.active'
-    );
-    if (activeButton) {
-      activeButton.classList.remove('btn-primary', 'active');
-      activeButton.classList.add('btn-secondary');
-    }
+    // ✅ Reset ONLY active buttons in the admin menu
+    document
+      .querySelectorAll('#admin-btn-group .dropdown-toggle.btn-primary.active')
+      .forEach((btn) => {
+        btn.classList.remove('btn-primary', 'active');
+        btn.classList.add('btn-secondary');
+      });
 
-    // document
-    //   .querySelectorAll('[id^="delete-"][id$="-details"]')
-    //   .forEach((panel) => {
-    //     panel.classList.add('d-none');
-    //   });
+    console.log('✅ Admin buttons reset successfully.');
 
-    // Reset the admin panel after deletion
-    resetAdminPanel();
-
-    // ✅ Reset the admin menu completely
+    // ✅ Reset the admin panel after deletion
     resetAdminPanel();
   } catch (error) {
     console.error(`❌ Error deleting '${recordName}':`, error);

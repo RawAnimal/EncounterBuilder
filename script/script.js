@@ -1321,20 +1321,28 @@ export function setupGeneralModal(
 
 // ✅ Resets the admin panel after any admin action (Save, Load, Delete)
 export function resetAdminPanel() {
-  console.log('🔄 Resetting admin panel after action...');
-
-  // ✅ Close all admin panels
-  document.querySelectorAll('.admin-panel').forEach((panel) => {
-    panel.style.display = 'none';
+  // ✅ Hide all admin action panels
+  document.querySelectorAll('.admin-action-details').forEach((panel) => {
+    panel.classList.add('d-none');
   });
 
-  // ✅ Remove active button states
-  document.querySelectorAll('.admin-menu .btn').forEach((btn) => {
-    btn.classList.remove('active', 'btn-primary');
-  });
+  // ✅ Close any open dropdowns inside #admin-btn-group
+  document
+    .querySelectorAll('#admin-btn-group .dropdown-toggle')
+    .forEach((btn) => {
+      const dropdownInstance = bootstrap.Dropdown.getOrCreateInstance(btn);
+      dropdownInstance.hide(); // Ensures dropdown is collapsed
+    });
+
+  /// ✅ Reset buttons: remove 'btn-primary active' and set to 'btn-secondary'
+  document
+    .querySelectorAll('#admin-btn-group .dropdown-toggle')
+    .forEach((btn) => {
+      btn.classList.remove('btn-primary', 'active');
+      btn.classList.add('btn-secondary');
+    });
 
   // ✅ Ensure dropdowns repopulate when menu is clicked again
-  console.log('📌 Populating dropdowns after reset...');
   populateLoadDropdowns();
   populateDeleteDropdowns();
 }
