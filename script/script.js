@@ -981,13 +981,33 @@ document.addEventListener('DOMContentLoaded', () => {
           if (
             document.querySelectorAll('#character-table-body tr').length > 0
           ) {
-            if (
-              !confirm(
-                '⚠️ Loading this party will replace the current list. Continue?'
-              )
-            ) {
-              return;
-            }
+            setupGeneralModal(
+              'Load Confirmation',
+              'Loading this party will replace the current list. Continue?',
+              async () => {
+                document.getElementById('character-table-body').innerHTML = '';
+
+                // Add loaded characters to the table
+                partyData.members.forEach((member) =>
+                  addCharacterToTable(member)
+                );
+
+                // Update calculations
+                updatePartyCalculations();
+
+                showToast(
+                  `Adevnturers  '${partyData.name}' loaded successfully.`,
+                  'success'
+                );
+                console.log('Adventurers loaded:', partyData);
+
+                // Reset admin panel after loading
+                resetAdminPanel();
+              },
+              'Load',
+              'btn-warning'
+            );
+            return; // Stop further execution until modal confirmation
           }
 
           // Clear current party
@@ -1100,13 +1120,46 @@ document.addEventListener('DOMContentLoaded', () => {
           if (
             document.querySelectorAll('#adversary-table-body tr').length > 0
           ) {
-            if (
-              !confirm(
-                '⚠️ Loading this adversary group will replace the current list. Continue?'
-              )
-            ) {
-              return;
-            }
+            setupGeneralModal(
+              'Load Confirmation',
+              'Loading this adversary group will replace the current list. Continue?',
+              async () => {
+                document.getElementById('adversary-table-body').innerHTML = '';
+
+                // Populate adversary table
+                adversaryData.adversaries.forEach((adv) => {
+                  const row = document.createElement('tr');
+                  row.innerHTML = `
+          <td class="align-middle">${adv.quantity}</td>
+          <td class="align-middle"><strong>${adv.name}</strong></td>
+          <td class="align-middle">${adv.cr}</td>
+          <td class="align-middle">${adv.xp}</td>
+          <td class="align-middle text-end">
+            <button class="btn btn-danger btn-sm remove-adversary" title="Remove from Encounter" data-tooltip="top">
+              <i class="bi bi-dash"></i>
+            </button>
+          </td>
+        `;
+                  document
+                    .getElementById('adversary-table-body')
+                    .appendChild(row);
+                });
+
+                updateEncounterXP();
+                showToast(
+                  `Adversary Group '${adversaryData.name}' loaded successfully.`,
+                  'success'
+                );
+                console.log('Adversary group loaded:', adversaryData);
+
+                // Reset admin panel after loading
+                resetAdminPanel();
+                initializeTooltip();
+              },
+              'Load',
+              'btn-warning'
+            );
+            return; // Stop further execution until modal confirmation
           }
 
           // Clear existing adversaries
@@ -1116,7 +1169,7 @@ document.addEventListener('DOMContentLoaded', () => {
           adversaryData.adversaries.forEach((adv) => {
             const row = document.createElement('tr');
             row.innerHTML = `
-              <td class="align-middle">${adv.quantity} <strong>x</strong></td>
+              <td class="align-middle">${adv.quantity}</td>
               <td class="align-middle"><strong>${adv.name}</strong></td>
               <td class="align-middle">${adv.cr}</td>
               <td class="align-middle">${adv.xp}</td>
@@ -1129,18 +1182,18 @@ document.addEventListener('DOMContentLoaded', () => {
           updateEncounterXP();
 
           showToast(
-            `✅ Adversary Group '${adversaryData.name}' loaded successfully.`,
+            `Adversary Group '${adversaryData.name}' loaded successfully.`,
             'success'
           );
-          console.log('✅ Adversary group loaded:', adversaryData);
+          console.log('Adversary group loaded:', adversaryData);
 
-          // ✅ Reset admin panel after loading
+          // Reset admin panel after loading
           resetAdminPanel();
           initializeTooltip();
         } catch (error) {
-          console.error('❌ Error loading adversary group:', error);
+          console.error('Error loading adversary group:', error);
           showToast(
-            '❌ Error loading adversary group. See console for details.',
+            'Error loading adversary group. See console for details.',
             'error'
           );
         }
@@ -1163,7 +1216,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const encounterId = encounterSelect.value;
 
         if (!encounterId) {
-          showToast('⚠️ Please select an encounter to load.', 'warning');
+          showToast(
+            'Please select an encounter to load.',
+            'warning',
+            'Notification'
+          );
           return;
         }
 
@@ -1181,13 +1238,63 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('#character-table-body tr').length > 0 ||
             document.querySelectorAll('#adversary-table-body tr').length > 0
           ) {
-            if (
-              !confirm(
-                '⚠️ Loading this encounter will replace the current lists. Continue?'
-              )
-            ) {
-              return;
-            }
+            setupGeneralModal(
+              'Load Confirmation',
+              'Loading this encounter will replace the current lists. Continue?',
+              async () => {
+                // Clear existing party and adversaries
+                document.getElementById('character-table-body').innerHTML = '';
+                document.getElementById('adversary-table-body').innerHTML = '';
+
+                // Load Party Members
+                if (encounterData.party && encounterData.party.length > 0) {
+                  encounterData.party.forEach((member) =>
+                    addCharacterToTable(member)
+                  );
+                }
+
+                // Load Adversaries
+                if (
+                  encounterData.adversaries &&
+                  encounterData.adversaries.length > 0
+                ) {
+                  encounterData.adversaries.forEach((adv) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+            <td class="align-middle">${adv.quantity} <strong>x</strong></td>
+            <td class="align-middle">${adv.name}</td>
+            <td class="align-middle">${adv.cr}</td>
+            <td class="align-middle">${adv.xp}</td>
+            <td class="align-middle text-end">
+              <button class="btn btn-danger btn-sm remove-adversary" title="Remove from Encounter" data-tooltip="top">
+                <i class="bi bi-dash"></i>
+              </button>
+            </td>
+          `;
+                    document
+                      .getElementById('adversary-table-body')
+                      .appendChild(row);
+                  });
+                }
+
+                // Update XP and Party Budget
+                updateEncounterXP();
+                updatePartyCalculations();
+
+                showToast(
+                  `Encounter '${encounterData.name}' loaded successfully.`,
+                  'success'
+                );
+                console.log('Encounter loaded:', encounterData);
+
+                // Reset admin panel after loading
+                resetAdminPanel();
+                initializeTooltip();
+              },
+              'Load',
+              'btn-warning'
+            );
+            return; // Stop further execution until modal confirmation
           }
 
           // Clear existing party and adversaries
@@ -1209,7 +1316,7 @@ document.addEventListener('DOMContentLoaded', () => {
             encounterData.adversaries.forEach((adv) => {
               const row = document.createElement('tr');
               row.innerHTML = `
-              <td class="align-middle">${adv.quantity} <strong>x</strong></td>
+              <td class="align-middle">${adv.quantity}</td>
               <td class="align-middle">${adv.name}</td>
               <td class="align-middle">${adv.cr}</td>
               <td class="align-middle">${adv.xp}</td>
