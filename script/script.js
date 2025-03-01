@@ -724,7 +724,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (button) {
       button.addEventListener('click', () => handleDeleteClick(action));
     } else {
-      console.warn(`❌ Delete button not found: ${id}`);
+      console.warn(`Delete button not found: ${id}`);
     }
   });
 
