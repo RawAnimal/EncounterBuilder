@@ -5,8 +5,6 @@ import { resetAdminPanel } from './script.js';
 
 // Function to open delete confirmation modal
 export async function confirmDelete(action, storeName, recordId, recordName) {
-  console.log(`🗑️ Deleting ${recordName} from ${storeName} (ID: ${recordId})`);
-
   try {
     await deleteData(storeName, recordId);
 
@@ -28,7 +26,6 @@ export async function confirmDelete(action, storeName, recordId, recordName) {
     if (deletePanelId) {
       const deletePanel = document.getElementById(deletePanelId);
       if (deletePanel) {
-        console.log(`✅ Hiding delete panel: ${deletePanelId}`);
         deletePanel.classList.add('d-none');
       }
     } else {
@@ -42,8 +39,6 @@ export async function confirmDelete(action, storeName, recordId, recordName) {
         btn.classList.remove('btn-primary', 'active');
         btn.classList.add('btn-secondary');
       });
-
-    console.log('✅ Admin buttons reset successfully.');
 
     // ✅ Reset the admin panel after deletion
     resetAdminPanel();

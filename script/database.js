@@ -22,7 +22,6 @@ function initializeDatabase() {
     };
 
     request.onsuccess = function (event) {
-      console.log('✅ IndexedDB initialized successfully.');
       resolve(event.target.result);
     };
 
@@ -39,12 +38,6 @@ function saveData(storeName, data) {
 
     request.onsuccess = function (event) {
       const db = event.target.result;
-
-      // Log available object stores to debug missing store issues
-      console.log(
-        '✅ IndexedDB Opened. Available Object Stores:',
-        db.objectStoreNames
-      );
 
       if (!db.objectStoreNames.contains(storeName)) {
         console.error(`❌ Object store '${storeName}' not found!`);

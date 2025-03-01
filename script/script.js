@@ -19,7 +19,6 @@ let useFemaleNames = false;
 // Initialize the database, then populate UI elements
 initializeDatabase()
   .then(() => {
-    console.log('✅ IndexedDB initialized successfully.');
     populateLoadDropdowns();
     populateDeleteDropdowns();
   })
@@ -27,15 +26,12 @@ initializeDatabase()
 
 // ✅ Populate delete dropdowns when the admin panel opens
 async function populateDeleteDropdowns() {
-  console.log('📌 Populating delete dropdowns...');
   try {
     const data = await loadAllData();
 
     updateDropdown('delete-party-select', data.parties);
     updateDropdown('delete-adversary-select', data.adversaries);
     updateDropdown('delete-encounter-select', data.encounters);
-
-    console.log('✅ Delete dropdowns populated successfully.');
   } catch (error) {
     console.error('❌ Error populating delete dropdowns:', error);
   }
@@ -107,7 +103,6 @@ document
 
 // Re-usable function to update a specific dropdown
 function updateDropdown(dropdownId, items) {
-  console.log(dropdownId);
   const dropdown = document.getElementById(dropdownId);
   if (!dropdown) return;
 
@@ -669,15 +664,11 @@ async function handlePrintButtonClick() {
 document.addEventListener('DOMContentLoaded', () => {
   // ✅ Function to handle Delete button clicks
   function handleDeleteClick(action) {
-    console.log(`🗑️ Panel delete button clicked for action: ${action}`);
-
     if (!action.startsWith('delete-')) {
       console.warn('⚠️ No valid delete action found.');
       showToast('⚠️ Please select a valid record to delete.', 'warning');
       return;
     }
-
-    console.log(`🗑️ Setting up general modal for delete action: ${action}`);
 
     let selectId, recordType;
     if (action === 'delete-party') {
@@ -761,7 +752,6 @@ document.addEventListener('DOMContentLoaded', () => {
         action.startsWith('load-') ||
         action.startsWith('delete-')
       ) {
-        console.log('📌 Populating dropdowns after menu reopens...');
         populateDeleteDropdowns();
         populateLoadDropdowns();
       }
@@ -817,8 +807,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Handle "Cancel" button in admin panels
   document.querySelectorAll('.cancel-admin-action').forEach((cancelBtn) => {
     cancelBtn.addEventListener('click', function () {
-      console.log('❌ Admin panel action cancelled.');
-
       // Hide all admin panels
       document.querySelectorAll('.admin-action-details').forEach((panel) => {
         panel.classList.add('d-none');
@@ -843,7 +831,6 @@ document.addEventListener('DOMContentLoaded', () => {
           '-details',
           ''
         );
-        console.log(`💾 Attempting to save: ${action}`);
 
         let inputField, inputValue;
         if (action === 'save-party') {
@@ -968,8 +955,6 @@ document.addEventListener('DOMContentLoaded', () => {
           return;
         }
 
-        console.log(`📌 Loading party with ID: ${partyId}`);
-
         try {
           const partyData = await loadData('parties', partyId);
           if (!partyData) {
@@ -999,7 +984,6 @@ document.addEventListener('DOMContentLoaded', () => {
                   `Adevnturers  '${partyData.name}' loaded successfully.`,
                   'success'
                 );
-                console.log('Adventurers loaded:', partyData);
 
                 // Reset admin panel after loading
                 resetAdminPanel();
@@ -1023,8 +1007,6 @@ document.addEventListener('DOMContentLoaded', () => {
             `✅ Party '${partyData.name}' loaded successfully.`,
             'success'
           );
-
-          console.log('✅ Party loaded:', partyData);
 
           // ✅ Reset admin panel after loading
           resetAdminPanel();
@@ -1104,13 +1086,11 @@ document.addEventListener('DOMContentLoaded', () => {
           return;
         }
 
-        console.log(`📌 Loading adversary group with ID: ${adversaryId}`);
-
         try {
           const adversaryData = await loadData('adversaries', adversaryId);
           if (!adversaryData) {
             showToast(
-              '❌ Failed to load adversary group. Data not found.',
+              'Failed to load adversary group. Data not found.',
               'error'
             );
             return;
@@ -1150,7 +1130,6 @@ document.addEventListener('DOMContentLoaded', () => {
                   `Adversary Group '${adversaryData.name}' loaded successfully.`,
                   'success'
                 );
-                console.log('Adversary group loaded:', adversaryData);
 
                 // Reset admin panel after loading
                 resetAdminPanel();
@@ -1185,7 +1164,6 @@ document.addEventListener('DOMContentLoaded', () => {
             `Adversary Group '${adversaryData.name}' loaded successfully.`,
             'success'
           );
-          console.log('Adversary group loaded:', adversaryData);
 
           // Reset admin panel after loading
           resetAdminPanel();
@@ -1223,8 +1201,6 @@ document.addEventListener('DOMContentLoaded', () => {
           );
           return;
         }
-
-        console.log(`📌 Loading encounter with ID: ${encounterId}`);
 
         try {
           const encounterData = await loadData('encounters', encounterId);
@@ -1285,7 +1261,6 @@ document.addEventListener('DOMContentLoaded', () => {
                   `Encounter '${encounterData.name}' loaded successfully.`,
                   'success'
                 );
-                console.log('Encounter loaded:', encounterData);
 
                 // Reset admin panel after loading
                 resetAdminPanel();
@@ -1334,7 +1309,6 @@ document.addEventListener('DOMContentLoaded', () => {
             `✅ Encounter '${encounterData.name}' loaded successfully.`,
             'success'
           );
-          console.log('✅ Encounter loaded:', encounterData);
 
           // ✅ Reset admin panel after loading
           resetAdminPanel();
@@ -1352,7 +1326,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ✅ Repopulates Load dropdowns when the menu is reopened
 async function populateLoadDropdowns() {
-  console.log('🔄 Repopulating load dropdowns...');
   try {
     const { parties, adversaries, encounters } = await loadAllData();
 
@@ -1391,8 +1364,6 @@ async function populateLoadDropdowns() {
         encounterSelect.appendChild(option);
       });
     }
-
-    console.log('✅ Load dropdowns repopulated successfully.');
   } catch (error) {
     console.error('❌ Error populating load dropdowns:', error);
   }
@@ -1406,8 +1377,6 @@ export function setupGeneralModal(
   confirmText = 'OK',
   confirmClass = 'btn-primary'
 ) {
-  console.log('📌 Preparing general modal...');
-
   // Update modal title and body
   document.getElementById('generalModalLabel').innerHTML = title;
   document.getElementById('generalModalBody').innerHTML = body;
@@ -1423,7 +1392,6 @@ export function setupGeneralModal(
 
   // ✅ Attach event listener properly
   newConfirmBtn.addEventListener('click', async () => {
-    console.log('✅ Confirm button clicked - executing callback...');
     if (typeof confirmCallback === 'function') {
       await confirmCallback();
     }
@@ -1472,8 +1440,6 @@ export function resetAdminPanel() {
 
 // ✅ Handles Clear Actions (Party, Adversary, Encounter)
 export function handleClearAction(action) {
-  console.log(`🧹 Clearing data for action: ${action}`);
-
   if (action === 'clear-party') {
     document.getElementById('character-table-body').innerHTML = '';
     updatePartyCalculations();
