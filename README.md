@@ -16,7 +16,7 @@ Welcome to the **Encounter Builder**! This project is designed as a simple, loca
 
 ## Installation
 
-This project is a static website that is meant to run locally for your own use. Simply download or clone the repository and open the `index.html` file in your preferred web browser.
+This project is a website that needs to be hosted on a web server to function correctly. You can run it locally by using a lightweight development server such as the Live Server extension in Visual Studio Code.
 
 ### Clone the Repository
 
@@ -24,14 +24,23 @@ This project is a static website that is meant to run locally for your own use. 
 git clone https://github.com/RawAnimal/EncounterBuilder.git
 ```
 
-### Open Locally
+### Run Locally
 
-Navigate to the project directory and open `index.html` in your web browser:
+- Navigate to the project directory:
 
 ```bash
 cd EncounterBuilder
-open index.html
 ```
+
+- Open the project in Visual Studio Code:
+
+```bash
+code .
+```
+
+- Start the Live Server extension to host the project on a local web server.
+
+- Open your browser and navigate to the provided local address (usually http://127.0.0.1:5500/).
 
 ## Usage
 
