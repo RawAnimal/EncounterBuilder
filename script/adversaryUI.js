@@ -222,9 +222,10 @@ function toggleFilter(button) {
 
 // Function to update filters dynamically
 function updateFilters() {
-  filterObject.search =
-    document.getElementById('search-adversary').value.trim().toLowerCase() ||
-    null;
+  const searchEl = document.getElementById('search-adversary');
+  filterObject.search = searchEl
+    ? searchEl.value.trim().toLowerCase()
+    : null;
   filterObject.cr = document.getElementById('filter-cr').value || null;
   filterObject.habitat =
     document.getElementById('filter-habitat').value || null;
