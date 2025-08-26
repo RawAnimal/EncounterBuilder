@@ -1,30 +1,39 @@
 // Version: 1.0 | JSON Validation Tool
-// This script checks JSON formatting for adversaries.json, classes.json, and random_names.json
+// This script checks JSON formatting for adversaries_2024.json, lookup_classes_2024.json,
+// and lookup_random_names.json using paths defined in dnd_2024_master.json
 
 async function validateJSON() {
   const output = document.getElementById('output');
   output.innerHTML = '🔍 Validating JSON files...\n\n';
 
-  const files = [
-    '../data/adversaries.json',
-    '../data/classes.json',
-    '../data/random_names.json',
-  ];
+  try {
+    const masterResponse = await fetch('../data/dnd_2024_master.json');
+    const masterData = await masterResponse.json();
+    const { adversaries, classes, names } = masterData.data;
+    const basePath = '../';
+    const files = [
+      basePath + adversaries,
+      basePath + classes,
+      basePath + names,
+    ];
 
-  for (const file of files) {
-    try {
-      const response = await fetch(file);
-      const data = await response.json();
-      output.innerHTML += `✅ Validating ${file}...\n`;
+    for (const file of files) {
+      try {
+        const response = await fetch(file);
+        const data = await response.json();
+        output.innerHTML += `✅ Validating ${file}...\n`;
 
-      if (file.includes('adversaries')) validateAdversaries(data, output);
-      if (file.includes('classes')) validateClasses(data, output);
-      if (file.includes('random_names')) validateNames(data, output);
+        if (file.includes('adversaries')) validateAdversaries(data, output);
+        if (file.includes('classes')) validateClasses(data, output);
+        if (file.includes('random_names')) validateNames(data, output);
 
-      output.innerHTML += `✅ ${file} validation completed.\n\n`;
-    } catch (error) {
-      output.innerHTML += `❌ Error loading ${file}: ${error}\n`;
+        output.innerHTML += `✅ ${file} validation completed.\n\n`;
+      } catch (error) {
+        output.innerHTML += `❌ Error loading ${file}: ${error}\n`;
+      }
     }
+  } catch (error) {
+    output.innerHTML += `❌ Error loading master file: ${error}\n`;
   }
 }
 
