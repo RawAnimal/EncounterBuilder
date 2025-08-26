@@ -195,7 +195,7 @@ function updateEncounterBalance() {
   balanceElement.textContent = balance.toLocaleString();
   balanceElement.className = `mx-4 my-1 ${textColor}`;
   labelElement.className = `stat-label px-3 py-2 text-white ${colorClass}`;
-  valueContainer.className = `stat-value border border-3 border-l-0 ${borderClass}`;
+  valueContainer.className = `stat-value border border-3 border-start-0 ${borderClass}`;
 }
 
 // Utility function to capitalize words and replace underscores
